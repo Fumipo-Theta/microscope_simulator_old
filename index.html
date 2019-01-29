@@ -4,16 +4,17 @@
     <meta http-equiv="Content-Type" charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="./css/main.css" charset="utf-8">
-    <link rel="icon" type="image/png" href="./data/icon.png" sizes="64x64">
-    <title>Texture of rocks</title>
+    <link rel="icon" type="image/png" href="./icon.png" sizes="64x64">
+    <title>Polarization microscope simulator</title>
+    <meta description content="This application simulates polarizing microscopic view of rock slices.">
 </head>
 
 <body id="top" ontouchstart="">
 
-    <div id='navigation' class="space-around">
-        <div class="space-around column-direction">
-            <div>Select rock name</div>
-            <div>
+    <div id='top-navigation' class="space-around">
+        <div class="space-around">
+            <div>Select </div>
+            <div class="select-wrapper">
                 <select id="rock_selector" name="rock_name">
                     <option value="granite_kiyama">花崗岩(香川県城山)</option>
                     <option value="test_cat">テスト</option>
@@ -22,12 +23,15 @@
             </div>
         </div>
 
-        <div id="change_nicol" class="button rect-button align-center">
-            Change Nichol
-        </div>
     </div>
 
     <div id='app-wrapper' class="align-center column-direction">
+        <div id="low-navigation" class="space-around">
+            <div id="change_nicol" class="button rect-button align-center">
+                Change Nichol
+            </div>
+        </div>
+
         <div id='viewer_wrapper'>
 
             <div id='viewer-containor' class='align-center'>
@@ -35,25 +39,43 @@
             </div>
 
         </div>
-        <div id="nicol_mode" class='title'> Open nickol </div>
+
+
         <div id="view_discription">
             Here is the discription for view.
         </div>
-
     </div>
 
-    <div class="image_containor"></div>
+
 
     <div id='footer'>
         <div id='rights' class='footer_column'>
-            This page and all contents are made by Fumipo Theta.
-            Please do not copy, modify, and repost any contents without telling me.
+            <p>
+                This page and all contents are made by Fumipo Theta.
+                Please do not copy, modify, and repost any contents without telling me.
+            </p>
+            <p>
+                Source code is available at <a href="https://github.com/Fumipo-Theta/microscope_simulator/">GitHub</a>
+            </p>
         </div>
         <div id='footer_nav' class='footer_column'>
-            Source code is available at <a href="https://github.com/Fumipo-Theta/microscope_simulator/">GitHub</a>
+
+            <p class="important">
+                Please donate for maintenence and updating service !
+            </p>
+            <p>
+                We will not hold any personal information.
+            </p>
+            <form action="your-server-side-code" method="POST">
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
+                    data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="100" data-name="Fumipo-Theta's microscope"
+                    data-description="Donation for maintenance of service" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                    data-currency="jpy">
+                    </script>
+            </form>
         </div>
     </div>
-
+    <div class="image_containor"></div>
 </body>
 
 <script src="./js/app.js"></script>

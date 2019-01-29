@@ -166,7 +166,7 @@ const updateViewDiscription = state => {
 const rockNameSelectHandler = state => {
     return new Promise((res, rej) => {
         const rock_selector = document.querySelector("#rock_selector")
-        const directory_name = `./data/${rock_selector.options[rock_selector.selectedIndex].value}/`
+        const directory_name = `./${rock_selector.options[rock_selector.selectedIndex].value}/`
 
 
         return fetch(directory_name + "manifest.json")
@@ -419,7 +419,7 @@ const toggleNicolText = (hasChangedToCrossNichol) => {
 
 const toggleNicolHandler = state => {
     state.isCrossNicol = !state.isCrossNicol;
-    toggleNicolText(state.isCrossNicol)
+    //toggleNicolText(state.isCrossNicol)
 }
 
 const toggleNicolButton = document.querySelector("#change_nicol")
@@ -505,6 +505,6 @@ window.onload = e => {
 window.onresize = e => {
     windowResizeHandler(state)
         //.then(rockNameSelectHandler(state)())
-        .then(createImageContainor)
-        .then(firstView)
+        //.then(createImageContainor)
+        .then(updateView)
 }

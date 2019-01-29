@@ -27,9 +27,12 @@ body{
 .button{
     min-width: 100px;
     height: 50px;
-    padding: 0 10px;
-    color: #eeeeff;
-    border: 1px solid #eeeeff;
+    padding: 7px 40px;
+    color: #2196f3;
+    background: transparent;
+    border: 1px solid #2196f3;
+    font-size: 1.2rem;
+    transition: all 0.2s;
 }
 
 .button:hover,
@@ -39,27 +42,57 @@ body{
     border: 1px solid #2196f3;
 }
 
-.rect-button{
+.button:active{
+    width: 500px;
+}
 
+.rect-button{
+    margin: 10px;
+    border-radius: 3px;
 }
 
 .title{
     margin: 5px 0 5px 0;
 }
 
-#navigation{
+.important{
+    font-size: 1.2rem;
+}
+
+select {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    padding:0.25em 0.5em;
+    font-size:1.2rem;
+    line-height:1;
+    border: 0.5px solid #8888aa;
+    border-bottom: 3px solid #2196f3;
+    color: inherit;
+    background-color: inherit;
+    cursor:pointer;
+}
+
+select option{
+    background-color: #0c395e;
+    color: #eeeeff;
+}
+
+
+#top-navigation{
         position: fixed;
         top: 0;
         width: 100vw;
         height: 64px;
         color: #eeeeff;
         background-color: #0c395e;
-        font-size: 1rem;
-        box-shadow: 5px 0 5px 3px rgba(0,0,0,0.5);
+        font-size: 1.25rem;
+        box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.5);
     }
 
+
 #app-wrapper{
-    padding: 100px 0 0 0;
+    padding: 64px 0 0 0;
     min-height: 80vh;
 }
 
@@ -67,7 +100,20 @@ body{
         background-color: #222222;
     }
 
+#view_discription{
 
+    padding: 20px;
+    width: 780px;
+    max-width: 100%;
+}
+
+#view_discription ul{
+    padding: 0;
+}
+
+#view_discription li{
+    margin: 5px 0;
+}
 
 .image_containor {
         display: none;
@@ -76,11 +122,12 @@ body{
 #footer{
         width: 100%;
         min-height: 100px;
-        background-color: #010101;
-        color: #eeeeff;
+        background-color: #c9c9c9;
+        color: #444466;
         display: flex;
-        border-top: 5px solid #2196f3;
+        border-top: 5px solid #0c395e;
         margin-top: 10px;
+        font-size:1rem;
     }
 
     .footer_column{
@@ -91,9 +138,6 @@ body{
         font-family: 'Arial';
     }
 
-#footer a:visited{
-    color: #eeeeff;
-}
 
 @media screen and (max-width:1023px) {
 
