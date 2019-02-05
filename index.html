@@ -13,16 +13,68 @@
 
     <div id='top-navigation' class="space-around">
         <div class="space-around">
-            <div>Select </div>
+            <div></div>
             <div class="select-wrapper">
                 <select id="rock_selector" name="rock_name">
-                    <option value="granite_kiyama">花崗岩(香川県城山)</option>
-                    <option value="test_cat">テスト</option>
-                    <option value="test_error">存在しない</option>
+
+                    <option value="Q27_quartz">流紋岩中の石英</option>
+                    <option value="Grc-1_quartz">花崗岩中の波動消光を示す石英</option>
+                    <option value="HNP1_plagioclase">斑れい岩中の斜長石</option>
+                    <option value="Fuji-1_plagioclase">玄武岩中の斜長石</option>
+                    <option value="E156_plagioclase">安山岩中の斜長石</option>
+                    <option value="Grc-1_microcline">花崗岩中のカリ長石</option>
+
+
+                    <option value="KL02_olivine">玄武岩中のかんらん石</option>
+                    <option value="KL02_olivine_2">玄武岩中のかんらん石</option>
+                    <option value="HWI-1_olivine">玄武岩中のかんらん石</option>
+
+
+                    <option value="Z32_staurolite">結晶片岩中の十字石</option>
+                    <option value="Z32_garnet">結晶片岩中のざくろ石</option>
+
+                    <option value="E156_hypersthene">安山岩中の直方輝石(ハイパーシン)</option>
+                    <option value="F17_olivine">かんらん岩中の直方輝石(エンスタタイト)</option>
+                    <option value="R74_augite">斑れい岩中の単斜輝石(普通輝石)</option>
+                    <option value="F17_clinopyroxene">かんらん岩中の単斜輝石(普通輝石)</option>
+                    <option value="X50_titan_augite">霞岩中の単斜輝石(チタンオージャイト)</option>
+
+                    <option value="D43_brown_hornblende">斑れい岩中の普通角閃石(褐色)</option>
+                    <option value="AB-1_hornblende">安山岩中の普通角閃石(褐色)</option>
+                    <option value="S48_green_hornblende">閃緑岩中の普通角閃石(緑色)</option>
+                    <option value="G1_granite">花崗岩中の普通角閃石(緑色)</option>
+                    <option value="D110_actinolite">緑色片岩中のアクチノ閃石</option>
+                    <option value="Glc-2_glaucophane">結晶片岩中の藍閃石</option>
+
+                    <option value="IH85_biotite">花崗岩中の黒雲母</option>
+                    <option value="Z58_biotite">結晶片岩中の黒雲母</option>
+                    <option value="HK48_muscovite">結晶片岩中の白雲母</option>
+
+                    <option value="PS4_epidote">結晶片岩中の緑簾石</option>
+                    <option value="L39_piemontite">結晶片岩中の紅簾石</option>
+
+                    <option value="TT70_calcite">カーボナタイト中の方解石</option>
+
+                    <option value="B59_graphic_texture">花崗岩の文象構造</option>
+                    <option value="B59_graphic_texture_2">花崗岩の文象構造2</option>
+                    <option value="KM-2_komatiite">かんらん石のスピニフェックス構造</option>
+                    <option value="GS913_green_schist">緑色片岩</option>
+                    <option value="DM_serpentine">結晶周辺が蛇紋石に変化したかんらん岩</option>
+                    <option value="SR_serpentine">蛇紋岩</option>
+
                 </select>
             </div>
         </div>
 
+    </div>
+
+    <div class="lds-css ng-scope">
+        <div style="width:100%;height:100%" class="lds-disk">
+            <div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
     </div>
 
     <div id='app-wrapper' class="align-center column-direction">
@@ -35,6 +87,7 @@
         <div id='viewer_wrapper'>
 
             <div id='viewer-containor' class='align-center'>
+
                 <canvas id="main-viewer"></canvas>
             </div>
 
@@ -42,7 +95,7 @@
 
 
         <div id="view_discription">
-            Here is the discription for view.
+
         </div>
     </div>
 
@@ -57,6 +110,8 @@
             <p>
                 Source code is available at <a href="https://github.com/Fumipo-Theta/microscope_simulator/">GitHub</a>
             </p>
+
+            <img class="icon" src="./ProfilePhoto.jpg">
         </div>
         <div id='footer_nav' class='footer_column'>
 
@@ -66,13 +121,38 @@
             <p>
                 We will not hold any personal information.
             </p>
-            <form action="your-server-side-code" method="POST">
-                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
-                    data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="100" data-name="Fumipo-Theta's microscope"
-                    data-description="Donation for maintenance of service" data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                    data-currency="jpy">
-                    </script>
-            </form>
+            <ul>
+                <li> 100 JPY
+                    <form action="your-server-side-code" method="POST">
+                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
+                            data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="100"
+                            data-name="Fumipo-Theta's microscope" data-description="Donation for maintenance of service"
+                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-currency="jpy">
+                            </script>
+                    </form>
+                </li>
+
+                <li> 1,000 JPY
+                    <form action="your-server-side-code" method="POST">
+                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
+                            data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="1000"
+                            data-name="Fumipo-Theta's microscope" data-description="Donation for maintenance of service"
+                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-currency="jpy">
+                            </script>
+                    </form>
+                </li>
+
+                <li> 10,000 JPY
+                    <form action="your-server-side-code" method="POST">
+                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
+                            data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="10000"
+                            data-name="Fumipo-Theta's microscope" data-description="Donation for maintenance of service"
+                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-currency="jpy">
+                            </script>
+                    </form>
+                </li>
+            </ul>
+
         </div>
     </div>
     <div class="image_containor"></div>

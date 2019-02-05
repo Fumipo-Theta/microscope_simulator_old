@@ -1,3 +1,4 @@
 *.ipynb
 node_modules/
 *.jpg
+data/

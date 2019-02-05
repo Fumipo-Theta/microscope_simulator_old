@@ -14,7 +14,7 @@ const cycleBy = unit => val => {
             : val
 }
 
-const mirrorby = (center) => val => val > center ? 2 * center - val : val
+const mirrorBy = (center) => val => val > center ? 2 * center - val : val
 
 const isInverse = degree => (180 <= degree)
 
@@ -75,9 +75,11 @@ const loadImageSrc = (src) => new Promise((res, rej) => {
     const returnImg = (img) => e => {
         res(img)
     }
+
     img = document.createElement("img")
     img.src = src
     img.addEventListener("load", returnImg(img), false)
+    img.addEventListener("error", returnImg(img), false)
 })
 
 
@@ -108,17 +110,30 @@ const updateStateByMeta = (state, directory_name) => meta => new Promise((res, r
         ? meta.discription
         : "No discription. "
     state.imageRadius = meta.image_radius
+    state.scaleWidth = (meta.hasOwnProperty("scale-pixel"))
+        ? parseInt(meta["scale-pixel"])
+        : false
+    state.scaleText = (meta.hasOwnProperty("scale-unit"))
+        ? meta["scale-unit"]
+        : false
 
     const rotate_degree_step = meta.rotate_by_degree
-    const image_number = (180 / rotate_degree_step) / 2 + 1 // 7: 0, 15, 30, 45, 60, 75, 90
+    const cycle_degree = meta.hasOwnProperty("cycle_rotate_degree")
+        ? parseInt(meta.cycle_rotate_degree)
+        : 90;
+    const image_number = cycle_degree / rotate_degree_step + 1 // 7: 0, 15, 30, 45, 60, 75, 90
     const mirror_at = (image_number - 1)
     const total_step = (image_number - 1) * 2
 
-    state.getImageNumber = degree => mirrorby(mirror_at)(
-        cycleBy(total_step)(
-            stepBy(rotate_degree_step)(degree)
+    state.getImageNumber = getImageNumber = cycle_degree > 0
+        ? degree => cycleBy(image_number - 1)(
+            stepBy(rotate_degree_step)(state.isClockwise ? 360 - degree : degree)
         )
-    )
+        : degree => mirrorBy(mirror_at)(
+            cycleBy(total_step)(
+                stepBy(rotate_degree_step)(degree)
+            )
+        )
 
     state.getAlpha = degree => {
         nth = cycleBy(total_step * 2)(
@@ -129,7 +144,12 @@ const updateStateByMeta = (state, directory_name) => meta => new Promise((res, r
 
     state.open_image_srcs = Array(image_number)
         .fill(0)
-        .map((_, i) => directory_name + "open/" + (i + 1) + ".jpg")
+        .map((_, i) => directory_name + "o" + (i + 1) + ".jpg")
+
+    state.cross_image_srcs = Array(image_number)
+        .fill(0)
+        .map((_, i) => directory_name + "c" + (i + 1) + ".jpg")
+
     res(state)
 })
 
@@ -163,17 +183,31 @@ const updateViewDiscription = state => {
     return state
 }
 
+const showLoadingAnimation = state => {
+    anime = document.querySelector(".lds-css.ng-scope")
+    anime.classList.remove("inactive")
+    return state
+}
+
+const hideLoadingAnimation = state => {
+    anime = document.querySelector(".lds-css.ng-scope")
+    anime.classList.add("inactive")
+    return state
+}
+
 const rockNameSelectHandler = state => {
     return new Promise((res, rej) => {
         const rock_selector = document.querySelector("#rock_selector")
-        const directory_name = `./${rock_selector.options[rock_selector.selectedIndex].value}/`
+        const directory_name = `./data/${rock_selector.options[rock_selector.selectedIndex].value}/`
 
+        showLoadingAnimation(state)
 
         return fetch(directory_name + "manifest.json")
             .then(handleErrors)
             .then(getMetadata)
             .then(updateStateByMeta(state, directory_name))
             .then(updateViewDiscription)
+            .then(hideLoadingAnimation)
             .then(res)
     })
 }
@@ -197,7 +231,9 @@ const createImageContainor = state => new Promise((res, rej) => {
 
     if (containorIsExist(subcontainors, sanitizeID(state.containorID))) {
         openContainor = containor.querySelector(`#${sanitizeID(state.containorID)} .open`)
+        crossContainor = containor.querySelector(`#${sanitizeID(state.containorID)} .cross`)
         state.open_images = Array.from(openContainor.querySelectorAll("img"))
+        state.cross_images = Array.from(crossContainor.querySelectorAll("img"))
         res(state)
     } else {
         subcontainor = document.createElement("div")
@@ -211,10 +247,18 @@ const createImageContainor = state => new Promise((res, rej) => {
         subcontainor.appendChild(crossContainor)
         containor.appendChild(subcontainor)
 
-        Promise.all(state.open_image_srcs.map(src => loadImageSrc(src)))
+        Promise.all([
+            Promise.all(state.open_image_srcs.map(src => loadImageSrc(src))),
+            Promise.all(state.cross_image_srcs.map(src => loadImageSrc(src)))
+        ])
             .then(imgDOMs => {
-                state.open_images = imgDOMs.map(img => {
+                state.open_images = imgDOMs[0].map(img => {
                     openContainor.appendChild(img)
+                    return img
+                })
+
+                state.cross_images = imgDOMs[1].map(img => {
+                    crossContainor.appendChild(img)
                     return img
                 })
 
@@ -238,56 +282,80 @@ const clipGeometoryFromImageCenter = (imgDOM, state) => {
     ]
 }
 
+const clearView = state => {
+    viewer_ctx.save()
+    viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
+    viewer_ctx.clearRect(-state.canvasWidth * 0.5, -state.canvasHeight * 0.5, state.canvasWidth, state.canvasHeight)
+    viewer_ctx.restore()
+}
+
 const blobToCanvas = (state) => {
 
     image_srcs = state.isCrossNicol
         ? state.cross_images
         : state.open_images
 
-
     // view window circle
+
+    viewer_ctx.save()
     viewer_ctx.beginPath()
     viewer_ctx.arc(0, 0, state.canvasWidth / 2, 0, Math.PI * 2, false)
     viewer_ctx.clip()
 
     // Draw a image
     alpha = state.getAlpha(state.rotate)
-    console.log(state.getImageNumber(state.rotate), state.getImageNumber(state.rotate + 15), state.rotate)
 
-    viewer_ctx.save()
+
+
     viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate) * 15 * Math.PI / 180)
 
 
-    viewer_ctx.globalAlpha = alpha
+    viewer_ctx.globalAlpha = 1
     image1 = image_srcs[state.getImageNumber(state.rotate)]
-    viewer_ctx.drawImage(
-        image1,
-        ...clipGeometoryFromImageCenter(image1, state),
-        -state.canvasWidth / 2,
-        -state.canvasHeight / 2,
-        state.canvasWidth,
-        state.canvasHeight
-    );
+
+    try {
+        viewer_ctx.drawImage(
+            image1,
+            ...clipGeometoryFromImageCenter(image1, state),
+            -state.canvasWidth / 2,
+            -state.canvasHeight / 2,
+            state.canvasWidth,
+            state.canvasHeight
+        );
+    } catch (e) {
+
+    }
+
     viewer_ctx.restore()
 
     // Draw next image
     viewer_ctx.save()
+    viewer_ctx.beginPath()
+    viewer_ctx.arc(0, 0, state.canvasWidth / 2, 0, Math.PI * 2, false)
+    viewer_ctx.clip()
     viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate + 15) * 15 * Math.PI / 180)
 
     viewer_ctx.globalAlpha = 1 - alpha
     image2 = image_srcs[state.getImageNumber(state.rotate + 15)]
-    viewer_ctx.drawImage(
-        image2,
-        ...clipGeometoryFromImageCenter(image2, state),
-        -state.canvasWidth / 2,
-        -state.canvasHeight / 2,
-        state.canvasWidth,
-        state.canvasHeight)
+    try {
+        viewer_ctx.drawImage(
+            image2,
+            ...clipGeometoryFromImageCenter(image2, state),
+            -state.canvasWidth / 2,
+            -state.canvasHeight / 2,
+            state.canvasWidth,
+            state.canvasHeight)
+    } catch (e) {
+
+    }
     viewer_ctx.restore()
 }
 
 const drawHairLine = state => {
     viewer_ctx.save()
+    viewer_ctx.strokeStyle = state.isCrossNicol
+        ? "white"
+        : "black";
     viewer_ctx.globalAlpha = 1
     viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
     viewer_ctx.beginPath()
@@ -300,6 +368,31 @@ const drawHairLine = state => {
     viewer_ctx.restore()
 }
 
+const scaleLength = (canvasWidth, imageWidth, scaleWidth) => canvasWidth * scaleWidth / imageWidth
+
+const drawScale = state => {
+    if (!state["scaleWidth"]) return;
+    scalePixel = scaleLength(state.canvasWidth, state.imageRadius, state.scaleWidth)
+
+    viewer_ctx.save()
+    viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
+    viewer_ctx.fillStyle = "white"
+    viewer_ctx.fillRect(
+        state.canvasWidth * 0.5 - scalePixel - 5,
+        state.canvasHeight * 0.5 - 10 - 5,
+        scalePixel,
+        10
+    )
+    viewer_ctx.font = "16px Arial"
+    viewer_ctx.textAlign = "center"
+    viewer_ctx.fillText(
+        state.scaleText,
+        state.canvasWidth * 0.5 - 5 - scalePixel * 0.5,
+        state.canvasHeight * 0.5 - 15 - 5
+    )
+    viewer_ctx.restore()
+}
+
 const updateState = (state, newState) => new Promise((res, rej) => {
     _state = Object.assign(state, newState)
     console.log(_state)
@@ -307,13 +400,17 @@ const updateState = (state, newState) => new Promise((res, rej) => {
 })
 
 const firstView = (state) => {
+    clearView(state)
     blobToCanvas(state)
     drawHairLine(state)
+    drawScale(state)
 }
 
 const updateView = (state) => {
+    clearView(state)
     blobToCanvas(state)
     drawHairLine(state)
+    drawScale(state)
 }
 
 
@@ -383,8 +480,10 @@ const rotateImage = (state, e) => () => {
     updateCoordinate(state, e)
     updateRotate(state, e)
     viewer_ctx.rotate(rotateSign(state.isClockwise) * (state.rotate_end))
+
     blobToCanvas(state)
     drawHairLine(state)
+    drawScale(state)
 }
 
 const touchStartHandler = e => {
@@ -417,22 +516,24 @@ const toggleNicolText = (hasChangedToCrossNichol) => {
         : "Open Nichol"
 }
 
-const toggleNicolHandler = state => {
+const toggleNicolHandler = state => new Promise((res, rej) => {
     state.isCrossNicol = !state.isCrossNicol;
-    //toggleNicolText(state.isCrossNicol)
-}
+    res(state)
+})
 
 const toggleNicolButton = document.querySelector("#change_nicol")
 
 toggleNicolButton.addEventListener(
     "click",
-    e => toggleNicolHandler(state),
+    e => toggleNicolHandler(state)
+        .then(updateView),
     false
 )
 
 toggleNicolButton.addEventListener(
     "touch",
-    e => toggleNicolHandler(state),
+    e => toggleNicolHandler(state)
+        .then(updateView),
     false
 )
 

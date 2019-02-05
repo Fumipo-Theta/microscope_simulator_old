@@ -59,6 +59,7 @@ body{
     font-size: 1.2rem;
 }
 
+
 select {
     -webkit-appearance: button;
     -moz-appearance: button;
@@ -98,6 +99,7 @@ select option{
 
 #viewer-containor{
         background-color: #222222;
+        border-radius: 3px;
     }
 
 #view_discription{
@@ -119,6 +121,13 @@ select option{
         display: none;
     }
 
+.icon{
+    margin: 5px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+
 #footer{
         width: 100%;
         min-height: 100px;
@@ -134,13 +143,90 @@ select option{
         flex:1;
         padding: 10px 20px;
         margin: 10px;
-        font-size: 0.75rem;
+        font-size: 1rem;
         font-family: 'Arial';
     }
 
+.lds-css {
+                visibility: visible;
+                position: absolute;
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(204, 204, 204, 0.637);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .lds-css.inactive {
+                visibility: hidden;
+                transition: all 0.1s;
+            }
+
+            @keyframes lds-disk {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+            }
+
+            @-webkit-keyframes lds-disk {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+            }
+
+            .lds-disk {
+                position: relative;
+            }
+
+            .lds-disk>div div:nth-child(1) {
+                position: absolute;
+                top: 30px;
+                left: 30px;
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                background: #333333;
+            }
+
+            .lds-disk>div div:nth-child(2) {
+                position: absolute;
+                top: 39.800000000000004px;
+                left: 79px;
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                background: #c1ddfc;
+                -webkit-animation: lds-disk 1s linear infinite;
+                animation: lds-disk 1s linear infinite;
+                -webkit-transform-origin: 21px 60.199999999999996px;
+                transform-origin: 21px 60.199999999999996px;
+            }
+
+            .lds-disk {
+                width: 200px !important;
+                height: 200px !important;
+                -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+                transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+            }
 
 @media screen and (max-width:1023px) {
-
+    #footer{
+        flex-direction: column;
+        margin: 0;
+    }
 
 }
 

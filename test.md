@@ -113,10 +113,10 @@ assert(toDegree(getRotation(0,0,-1,1,-1,-1,false)) === -270 )
 ```
 
 ```javascript
-var stepby = step => degree => Math.floor(degree/step)
+var stepBy = step => degree => Math.floor(degree/step)
 
     
-var cycleby = unit => val => {
+var cycleBy = unit => val => {
     cycle_count = Math.floor(val/unit)
     //console.log(cycle_count)
     //console.log(unit,val)
@@ -152,3 +152,39 @@ console.log(mirrorby((180/15)/2)(cycleby(180/15)(stepby(15)(d+15))))
 ```javascript
 isInverse(190)
 ```
+
+```javascript
+0   15   30   45   60   75   90
+180 165  150  135  120  105  
+    195  210  225  240  255  270
+360 345  330  315  300  285
+
+0   15   30   45   60   75   90   105   120   135   150   165   180
+
+```
+
+```javascript
+
+rotate_degree_step = 15
+cycle_rotate_degree = 180
+image_number = cycle_rotate_degree / rotate_degree_step + 1
+total_step = (image_number-1) *2
+mirror_at = image_number-1
+
+var getImageNumber = cycle_rotate_degree > 90 
+    ? degree => cycleBy(image_number-1)(
+        stepBy(rotate_degree_step)(degree)
+    )
+    : degree => mirrorby(mirror_at)(
+        cycleBy(total_step)(
+            stepBy(rotate_degree_step)(degree)
+        )
+    )
+
+degree = 30
+console.log(getImageNumber(degree))
+console.log(getImageNumber(degree+90))
+console.log(getImageNumber(degree+180))
+```
+
+##### 
