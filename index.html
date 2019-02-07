@@ -4,160 +4,305 @@
     <meta http-equiv="Content-Type" charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="./css/main.css" charset="utf-8">
+
     <link rel="icon" type="image/png" href="./icon.png" sizes="64x64">
-    <title>Polarization microscope simulator</title>
-    <meta description content="This application simulates polarizing microscopic view of rock slices.">
+    <title>SCOPin rock: polarizing microscope simulator</title>
+    <meta name="description" content="This application simulates polarizing microscopic view of rock slices." />
+    <meta property="og:title" content="SCOPin rock: polarizing microscope simulator" />
+    <meta property="og:description" content="This application simulates polarizing microscopic view of rock slices." />
+    <meta property="og:image" content="./images/SCOPin_image.svg" />
+    <meta property="og:url" content="https://microscope.fumipo-theta.com" />
+    <meta property="og:type" content="article" />
+    <!--meta name="twitter:site" content="@xxxxxxxxx" /-->
+    <meta name="twitter:card" content="summary" />
+    <!--meta property="fb:admins" content="xxxxxxxx" /-->
 </head>
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.2';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
 
 <body id="top" ontouchstart="">
 
-    <div id='top-navigation' class="space-around">
-        <div class="space-around">
-            <div></div>
-            <div class="select-wrapper">
-                <select id="rock_selector" name="rock_name">
-
-                    <option value="Q27_quartz">流紋岩中の石英</option>
-                    <option value="Grc-1_quartz">花崗岩中の波動消光を示す石英</option>
-                    <option value="HNP1_plagioclase">斑れい岩中の斜長石</option>
-                    <option value="Fuji-1_plagioclase">玄武岩中の斜長石</option>
-                    <option value="E156_plagioclase">安山岩中の斜長石</option>
-                    <option value="Grc-1_microcline">花崗岩中のカリ長石</option>
-
-
-                    <option value="KL02_olivine">玄武岩中のかんらん石</option>
-                    <option value="KL02_olivine_2">玄武岩中のかんらん石</option>
-                    <option value="HWI-1_olivine">玄武岩中のかんらん石</option>
+    <div id='top-navigation' class="align-center">
+        <!-- div class="space-around" -->
+        <div class="select-wrapper margin-between">
+            <select id="rock_selector" name="rock_name">
+                <option value='' disabled selected style='display:none;'>Select sample</option>
+                <option value="Q27_quartz">流紋岩中の石英</option>
+                <option value="Grc-1_quartz">花崗岩中の波動消光を示す石英</option>
+                <option value="HNP1_plagioclase">斑れい岩中の斜長石</option>
+                <option value="Fuji-1_plagioclase">玄武岩中の斜長石</option>
+                <option value="E156_plagioclase">安山岩中の斜長石</option>
+                <option value="Grc-1_microcline">花崗岩中のカリ長石</option>
 
 
-                    <option value="Z32_staurolite">結晶片岩中の十字石</option>
-                    <option value="Z32_garnet">結晶片岩中のざくろ石</option>
+                <option value="KL02_olivine">玄武岩中のかんらん石</option>
+                <option value="KL02_olivine_2">玄武岩中のかんらん石</option>
+                <option value="HWI-1_olivine">玄武岩中のかんらん石</option>
 
-                    <option value="E156_hypersthene">安山岩中の直方輝石(ハイパーシン)</option>
-                    <option value="F17_olivine">かんらん岩中の直方輝石(エンスタタイト)</option>
-                    <option value="R74_augite">斑れい岩中の単斜輝石(普通輝石)</option>
-                    <option value="F17_clinopyroxene">かんらん岩中の単斜輝石(普通輝石)</option>
-                    <option value="X50_titan_augite">霞岩中の単斜輝石(チタンオージャイト)</option>
 
-                    <option value="D43_brown_hornblende">斑れい岩中の普通角閃石(褐色)</option>
-                    <option value="AB-1_hornblende">安山岩中の普通角閃石(褐色)</option>
-                    <option value="S48_green_hornblende">閃緑岩中の普通角閃石(緑色)</option>
-                    <option value="G1_granite">花崗岩中の普通角閃石(緑色)</option>
-                    <option value="D110_actinolite">緑色片岩中のアクチノ閃石</option>
-                    <option value="Glc-2_glaucophane">結晶片岩中の藍閃石</option>
+                <option value="Z32_staurolite">結晶片岩中のざくろ石と十字石</option>
 
-                    <option value="IH85_biotite">花崗岩中の黒雲母</option>
-                    <option value="Z58_biotite">結晶片岩中の黒雲母</option>
-                    <option value="HK48_muscovite">結晶片岩中の白雲母</option>
+                <option value="E156_hypersthene">安山岩中の直方輝石(ハイパーシン)</option>
+                <option value="F17_olivine">かんらん岩中の直方輝石(エンスタタイト)</option>
+                <option value="R74_augite">斑れい岩中の単斜輝石(普通輝石)</option>
+                <option value="F17_clinopyroxene">かんらん岩中の単斜輝石(普通輝石)</option>
+                <option value="X50_titan_augite">霞岩中の単斜輝石(チタンオージャイト)</option>
 
-                    <option value="PS4_epidote">結晶片岩中の緑簾石</option>
-                    <option value="L39_piemontite">結晶片岩中の紅簾石</option>
+                <option value="D43_brown_hornblende">斑れい岩中の普通角閃石(褐色)</option>
+                <option value="AB-1_hornblende">安山岩中の普通角閃石(褐色)</option>
+                <option value="S48_green_hornblende">閃緑岩中の普通角閃石(緑色)</option>
+                <option value="G1_granite">花崗岩中の普通角閃石(緑色)</option>
+                <option value="D110_actinolite">緑色片岩中のアクチノ閃石</option>
+                <option value="Glc-2_glaucophane">結晶片岩中の藍閃石</option>
 
-                    <option value="TT70_calcite">カーボナタイト中の方解石</option>
+                <option value="IH85_biotite">花崗岩中の黒雲母</option>
+                <option value="Z58_biotite">結晶片岩中の黒雲母</option>
+                <option value="HK48_muscovite">結晶片岩中の白雲母</option>
 
-                    <option value="B59_graphic_texture">花崗岩の文象構造</option>
-                    <option value="B59_graphic_texture_2">花崗岩の文象構造2</option>
-                    <option value="KM-2_komatiite">かんらん石のスピニフェックス構造</option>
-                    <option value="GS913_green_schist">緑色片岩</option>
-                    <option value="DM_serpentine">結晶周辺が蛇紋石に変化したかんらん岩</option>
-                    <option value="SR_serpentine">蛇紋岩</option>
+                <option value="PS4_epidote">結晶片岩中の緑簾石</option>
+                <option value="L39_piemontite">結晶片岩中の紅簾石</option>
 
-                </select>
+                <option value="TT70_calcite">カーボナタイト中の方解石</option>
+
+                <option value="B59_graphic_texture">花崗岩の文象構造</option>
+                <option value="B59_graphic_texture_2">花崗岩の文象構造2</option>
+                <option value="KM-2_komatiite">かんらん石のスピニフェックス構造</option>
+                <option value="GS913_green_schist">緑色片岩</option>
+                <option value="DM_serpentine">結晶周辺が蛇紋石に変化したかんらん岩</option>
+                <option value="SR_serpentine">蛇紋岩</option>
+
+            </select>
+        </div>
+        <div id="low-navigation" class="space-around margin-between">
+            <div id="change_nicol" class="button rect-button align-center inactive">
+                Change Nichol
             </div>
         </div>
 
     </div>
 
-    <div class="lds-css ng-scope">
+    <!--div id="app-loader" class="lds-css ng-scope inactive">
         <div style="width:100%;height:100%" class="lds-disk">
             <div>
                 <div></div>
                 <div></div>
             </div>
         </div>
+    </div-->
+
+    <div id="app-loader" class="lds-css ng-scope inactive">
+        <img src="./images/SCOPin_image.svg">
     </div>
 
+
     <div id='app-wrapper' class="align-center column-direction">
-        <div id="low-navigation" class="space-around">
-            <div id="change_nicol" class="button rect-button align-center">
-                Change Nichol
+
+
+        <div id="welcome-card" class="align-center space-around">
+            <div class="align-center column-direction">
+                <h1>
+                    <img src="./images/logo.svg" alt="SCOPin rock" width="100%">
+                </h1>
+
+                <p>Polarizing microscope simulator</p>
             </div>
         </div>
 
-        <div id='viewer_wrapper'>
-
+        <div id='viewer_wrapper' class="inactive">
             <div id='viewer-containor' class='align-center'>
-
                 <canvas id="main-viewer"></canvas>
             </div>
-
         </div>
 
-
-        <div id="view_discription">
-
+        <div id="view_discription" class="align-center column-direction">
         </div>
     </div>
 
 
 
     <div id='footer'>
+        <div id='footer_nav' class='footer_column'></div>
+
+        <div id='footer_nav' class='footer_column '>
+            <div class="space-around" style="margin: 15px 0;">
+                <div class="sns_icon facebook_back"><a href="" target="_blank" title="Facebookでシェア"><img src="./images/facebook-brands.svg"
+                            alt="facebook"></a></div>
+
+
+                <div class="sns_icon  twitter_back"><a href="" target="_blank" title="Twitterでシェア"><img src="./images/twitter-square-brands.svg"
+                            alt="twitter"></a></div>
+
+                <div class="sns_icon  hatena_back"><a href="" target="_blank" title="はてなブックマークに登録"><img src="./images/hatena.png"
+                            alt="はてなブックマーク"></a></div>
+
+                <div class="sns_icon line_back"><a href="" target="_blank" title="LINEに送る"><img src="./images/line-brands.svg"
+                            alt="LINE"></a></div>
+
+            </div>
+
+            <div class="form-wrapper space-around column-direction">
+                <div class="card-icon">
+                    <img class="icon" src="./ProfilePhoto.jpg">
+                </div>
+                <div class="spread">
+                    <span class="important">Please donate</span> for maintenence and updating service ! <br>
+                    We will not hold any personal information.
+                </div>
+
+                <div id="form-loader" class="lds-css ng-scope ">
+                    <img src="./images/SCOPin_image.svg">
+                </div>
+
+                <form id="payment-form" class="spread inactive">
+                    <div class="space-around column-direction">
+
+                        <div class="spread">
+                            <select id="select-amount">
+                                <option value='placeholder' disabled selected style='display:none;'>Select amount</option>
+                                <option value="small">100 JPY (1 USD)</option>
+                                <option value="middle">1,000 JPY (10 USD)</option>
+                                <option value="large">10,000 JPY (100 USD)</option>
+                            </select>
+                        </div>
+
+                        <div class="spread">
+                            <div id="card-element"></div>
+                            <div id="card-errors" class="alert alert-warning" role="alert" style="display: none;"></div>
+                            <div id="card-success" class=" info-text inactive">
+                                Payment was successful !
+                                Thank you very much !
+                            </div>
+                        </div>
+
+                        <div class="spread">
+                            <button class="button rect-button">Donate <span id="show-amount"> </span></button>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
         <div id='rights' class='footer_column'>
+
             <p>
                 This page and all contents are made by Fumipo Theta.
                 Please do not copy, modify, and repost any contents without telling me.
             </p>
             <p>
-                Source code is available at <a href="https://github.com/Fumipo-Theta/microscope_simulator/">GitHub</a>
+                Source code is available at <a href="https://github.com/Fumipo-Theta/microscope_simulator/">GitHub</a>.
             </p>
-
-            <img class="icon" src="./ProfilePhoto.jpg">
         </div>
-        <div id='footer_nav' class='footer_column'>
 
-            <p class="important">
-                Please donate for maintenence and updating service !
-            </p>
-            <p>
-                We will not hold any personal information.
-            </p>
-            <ul>
-                <li> 100 JPY
-                    <form action="your-server-side-code" method="POST">
-                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
-                            data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="100"
-                            data-name="Fumipo-Theta's microscope" data-description="Donation for maintenance of service"
-                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-currency="jpy">
-                            </script>
-                    </form>
-                </li>
-
-                <li> 1,000 JPY
-                    <form action="your-server-side-code" method="POST">
-                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
-                            data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="1000"
-                            data-name="Fumipo-Theta's microscope" data-description="Donation for maintenance of service"
-                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-currency="jpy">
-                            </script>
-                    </form>
-                </li>
-
-                <li> 10,000 JPY
-                    <form action="your-server-side-code" method="POST">
-                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_live_M3gHx2rVryQR68o4sn8PdF7y"
-                            data-currency="JPY" // 通貨単位（日本円はJPY） data-locale="ja" // 地域設定（日本はja） data-amount="10000"
-                            data-name="Fumipo-Theta's microscope" data-description="Donation for maintenance of service"
-                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-currency="jpy">
-                            </script>
-                    </form>
-                </li>
-            </ul>
-
-        </div>
     </div>
     <div class="image_containor"></div>
+    <script src="./js/app.js"></script>
 </body>
 
-<script src="./js/app.js"></script>
+
+
+<!-- API Gateway SDK -->
+<script type="text/javascript" defer src="js/lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" defer src="js/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" defer src="js/lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" defer src="js/lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" defer src="js/lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" defer src="js/lib/url-template/url-template.js"></script>
+<script type="text/javascript" defer src="js/lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" defer src="js/lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" defer src="js/lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" defer src="js/lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" defer src="js/apigClient.js"></script>
+
+<!-- stripe.js -->
+<script defer src="https://js.stripe.com/v3/"></script>
+<script defer src="./js/payment.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-134075472-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-134075472-1');
+
+    window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
+    ga('create', 'UA-134075472-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+<script>
+    // SNSの各種カウントを実装するためのjavascript。
+    // jqueryとgoogleアナリティクスのロード完了が前提のコードなので注意。
+    /**
+     * SNSシェアボタンを指定された要素の下に埋め込む
+     * @param shareUrl シェアするUrl。og:shareUrlの値と一緒にすることをオススメ
+     * @param description ツイート本文などに埋め込む文言
+     */
+    function setSnsShare(shareUrl, description) {
+        // 都合に合わせてセレクタは変えてね！
+        setTwitterLink(".twitter_back a", shareUrl, description);
+        setFacebookLink(".facebook_back a", shareUrl, description);
+        setHatebuLink(".hatena_back a", shareUrl, description);
+        setLineLink(".line_back a", shareUrl, description);
+    }
+
+
+    function setTwitterLink(shareSelector, shareUrl, description) {
+        document.querySelector(shareSelector).href = ("https://twitter.com/share?shareUrl=" + shareUrl + "&text=" + encodeURIComponent(description));
+        setShareEvent(shareSelector, 'Twitter', shareUrl);
+    }
+
+    function setFacebookLink(shareSelector, shareUrl, description) {
+        document.querySelector(shareSelector).href = ("https://www.facebook.com/sharer/sharer.php?u=" + shareUrl + "&t=" + encodeURIComponent(description));
+        setShareEvent(shareSelector, 'Facebook', shareUrl);
+    }
+
+    function setHatebuLink(shareSelector, shareUrl, description) {
+        document.querySelector(shareSelector).href = ("https://b.hatena.ne.jp/add?mode=confirm&shareUrl=" + shareUrl + "&description=" + encodeURIComponent(description));
+        setShareEvent(shareSelector, 'Hatena Bookmark', shareUrl);
+    }
+
+    function setLineLink(shareSelector, shareUrl, description) {
+        document.querySelector(shareSelector).href = ("http://line.me/R/msg/text/?" + encodeURIComponent(description + " " + shareUrl));
+        setShareEvent(shareSelector, 'LINE', shareUrl);
+    }
+
+    /**
+     *  シェアボタン押下時にGoogleアナリティクスへイベントを送信する
+     *  @param selector イベントを付与するセレクタ
+     *  @param snsName SNSの名前（Googleアナリティクス上の表示に使われる）
+     *  @param shareUrl シェア対象のURL（Googleアナリティクス上の表示に使われる）
+     */
+    function setShareEvent(selector, snsName, shareUrl) {
+        document.querySelector(selector).addEventListener('click', function (e) {
+            var current = this;
+            //　*** Googleアナリティクスにイベント送らないなら、以下のコードは不要 ***
+            // 'share'の文字列は任意に変えてもよい（Googleアナリティクス上の表示文字列として使われる）
+            // 'nonInteraction' : 1にしないと、直帰率がおかしくなる（イベント発行したユーザーは直帰扱いでなくなる）ので注意
+            ga('send', 'social', snsName, 'share', shareUrl, {
+                'nonInteraction': 1
+            });
+            // *** Googleアナリティクス送信ここまで ****
+
+            // このあたりは適当に書き換えて下さい
+            window.open(current.href, '_blank', 'width=600, height=600, menubar=no, toolbar=no, scrollbars=yes');
+            e.preventDefault();
+        });
+    }
+
+    setSnsShare("https://microscope.fumipo-theta.com", "SCOPin rock: polarizing microscope simulator")
+
+</script>
 
 </html>

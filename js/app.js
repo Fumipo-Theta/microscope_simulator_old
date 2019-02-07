@@ -144,11 +144,11 @@ const updateStateByMeta = (state, directory_name) => meta => new Promise((res, r
 
     state.open_image_srcs = Array(image_number)
         .fill(0)
-        .map((_, i) => directory_name + "o" + (i + 1) + ".jpg")
+        .map((_, i) => directory_name + "o" + (i + 1) + ".JPG")
 
     state.cross_image_srcs = Array(image_number)
         .fill(0)
-        .map((_, i) => directory_name + "c" + (i + 1) + ".jpg")
+        .map((_, i) => directory_name + "c" + (i + 1) + ".JPG")
 
     res(state)
 })
@@ -184,14 +184,32 @@ const updateViewDiscription = state => {
 }
 
 const showLoadingAnimation = state => {
-    anime = document.querySelector(".lds-css.ng-scope")
+    const anime = document.querySelector(".lds-css.ng-scope")
     anime.classList.remove("inactive")
     return state
 }
 
 const hideLoadingAnimation = state => {
-    anime = document.querySelector(".lds-css.ng-scope")
+    const anime = document.querySelector(".lds-css.ng-scope")
     anime.classList.add("inactive")
+    return state
+}
+
+const hideWelcomeBoard = state => {
+    const board = document.querySelector("#welcome-card")
+    board.classList.add("inactive");
+    return state
+}
+
+const showViewer = state => {
+    const card = document.querySelector("#viewer_wrapper")
+    card.classList.remove("inactive")
+    return state
+}
+
+const showNicolButton = state => {
+    const button = document.querySelector("#change_nicol")
+    button.classList.remove("inactive");
     return state
 }
 
@@ -201,13 +219,16 @@ const rockNameSelectHandler = state => {
         const directory_name = `./data/${rock_selector.options[rock_selector.selectedIndex].value}/`
 
         showLoadingAnimation(state)
+        hideWelcomeBoard(state)
+        showViewer(state)
+        showNicolButton(state)
 
         return fetch(directory_name + "manifest.json")
             .then(handleErrors)
+            .catch(rej)
             .then(getMetadata)
             .then(updateStateByMeta(state, directory_name))
             .then(updateViewDiscription)
-            .then(hideLoadingAnimation)
             .then(res)
     })
 }
@@ -417,13 +438,13 @@ const updateView = (state) => {
 const getCoordinateOnCanvas = canvas => e => {
     if (e instanceof MouseEvent) {
         return [
-            e.clientX - canvas.offsetLeft,
-            e.clientY - canvas.offsetTop
+            e.pageX - canvas.offsetLeft,
+            e.pageY - canvas.offsetTop
         ]
     } else if (e instanceof TouchEvent) {
         return [
-            e.touches[0].clientX - canvas.offsetLeft,
-            e.touches[0].clientY - canvas.offsetTop
+            e.touches[0].pageX - canvas.offsetLeft,
+            e.touches[0].pageY - canvas.offsetTop
         ]
     }
 }
@@ -544,6 +565,7 @@ rock_selector.addEventListener(
     e => rockNameSelectHandler(state)
         .then(createImageContainor)
         .then(firstView)
+        .then(hideLoadingAnimation)
         .catch(console.log),
     false
 )
@@ -596,16 +618,18 @@ viewer.addEventListener(
 )*/
 
 
-window.onload = e => {
-    windowResizeHandler(state)
-        .then(rockNameSelectHandler)
-        .then(createImageContainor)
-        .then(firstView)
-}
+//window.onload = e => {
+windowResizeHandler(state)
+    //.then(rockNameSelectHandler)
+    //.then(createImageContainor)
+    //.then(firstView)
+    .then(hideLoadingAnimation)
+    .catch(hideLoadingAnimation)
+//}
 
 window.onresize = e => {
-    windowResizeHandler(state)
-        //.then(rockNameSelectHandler(state)())
-        //.then(createImageContainor)
-        .then(updateView)
+    //windowResizeHandler(state)
+    //.then(rockNameSelectHandler(state)())
+    //.then(createImageContainor)
+    //.then(updateView)
 }
