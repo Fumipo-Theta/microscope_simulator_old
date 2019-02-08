@@ -7,10 +7,12 @@
 
     <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
     <title>SCOPin rock: polarizing microscope simulator</title>
-    <meta name="description" content="偏光顕微鏡による岩石薄片観察をシミュレートするアプリです. This application simulates polarizing microscopic view of rock slices." />
+    <meta name="description"
+        content="偏光顕微鏡による岩石薄片観察をシミュレートするアプリです. This application simulates polarizing microscopic view of rock slices." />
     <meta property="og:title" content="SCOPin rock: polarizing microscope simulator" />
     <meta property="og:description" content="This application simulates polarizing microscopic view of rock slices." />
-    <meta property="og:image" content="https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png" />
+    <meta property="og:image"
+        content="https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png" />
     <meta property="og:url" content="https://microscope.fumipo-theta.com" />
     <meta property="og:type" content="article" />
     <!--meta name="twitter:site" content="@xxxxxxxxx" /-->
@@ -109,9 +111,8 @@
         <div id="welcome-card" class="align-center space-around">
             <div class="align-center column-direction">
                 <h1>
-                    <img src="./images/logo.svg" alt="SCOPin rock" width="100%">
+                    <img src="./images/SCOPin_rock_logo.svg" alt="SCOPin rock" width="100%">
                 </h1>
-
                 <p>Polarizing microscope simulator</p>
             </div>
         </div>
@@ -133,15 +134,15 @@
 
         <div id='footer_nav' class='footer_column '>
             <div class="space-around" style="margin: 15px 0;">
-                <div class="sns_icon facebook_back"><a href="" target="_blank" title="Facebookでシェア"><img src="./images/facebook-brands.svg"
-                            alt="facebook"></a></div>
+                <div class="sns_icon facebook_back"><a href="" target="_blank" title="Facebookでシェア"><img
+                            src="./images/facebook-brands.svg" alt="facebook"></a></div>
 
 
-                <div class="sns_icon  twitter_back"><a href="" target="_blank" title="Twitterでシェア"><img src="./images/twitter-square-brands.svg"
-                            alt="twitter"></a></div>
+                <div class="sns_icon  twitter_back"><a href="" target="_blank" title="Twitterでシェア"><img
+                            src="./images/twitter-square-brands.svg" alt="twitter"></a></div>
 
-                <div class="sns_icon line_back"><a href="" target="_blank" title="LINEに送る"><img src="./images/line-brands.svg"
-                            alt="LINE"></a></div>
+                <div class="sns_icon line_back"><a href="" target="_blank" title="LINEに送る"><img
+                            src="./images/line-brands.svg" alt="LINE"></a></div>
 
             </div>
 
@@ -163,7 +164,8 @@
 
                         <div class="spread">
                             <select id="select-amount">
-                                <option value='placeholder' disabled selected style='display:none;'>Select amount</option>
+                                <option value='placeholder' disabled selected style='display:none;'>Select amount
+                                </option>
                                 <option value="small">100 JPY (1 USD)</option>
                                 <option value="middle">1,000 JPY (10 USD)</option>
                                 <option value="large">10,000 JPY (100 USD)</option>
@@ -251,7 +253,6 @@
         // 都合に合わせてセレクタは変えてね！
         setTwitterLink(".twitter_back a", shareUrl, description);
         setFacebookLink(".facebook_back a", shareUrl, description);
-        setHatebuLink(".hatena_back a", shareUrl, description);
         setLineLink(".line_back a", shareUrl, description);
     }
 
@@ -266,10 +267,6 @@
         setShareEvent(shareSelector, 'Facebook', shareUrl);
     }
 
-    function setHatebuLink(shareSelector, shareUrl, description) {
-        document.querySelector(shareSelector).href = ("https://b.hatena.ne.jp/add?mode=confirm&shareUrl=" + shareUrl + "&description=" + encodeURIComponent(description));
-        setShareEvent(shareSelector, 'Hatena Bookmark', shareUrl);
-    }
 
     function setLineLink(shareSelector, shareUrl, description) {
         document.querySelector(shareSelector).href = ("http://line.me/R/msg/text/?" + encodeURIComponent(description + " " + shareUrl));
