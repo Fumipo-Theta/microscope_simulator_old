@@ -58,12 +58,12 @@ const viewer_ctx = viewer.getContext("2d")
 
 
 const windowResizeHandler = state => new Promise((res, rej) => {
-    state.canvasWidth = getMinimumWindowSize() <= 800
+    state.canvasWidth = getMinimumWindowSize() <= 600
         ? getMinimumWindowSize() - 20
-        : 800 - 20
-    state.canvasHeight = getMinimumWindowSize() <= 800
+        : 600 - 20
+    state.canvasHeight = getMinimumWindowSize() <= 600
         ? getMinimumWindowSize() - 20
-        : 800 - 20
+        : 600 - 20
 
     viewer.width = state.canvasWidth
     viewer.height = state.canvasHeight
