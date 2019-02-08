@@ -41,7 +41,7 @@
                 <option value="Grc-1_quartz">花崗岩中の波動消光を示す石英</option>
                 <option value="HNP1_plagioclase">斑れい岩中の斜長石</option>
                 <option value="Fuji-1_plagioclase">玄武岩中の斜長石</option>
-                <option value="E156_plagioclase">安山岩中の斜長石</option>
+                <!--option value="E156_plagioclase">安山岩中の斜長石</option-->
                 <option value="Grc-1_microcline">花崗岩中のカリ長石</option>
 
 
@@ -81,13 +81,15 @@
                 <option value="DM_serpentine">結晶周辺が蛇紋石に変化したかんらん岩</option>
                 <option value="SR_serpentine">蛇紋岩</option>
 
+                <option value="test_1">Test 1</option>
+                <option value="test_2">Test 2</option>
             </select>
+
+
         </div>
-        <div id="low-navigation" class="space-around margin-between">
-            <div id="change_nicol" class="button rect-button align-center inactive">
-                Change Nichol
-            </div>
-        </div>
+
+
+
 
     </div>
 
@@ -110,9 +112,9 @@
 
         <div id="welcome-card" class="align-center space-around">
             <div class="align-center column-direction">
-                <h1>
-                    <img src="./images/SCOPin_rock_logo.svg" alt="SCOPin rock" width="100%">
-                </h1>
+
+                <img src="./images/SCOPin_rock_logo.svg" alt="SCOPin rock" width="100%">
+
                 <p>Polarizing microscope simulator</p>
             </div>
         </div>
@@ -123,6 +125,15 @@
             </div>
         </div>
 
+        <div id="low-navigation" class="space-around margin-between inactive">
+            <!--div id="change_nicol" class="button rect-button align-center inactive">
+                                            Change Nichol
+                                        </div-->
+            <input id="change_nicol" type="checkbox" checked />
+            <label for="change_nicol" data-on-label="Open" data-off-label="Cross"></label>
+
+        </div>
+
         <div id="view_discription" class="align-center column-direction">
         </div>
     </div>
@@ -130,7 +141,6 @@
 
 
     <div id='footer'>
-        <div id='footer_nav' class='footer_column'></div>
 
         <div id='footer_nav' class='footer_column '>
             <div class="space-around" style="margin: 15px 0;">
@@ -187,13 +197,17 @@
 
                     </div>
                 </form>
-
             </div>
+        </div>
+
+        <div id='footer_nav' class='footer_column'>
+
+            <img src="./images/SCOPin_rock_logo.svg" alt="SCOPin rock" width="100%">
+            <h1>Polarization microscope simulator, SCOPin rock !</h1>
 
         </div>
 
         <div id='rights' class='footer_column'>
-
             <p>
                 This page and all contents are made by Fumipo Theta.
                 Please do not copy, modify, and repost any contents without telling me.

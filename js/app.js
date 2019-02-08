@@ -208,7 +208,7 @@ const showViewer = state => {
 }
 
 const showNicolButton = state => {
-    const button = document.querySelector("#change_nicol")
+    const button = document.querySelector("#low-navigation")
     button.classList.remove("inactive");
     return state
 }
