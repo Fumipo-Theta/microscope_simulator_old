@@ -42,13 +42,6 @@ body {
     color: #be0000;
 }
 
-/* Logo */
-
-svg:hover #bF75GXwq {
-    transform: rotate(180deg);
-    transition: all 1s;
-}
-
 @keyframes pulsation {
     0% {
         box-shadow: 0 0 0 0 rgba(75, 133, 240, 0.7), 0 0 0 0 rgba(75, 133, 240, .7)
@@ -284,6 +277,43 @@ select:after {
     }
 }
 
+@keyframes load {
+    /*アニメーション*/
+    0% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.progress {
+    /*親要素*/
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    text-align: center;
+}
+
+.progress>div {
+    /*プログレスバーを包括する子要素*/
+    display: inline-block;
+    position: fixed;
+    text-align: center;
+    color: #93A2AC;
+    font-weight: 100;
+}
+
+.progress-circle circle {
+    stroke-width: 2px;
+    fill: none;
+}
+
+#open-progress {
+    stroke: url(#g_open);
+}
+
+#cross-progress {
+    stroke: url(#g_cross);
+}
+
 #welcome-card {
     width: 100%;
     height: 100vh;
@@ -410,6 +440,10 @@ select:after {
 
 .lds-css>img {
     animation: lds-disk 1s infinite;
+}
+
+.progress-circle {
+    animation: lds-disk 1.1s infinite;
 }
 
 .lds-css {

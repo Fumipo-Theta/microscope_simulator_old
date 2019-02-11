@@ -22,7 +22,7 @@ const rotateSign = (clockwise = true) => clockwise ? -1 : 1
 
 const getMinimumWindowSize = () => {
     const width = window.innerWidth
-    const height = window.innerHeight
+    const height = window.innerHeight - 200
     return width < height ? width : height
 }
 
@@ -49,6 +49,8 @@ const resetState = () => ({
     "rotate_end": 0,
     "isClockwise": true,
     "isCrossNicol": false,
+    "metaContainor": {},
+    "zipContainor": {},
 })
 
 const state = resetState()
@@ -58,12 +60,8 @@ const viewer_ctx = viewer.getContext("2d")
 
 
 const windowResizeHandler = state => new Promise((res, rej) => {
-    state.canvasWidth = getMinimumWindowSize() <= 600
-        ? getMinimumWindowSize() - 20
-        : 600 - 20
-    state.canvasHeight = getMinimumWindowSize() <= 600
-        ? getMinimumWindowSize() - 20
-        : 600 - 20
+    state.canvasWidth = getMinimumWindowSize() - 20
+    state.canvasHeight = getMinimumWindowSize() - 20
 
     viewer.width = state.canvasWidth
     viewer.height = state.canvasHeight
@@ -84,18 +82,11 @@ const loadImageSrc = (src) => new Promise((res, rej) => {
 
 
 
-const getMetadata = response => new Promise((res, rej) => {
-    try {
-        res(response.json())
-    } catch{
-        rej("No directory")
-    }
+const updateStateByMeta = (state, directory_name) => (response) => new Promise((res, rej) => {
 
+    const { meta, zip } = response;
 
-})
-
-const updateStateByMeta = (state, directory_name) => meta => new Promise((res, rej) => {
-    state.containorID = directory_name
+    state.containorID = sanitizeID(directory_name);
     state.isClockwise = meta.rotate_clockwise
     state.location = (meta.hasOwnProperty("location"))
         ? meta.location
@@ -122,6 +113,7 @@ const updateStateByMeta = (state, directory_name) => meta => new Promise((res, r
         ? parseInt(meta.cycle_rotate_degree)
         : 90;
     const image_number = cycle_degree / rotate_degree_step + 1 // 7: 0, 15, 30, 45, 60, 75, 90
+    state.image_number = image_number
     const mirror_at = (image_number - 1)
     const total_step = (image_number - 1) * 2
 
@@ -142,14 +134,24 @@ const updateStateByMeta = (state, directory_name) => meta => new Promise((res, r
         return 1 - (degree - rotate_degree_step * nth) / rotate_degree_step
     }
 
+    function base64String(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
     state.open_image_srcs = Array(image_number)
         .fill(0)
-        .map((_, i) => directory_name + "o" + (i + 1) + ".JPG")
+        .map((_, i) => zip.files["o" + (i + 1) + ".JPG"])
+        .map(image => "data:image/png;base64," + base64String(image.inflate()))
 
     state.cross_image_srcs = Array(image_number)
         .fill(0)
-        .map((_, i) => directory_name + "c" + (i + 1) + ".JPG")
-
+        .map((_, i) => zip.files["c" + (i + 1) + ".JPG"])
+        .map(image => "data:image/png;base64," + base64String(image.inflate()))
     res(state)
 })
 
@@ -213,35 +215,113 @@ const showNicolButton = state => {
     return state
 }
 
+
+
+const unziper = (url) => new Promise((res, rej) => {
+    function progressCircle(selector) {
+        const progress_circle = document.querySelector(selector)
+        const total = progress_circle.attributes["r"].value * 2 * Math.PI
+        progress_circle.attributes["stroke-dasharray"].value = total
+        progress_circle.attributes["stroke-dashoffset"].value = total
+
+        return (load) => {
+            progress_circle.attributes["stroke-dashoffset"].value = total * (1 - 0.5 * load)
+        }
+    }
+
+    function progressHandler(evt) {
+        const open_progress = progressCircle("#open-progress", state.image_number)
+        const cross_progress = progressCircle("#cross-progress", state.image_number)
+        const load = (100 * evt.loaded / evt.total | 0);
+        open_progress(load * 0.01)
+        cross_progress(load * 0.01)
+    }
+
+    function completeHandler() {
+        const open_progress = progressCircle("#open-progress", state.image_number)
+        const cross_progress = progressCircle("#cross-progress", state.image_number)
+        open_progress(0)
+        cross_progress(0)
+    }
+    Zip.inflate_file(url, res, rej, progressHandler, completeHandler)
+})
+
+const extractFile = zip => {
+    meta = zip.files["manifest.json"]
+    const decoder = new TextDecoder("UTF-8");
+
+    function buffer_to_string(buf) {
+        return decoder.decode(new Uint8Array(buf))
+    }
+
+    return {
+        "meta": JSON.parse(buffer_to_string(meta.inflate())),
+        "zip": zip
+    }
+}
+
+const reselectFile = (state, key) => new Promise((res, rej) => {
+    res({
+        "meta": state.metaContainor[key],
+        "zip": state.zipContainor[key]
+    })
+})
+
+const registerZip = (state, key) => response => {
+    const { meta, zip } = response;
+    state.metaContainor[key] = meta;
+    state.zipContainor[key] = zip
+    return response
+}
+
+const zipUrlHandler = (state, url) => new Promise((res, rej) => {
+
+    const key = sanitizeID(url)
+
+    if (key in state.zipContainor) {
+        reselectFile(state, key)
+            .then(res)
+    } else {
+        unziper(url)
+            .then(extractFile)
+            .then(registerZip(state, key))
+            .then(res)
+            .catch(rej)
+    }
+})
+
 const rockNameSelectHandler = state => {
     return new Promise((res, rej) => {
         const rock_selector = document.querySelector("#rock_selector")
-        const directory_name = `./data/${rock_selector.options[rock_selector.selectedIndex].value}/`
+        const directory_name = `./zipped/${rock_selector.options[rock_selector.selectedIndex].value}/`
+        const zipfileName = `./zipped/${rock_selector.options[rock_selector.selectedIndex].value}.zip`
 
         showLoadingAnimation(state)
         hideWelcomeBoard(state)
         showViewer(state)
         showNicolButton(state)
 
-        return fetch(directory_name + "manifest.json")
-            .then(handleErrors)
-            .catch(rej)
-            .then(getMetadata)
-            .then(updateStateByMeta(state, directory_name))
+        zipUrlHandler(state, zipfileName)
+            .then(updateStateByMeta(state, zipfileName))
             .then(updateViewDiscription)
             .then(res)
+            .catch(rej)
     })
+}
+
+function sanitizeID(id) {
+    return id.replace(/\//g, "_").replace(/\./g, "")
 }
 
 
 const createImageContainor = state => new Promise((res, rej) => {
 
-    containor = document.querySelector(".image_containor")
-    subcontainors = containor.querySelectorAll("div")
+    const containor = document.querySelector(".image_containor")
+    const subcontainors = containor.querySelectorAll("div")
 
-    function sanitizeID(id) {
-        return id.replace(/\//g, "_").replace(/\./g, "")
-    }
+
+
+
 
     function containorIsExist(doms, id) {
         return Array.from(doms)
@@ -267,6 +347,8 @@ const createImageContainor = state => new Promise((res, rej) => {
         subcontainor.appendChild(openContainor)
         subcontainor.appendChild(crossContainor)
         containor.appendChild(subcontainor)
+
+
 
         Promise.all([
             Promise.all(state.open_image_srcs.map(src => loadImageSrc(src))),
@@ -452,6 +534,7 @@ const getCoordinateOnCanvas = canvas => e => {
 const canvasCoordinate = getCoordinateOnCanvas(viewer)
 
 
+
 const radiunBetween = (cx, cy) => (_x1, _y1, _x2, _y2) => {
     x1 = _x1 - cx
     x2 = _x2 - cx
@@ -510,51 +593,83 @@ const rotateImage = (state, e) => () => {
 const touchStartHandler = e => {
     state.isMousedown = true
     state.drag_end = canvasCoordinate(e)
+    e.preventDefault();
 }
 
 const touchMoveHandler = e => {
     if (state.isMousedown) {
+        e.preventDefault();
         requestAnimationFrame(
             rotateImage(state, e)
         )
     } else {
 
     }
-    e.preventDefault()
+    //if (e.cancelable) {
+
+    //}
 }
 
 const touchEndHandler = e => {
     state.isMousedown = false
     state.rotate_start = 0
     state.rotate_end = 0
+    e.preventDefault()
 }
 
 const nicolText = document.querySelector("#nicol_mode")
 
-const toggleNicolText = (hasChangedToCrossNichol) => {
-    nicolText.innerHTML = hasChangedToCrossNichol
-        ? "Cross Nichol"
-        : "Open Nichol"
-}
+const toggleNicolButton = document.querySelector("#change_nicol")
+const toggleNicolLabel = document.querySelector("#change_nicol + label")
 
 const toggleNicolHandler = state => new Promise((res, rej) => {
+
+    toggleNicolButton.checked = state.isCrossNicol
     state.isCrossNicol = !state.isCrossNicol;
+
+
     res(state)
 })
 
-const toggleNicolButton = document.querySelector("#change_nicol")
+
+
 
 toggleNicolButton.addEventListener(
     "click",
-    e => toggleNicolHandler(state)
-        .then(updateView),
+    e => { e.preventDefault() },
+    false
+)
+
+
+toggleNicolLabel.addEventListener(
+    "touch",
+    e => { e.preventDefault() },
     false
 )
 
 toggleNicolButton.addEventListener(
     "touch",
+    e => { e.preventDefault() },
+    false
+)
+
+
+toggleNicolLabel.addEventListener(
+    "mouseup",
     e => toggleNicolHandler(state)
         .then(updateView),
+    false
+)
+
+toggleNicolLabel.addEventListener(
+    "touchend",
+    e => toggleNicolHandler(state)
+        .then(updateView)
+        .then(_ => {
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+        }),
     false
 )
 
@@ -576,6 +691,26 @@ viewer.addEventListener(
     touchStartHandler,
     false
 )
+
+viewer.addEventListener(
+    "dragstart",
+    e => { e.preventDefault() },
+    false
+)
+
+viewer.addEventListener(
+    "drag",
+    e => { e.preventDefault() },
+    false
+)
+
+viewer.addEventListener(
+    "dragend",
+    e => { e.preventDefault() },
+    false
+)
+
+
 
 viewer.addEventListener(
     "touchstart",
