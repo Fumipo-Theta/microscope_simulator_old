@@ -26,6 +26,8 @@ const getMinimumWindowSize = () => {
     return width < height ? width : height
 }
 
+const VIEW_PADDING = 0 // px
+
 
 const resetState = () => ({
     "containorID": "",
@@ -47,6 +49,7 @@ const resetState = () => ({
     "rotate": 0,
     "rotate_start": 0,
     "rotate_end": 0,
+    "rotate_axis_translate": [],
     "isClockwise": true,
     "isCrossNicol": false,
     "metaContainor": {},
@@ -100,13 +103,41 @@ const updateStateByMeta = (state, directory_name) => (response) => new Promise((
     state.discription = (meta.hasOwnProperty("discription"))
         ? meta.discription
         : "No discription. "
-    state.imageRadius = meta.image_radius
+    state.rotate_center = getRotationCenter(meta)
+
+    function getRotationCenter(meta) {
+        return (meta.hasOwnProperty("rotate_center"))
+            ? {
+                "to_right": meta.rotate_center[0],
+                "to_bottom": meta.rotate_center[1]
+            }
+            : {
+                "to_right": meta.image_width * 0.5,
+                "to_bottom": meta.image_height * 0.5
+            }
+    }
+
+    function getImageRadius(meta) {
+        const shift = getRotationCenter(meta);
+        const image_center = {
+            "x": meta.image_width * 0.5,
+            "y": meta.image_height * 0.5
+        }
+        return Math.min(
+            image_center.x - Math.abs(image_center.x - shift.to_right),
+            image_center.y - Math.abs(image_center.y - shift.to_bottom)
+        )
+    }
+
+    state.imageRadius = getImageRadius(meta)
+    state.imageRadiusOriginal = getImageRadius(meta)
     state.scaleWidth = (meta.hasOwnProperty("scale-pixel"))
         ? parseInt(meta["scale-pixel"])
         : false
     state.scaleText = (meta.hasOwnProperty("scale-unit"))
         ? meta["scale-unit"]
         : false
+
 
     const rotate_degree_step = meta.rotate_by_degree
     const cycle_degree = meta.hasOwnProperty("cycle_rotate_degree")
@@ -175,7 +206,7 @@ const updateViewDiscription = state => {
 
     const textTemplate = state => {
         return `<ul style="list-style-type:none;">
-            <li>${state.rockType} at ${state.location}</li>
+            <li>${state.rockType} ${state.location ? "at " + state.location : ""}</li>
             <li>${state.discription}</li>
             <li>Owner: ${state.owner}</li>
         </ul>`
@@ -375,13 +406,14 @@ const createImageContainor = state => new Promise((res, rej) => {
  */
 
 const clipGeometoryFromImageCenter = (imgDOM, state) => {
-    img_height = imgDOM.height
-    img_width = imgDOM.width
+    const img_height = imgDOM.height
+    const img_width = imgDOM.width
+
     return [
-        (img_width - state.imageRadius) * 0.5,
-        (img_height - state.imageRadius) * 0.5,
-        state.imageRadius,
-        state.imageRadius
+        state.rotate_center.to_right - state.imageRadius,
+        state.rotate_center.to_bottom - state.imageRadius,
+        state.imageRadius * 2,
+        state.imageRadius * 2
     ]
 }
 
@@ -402,7 +434,7 @@ const blobToCanvas = (state) => {
 
     viewer_ctx.save()
     viewer_ctx.beginPath()
-    viewer_ctx.arc(0, 0, state.canvasWidth / 2, 0, Math.PI * 2, false)
+    viewer_ctx.arc(0, 0, state.canvasWidth / 2 - VIEW_PADDING, 0, Math.PI * 2, false)
     viewer_ctx.clip()
 
     // Draw a image
@@ -434,7 +466,7 @@ const blobToCanvas = (state) => {
     // Draw next image
     viewer_ctx.save()
     viewer_ctx.beginPath()
-    viewer_ctx.arc(0, 0, state.canvasWidth / 2, 0, Math.PI * 2, false)
+    viewer_ctx.arc(0, 0, state.canvasWidth / 2 - VIEW_PADDING, 0, Math.PI * 2, false)
     viewer_ctx.clip()
     viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate + 15) * 15 * Math.PI / 180)
 
@@ -462,10 +494,10 @@ const drawHairLine = state => {
     viewer_ctx.globalAlpha = 1
     viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
     viewer_ctx.beginPath()
-    viewer_ctx.moveTo(0, -state.canvasHeight * 0.5)
-    viewer_ctx.lineTo(0, state.canvasHeight)
-    viewer_ctx.moveTo(-state.canvasWidth * 0.5, 0)
-    viewer_ctx.lineTo(state.canvasWidth * 0.5, 0)
+    viewer_ctx.moveTo(0, -state.canvasHeight * 0.5 + VIEW_PADDING)
+    viewer_ctx.lineTo(0, state.canvasHeight - VIEW_PADDING)
+    viewer_ctx.moveTo(-state.canvasWidth * 0.5 + VIEW_PADDING, 0)
+    viewer_ctx.lineTo(state.canvasWidth * 0.5 - VIEW_PADDING, 0)
     viewer_ctx.closePath()
     viewer_ctx.stroke()
     viewer_ctx.restore()
@@ -475,25 +507,20 @@ const scaleLength = (canvasWidth, imageWidth, scaleWidth) => canvasWidth * scale
 
 const drawScale = state => {
     if (!state["scaleWidth"]) return;
-    scalePixel = scaleLength(state.canvasWidth, state.imageRadius, state.scaleWidth)
+    let scalePixel = scaleLength(state.canvasWidth, state.imageRadius * 2, state.scaleWidth)
+    const canvasWidth = state.canvasWidth;
+    const scaleBar = document.querySelector("#scalebar")
 
-    viewer_ctx.save()
-    viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
-    viewer_ctx.fillStyle = "white"
-    viewer_ctx.fillRect(
-        state.canvasWidth * 0.5 - scalePixel - 5,
-        state.canvasHeight * 0.5 - 10 - 5,
-        scalePixel,
-        10
-    )
-    viewer_ctx.font = "16px Arial"
-    viewer_ctx.textAlign = "center"
-    viewer_ctx.fillText(
-        state.scaleText,
-        state.canvasWidth * 0.5 - 5 - scalePixel * 0.5,
-        state.canvasHeight * 0.5 - 15 - 5
-    )
-    viewer_ctx.restore()
+
+    let scaleNumber = state.scaleText.match(/(\d+\.?\d*)/)[0] * 1
+    const scaleUnit = state.scaleText.match(/\D*$/)[0]
+
+    while (scalePixel >= canvasWidth) {
+        scalePixel *= 0.5
+        scaleNumber *= 0.5
+    }
+    scaleBar.style.width = scalePixel;
+    scaleBar.querySelector("div:first-child").innerHTML = `${scaleNumber} ${scaleUnit}`;
 }
 
 const updateState = (state, newState) => new Promise((res, rej) => {
@@ -517,16 +544,21 @@ const updateView = (state) => {
 }
 
 
-const getCoordinateOnCanvas = canvas => e => {
+const getCoordinateOnCanvas = canvas => (e, fingur = 0) => {
     if (e instanceof MouseEvent) {
+        return (e instanceof WheelEvent)
+            ? [
+                e.deltaX,
+                e.deltaY
+            ]
+            : [
+                e.pageX - canvas.offsetLeft,
+                e.pageY - canvas.offsetTop
+            ]
+    } else if (e instanceof TouchEvent && e.touches.length > fingur) {
         return [
-            e.pageX - canvas.offsetLeft,
-            e.pageY - canvas.offsetTop
-        ]
-    } else if (e instanceof TouchEvent) {
-        return [
-            e.touches[0].pageX - canvas.offsetLeft,
-            e.touches[0].pageY - canvas.offsetTop
+            e.touches[fingur].pageX - canvas.offsetLeft,
+            e.touches[fingur].pageY - canvas.offsetTop
         ]
     }
 }
@@ -551,8 +583,11 @@ const radiunBetween = (cx, cy) => (_x1, _y1, _x2, _y2) => {
  * @param {*} e
  */
 const updateCoordinate = (state, e) => {
-    state.drag_start = state.drag_end
+    state.drag_start = state.drag_end || undefined
     state.drag_end = canvasCoordinate(e)
+
+    state.pinch_start = state.pinch_end || undefined
+    state.pinch_end = canvasCoordinate(e, 1)
 }
 
 /**
@@ -563,7 +598,7 @@ const updateCoordinate = (state, e) => {
  * @param {*} e
  */
 const updateRotate = (state, e) => {
-
+    if (state.drag_start === undefined) return
     // delta rotate radius
     state.rotate_end = radiunBetween(
         state.canvasWidth * 0.5,
@@ -584,36 +619,97 @@ const rotateImage = (state, e) => () => {
     updateCoordinate(state, e)
     updateRotate(state, e)
     viewer_ctx.rotate(rotateSign(state.isClockwise) * (state.rotate_end))
+    blobToCanvas(state)
+    drawHairLine(state)
+    //drawScale(state)
+}
 
+const updateMagnifyByPinch = (state, e) => {
+    if (state.drag_start === undefined) return
+    if (state.pinch_start === undefined) return
+
+    const x1 = [...state.drag_start]
+    const y1 = [...state.pinch_start]
+    const x2 = [...state.drag_end]
+    const y2 = [...state.pinch_end]
+
+    const expansion = Math.sqrt((x2[0] - y2[0]) ** 2 + (x2[1] - y2[1]) ** 2) / Math.sqrt((x1[0] - y1[0]) ** 2 + (x1[1] - y1[1]) ** 2)
+
+    const newRadius = (expansion > 2)
+        ? state.imageRadius
+        : state.imageRadius / expansion
+    state.imageRadius = (newRadius) > state.imageRadiusOriginal
+        ? state.imageRadiusOriginal
+        : (newRadius < 100)
+            ? 100
+            : newRadius
+
+}
+
+const updateMagnifyByWheel = (state, e) => {
+    const scrolled = canvasCoordinate(e)[1]
+
+    const newRadius = state.imageRadius + scrolled
+    state.imageRadius = (newRadius) > state.imageRadiusOriginal
+        ? state.imageRadiusOriginal
+        : (newRadius < 100)
+            ? 100
+            : newRadius
+
+}
+
+const pinchImage = (state, e) => () => {
+    updateCoordinate(state, e)
+    updateMagnifyByPinch(state, e)
     blobToCanvas(state)
     drawHairLine(state)
     drawScale(state)
 }
 
-const touchStartHandler = e => {
+const touchStartHandler = state => e => {
     state.isMousedown = true
     state.drag_end = canvasCoordinate(e)
     e.preventDefault();
 }
 
-const touchMoveHandler = e => {
-    if (state.isMousedown) {
+const wheelImage = (state, e) => () => {
+    updateMagnifyByWheel(state, e)
+    blobToCanvas(state)
+    drawHairLine(state)
+    drawScale(state)
+}
+
+const wheelHandler = state => e => {
+    e.preventDefault();
+    requestAnimationFrame(
+        wheelImage(state, e)
+    )
+}
+
+const touchMoveHandler = state => e => {
+    if (!state.isMousedown) return
+    if (e instanceof MouseEvent || e.touches.length === 1) {
         e.preventDefault();
         requestAnimationFrame(
             rotateImage(state, e)
         )
-    } else {
-
+    } else if (e.touches.length === 2) {
+        e.preventDefault()
+        requestAnimationFrame(
+            pinchImage(state, e)
+        )
     }
     //if (e.cancelable) {
 
     //}
 }
 
-const touchEndHandler = e => {
+const touchEndHandler = state => e => {
     state.isMousedown = false
     state.rotate_start = 0
     state.rotate_end = 0
+    state.drag_end = undefined
+    state.pinch_end = undefined
     e.preventDefault()
 }
 
@@ -688,7 +784,7 @@ rock_selector.addEventListener(
 
 viewer.addEventListener(
     "mousedown",
-    touchStartHandler,
+    touchStartHandler(state),
     false
 )
 
@@ -714,31 +810,37 @@ viewer.addEventListener(
 
 viewer.addEventListener(
     "touchstart",
-    touchStartHandler,
+    touchStartHandler(state),
     false
 )
 
 viewer.addEventListener(
     "mousemove",
-    touchMoveHandler,
+    touchMoveHandler(state),
     false
 )
 
 viewer.addEventListener(
     "touchmove",
-    touchMoveHandler,
+    touchMoveHandler(state),
     false
 )
 
 viewer.addEventListener(
     "mouseup",
-    touchEndHandler,
+    touchEndHandler(state),
     false
 )
 
 viewer.addEventListener(
     "touchend",
-    touchEndHandler,
+    touchEndHandler(state),
+    false
+)
+
+viewer.addEventListener(
+    "wheel",
+    wheelHandler(state),
     false
 )
 

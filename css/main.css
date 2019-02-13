@@ -327,6 +327,22 @@ select:after {
     border-radius: 3px;
 }
 
+#scalebar {
+    width: 0px;
+    padding: 5px 0;
+    display: flex;
+}
+
+#scalebar>div {
+    width: inherit;
+    color: white;
+}
+
+#scalebar>div:nth-last-child(1) {
+    height: 5px;
+    background-color: white;
+}
+
 #view_discription {
     /*position: sticky;*/
     top: 64px;

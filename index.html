@@ -2,7 +2,7 @@
 
 <head>
     <meta http-equiv="Content-Type" charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1" user-zoom="no">
     <link rel="stylesheet" href="./css/main.css" charset="utf-8">
 
     <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
@@ -131,11 +131,18 @@
             </div>
         </div>
 
-        <div id='viewer_wrapper' class="inactive">
+        <div id='viewer_wrapper' class="inactive align-center column-direction">
             <div id='viewer-containor' class='align-center'>
                 <canvas id="main-viewer"></canvas>
             </div>
+
+            <div id="scalebar" class="column-direction">
+                <div class="align-center"></div>
+                <div></div>
+            </div>
         </div>
+
+
 
         <div id="low-navigation" class="space-around margin-between inactive">
             <!--div id="change_nicol" class="button rect-button align-center inactive">
