@@ -47,8 +47,6 @@ const resetState = () => ({
     "drag_start": [0, 0],
     "drag_end": [0, 0],
     "rotate": 0,
-    "rotate_start": 0,
-    "rotate_end": 0,
     "rotate_axis_translate": [],
     "isClockwise": true,
     "isCrossNicol": false,
@@ -58,14 +56,16 @@ const resetState = () => ({
 
 const state = resetState()
 
-const viewer = document.querySelector("#main-viewer")
-const viewer_ctx = viewer.getContext("2d")
+let viewer = document.querySelector("#main-viewer")
+let viewer_ctx = viewer.getContext("2d")
 
 
 const windowResizeHandler = state => new Promise((res, rej) => {
     state.canvasWidth = getMinimumWindowSize() - 20
     state.canvasHeight = getMinimumWindowSize() - 20
 
+    viewer = document.querySelector("#main-viewer")
+    viewer_ctx = viewer.getContext("2d")
     viewer.width = state.canvasWidth
     viewer.height = state.canvasHeight
     viewer_ctx.translate(state.canvasWidth * 0.5, state.canvasHeight * 0.5)
@@ -419,7 +419,7 @@ const clipGeometoryFromImageCenter = (imgDOM, state) => {
 
 const clearView = state => {
     viewer_ctx.save()
-    viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
+    //viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
     viewer_ctx.clearRect(-state.canvasWidth * 0.5, -state.canvasHeight * 0.5, state.canvasWidth, state.canvasHeight)
     viewer_ctx.restore()
 }
@@ -440,9 +440,11 @@ const blobToCanvas = (state) => {
     // Draw a image
     alpha = state.getAlpha(state.rotate)
 
+    viewer_ctx.rotate(
+        rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate) * 15) / 180 * Math.PI
+    )
 
-
-    viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate) * 15 * Math.PI / 180)
+    //viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate) * 15 * Math.PI / 180)
 
 
     viewer_ctx.globalAlpha = 1
@@ -468,7 +470,11 @@ const blobToCanvas = (state) => {
     viewer_ctx.beginPath()
     viewer_ctx.arc(0, 0, state.canvasWidth / 2 - VIEW_PADDING, 0, Math.PI * 2, false)
     viewer_ctx.clip()
-    viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate + 15) * 15 * Math.PI / 180)
+
+    viewer_ctx.rotate(
+        rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate + 15) * 15) / 180 * Math.PI
+    )
+    //viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate + 15) * 15 * Math.PI / 180)
 
     viewer_ctx.globalAlpha = 1 - alpha
     image2 = image_srcs[state.getImageNumber(state.rotate + 15)]
@@ -492,10 +498,11 @@ const drawHairLine = state => {
         ? "white"
         : "black";
     viewer_ctx.globalAlpha = 1
-    viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
+    console.log(state.rotate)
+    //viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
     viewer_ctx.beginPath()
     viewer_ctx.moveTo(0, -state.canvasHeight * 0.5 + VIEW_PADDING)
-    viewer_ctx.lineTo(0, state.canvasHeight - VIEW_PADDING)
+    viewer_ctx.lineTo(0, state.canvasHeight * 0.5 - VIEW_PADDING)
     viewer_ctx.moveTo(-state.canvasWidth * 0.5 + VIEW_PADDING, 0)
     viewer_ctx.lineTo(state.canvasWidth * 0.5 - VIEW_PADDING, 0)
     viewer_ctx.closePath()
@@ -600,17 +607,18 @@ const updateCoordinate = (state, e) => {
 const updateRotate = (state, e) => {
     if (state.drag_start === undefined) return
     // delta rotate radius
-    state.rotate_end = radiunBetween(
+    const rotate_end = radiunBetween(
         state.canvasWidth * 0.5,
         state.canvasHeight * 0.5
     )(...state.drag_end, ...state.drag_start)
 
-    state.rotate += state.rotate_end / Math.PI * 180
+    state.rotate += rotate_end / Math.PI * 180
     if (state.rotate >= 360) {
         state.rotate -= 360
     } else if (state.rotate < 0) {
         state.rotate += 360
     }
+    console.log(state.rotate)
 }
 
 
@@ -618,7 +626,6 @@ const updateRotate = (state, e) => {
 const rotateImage = (state, e) => () => {
     updateCoordinate(state, e)
     updateRotate(state, e)
-    viewer_ctx.rotate(rotateSign(state.isClockwise) * (state.rotate_end))
     blobToCanvas(state)
     drawHairLine(state)
     //drawScale(state)
@@ -706,8 +713,6 @@ const touchMoveHandler = state => e => {
 
 const touchEndHandler = state => e => {
     state.isMousedown = false
-    state.rotate_start = 0
-    state.rotate_end = 0
     state.drag_end = undefined
     state.pinch_end = undefined
     e.preventDefault()
@@ -844,29 +849,27 @@ viewer.addEventListener(
     false
 )
 
-/*viewer.addEventListener(
-    "mouseout",
-    e => {
-        state.isMousedown = false
-        state.rotate_start = 0
-        state.rotate_end = 0
-    },
-    false
-)*/
 
 
 //window.onload = e => {
 windowResizeHandler(state)
-    //.then(rockNameSelectHandler)
-    //.then(createImageContainor)
-    //.then(firstView)
     .then(hideLoadingAnimation)
     .catch(hideLoadingAnimation)
-//}
 
-window.onresize = e => {
-    //windowResizeHandler(state)
-    //.then(rockNameSelectHandler(state)())
-    //.then(createImageContainor)
-    //.then(updateView)
-}
+
+
+const userAgent = navigator.userAgent;
+
+// スマートフォンの場合はorientationchangeイベントを監視する
+if (userAgent.indexOf("iPhone") >= 0 || userAgent.indexOf("iPad") >= 0 || userAgent.indexOf("Android") >= 0)
+    window.addEventListener(
+        "orientationchange",
+        e => windowResizeHandler(state).then(updateView),
+        false
+    );
+else
+    window.addEventListener(
+        "resize",
+        e => windowResizeHandler(state).then(updateView),
+        false
+    );
