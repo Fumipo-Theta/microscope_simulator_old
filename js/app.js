@@ -418,10 +418,9 @@ const clipGeometoryFromImageCenter = (imgDOM, state) => {
 }
 
 const clearView = state => {
-    viewer_ctx.save()
-    //viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
+    //viewer_ctx.save()
     viewer_ctx.clearRect(-state.canvasWidth * 0.5, -state.canvasHeight * 0.5, state.canvasWidth, state.canvasHeight)
-    viewer_ctx.restore()
+    //viewer_ctx.restore()
 }
 
 const blobToCanvas = (state) => {
@@ -493,13 +492,11 @@ const blobToCanvas = (state) => {
 }
 
 const drawHairLine = state => {
-    viewer_ctx.save()
+    //viewer_ctx.save()
     viewer_ctx.strokeStyle = state.isCrossNicol
         ? "white"
         : "black";
     viewer_ctx.globalAlpha = 1
-    console.log(state.rotate)
-    //viewer_ctx.rotate(-rotateSign(state.isClockwise) * state.rotate / 180 * Math.PI)
     viewer_ctx.beginPath()
     viewer_ctx.moveTo(0, -state.canvasHeight * 0.5 + VIEW_PADDING)
     viewer_ctx.lineTo(0, state.canvasHeight * 0.5 - VIEW_PADDING)
@@ -507,7 +504,7 @@ const drawHairLine = state => {
     viewer_ctx.lineTo(state.canvasWidth * 0.5 - VIEW_PADDING, 0)
     viewer_ctx.closePath()
     viewer_ctx.stroke()
-    viewer_ctx.restore()
+    //viewer_ctx.restore()
 }
 
 const scaleLength = (canvasWidth, imageWidth, scaleWidth) => canvasWidth * scaleWidth / imageWidth
@@ -618,7 +615,6 @@ const updateRotate = (state, e) => {
     } else if (state.rotate < 0) {
         state.rotate += 360
     }
-    console.log(state.rotate)
 }
 
 
@@ -628,7 +624,6 @@ const rotateImage = (state, e) => () => {
     updateRotate(state, e)
     blobToCanvas(state)
     drawHairLine(state)
-    //drawScale(state)
 }
 
 const updateMagnifyByPinch = (state, e) => {
