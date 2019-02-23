@@ -174,12 +174,12 @@ const updateStateByMeta = (state, directory_name) => (response) => new Promise((
         }
         return window.btoa(binary);
     }
-    state.open_image_srcs = Array(image_number)
+    state.open_image_srcs = Array(image_number - 1)
         .fill(0)
         .map((_, i) => zip.files["o" + (i + 1) + ".JPG"])
         .map(image => "data:image/png;base64," + base64String(image.inflate()))
 
-    state.cross_image_srcs = Array(image_number)
+    state.cross_image_srcs = Array(image_number - 1)
         .fill(0)
         .map((_, i) => zip.files["c" + (i + 1) + ".JPG"])
         .map(image => "data:image/png;base64," + base64String(image.inflate()))
@@ -448,7 +448,7 @@ const blobToCanvas = (state) => {
 
     viewer_ctx.globalAlpha = 1
     image1 = image_srcs[state.getImageNumber(state.rotate)]
-
+    console.log(state.getImageNumber(state.rotate), state.getImageNumber(state.rotate + 15))
     try {
         viewer_ctx.drawImage(
             image1,
