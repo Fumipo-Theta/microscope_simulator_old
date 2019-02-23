@@ -149,7 +149,7 @@ const updateStateByMeta = (state, containorID) => (response) => new Promise((res
 
     const { meta, zip } = response;
 
-    state.containorID = containorID;
+    state.containorID = sanitizeID(containorID);
     state.isClockwise = meta.rotate_clockwise
     state.location = (meta.hasOwnProperty("location"))
         ? meta.location
@@ -203,7 +203,7 @@ const updateStateByMeta = (state, containorID) => (response) => new Promise((res
     const cycle_degree = meta.hasOwnProperty("cycle_rotate_degree")
         ? parseInt(meta.cycle_rotate_degree)
         : 90;
-    const image_number = cycle_degree / rotate_degree_step + 1 // 7: 0, 15, 30, 45, 60, 75, 90
+    const image_number = cycle_degree / rotate_degree_step + 1
     state.image_number = image_number
     const mirror_at = (image_number - 1)
     const total_step = (image_number - 1) * 2
@@ -351,6 +351,11 @@ const extractFile = zip => {
     }
 }
 
+/**
+ * Reselect from memory
+ * @param {*} state
+ * @param {*} key
+ */
 const reselectFile = (state, key) => new Promise((res, rej) => {
     res({
         "meta": state.metaContainor[key],
@@ -369,7 +374,7 @@ const registerZip = (state, key) => response => {
 const markDownloadedOption = packageName => response => new Promise((res, rej) => {
     Array.from(document.querySelectorAll(`#rock_selector>option[value=${packageName}]`)).forEach(option => {
         label = option.innerHTML
-        option.innerHTML = "✓" + label
+        option.innerHTML = "✓ " + label
     })
     res(response)
 })
@@ -417,14 +422,22 @@ function sanitizeID(id) {
 }
 
 
+const updateImages = state => imgSets => new Promise((res, rej) => {
+    state.open_images = imgSets.open
+    state.cross_images = imgSets.cross
+    res(state)
+})
+
+
+/**
+ * Check images are in containor.
+ * If true, set them in state object.
+ * else, create img element and set them in state object.
+ */
 const createImageContainor = state => new Promise((res, rej) => {
 
     const containor = document.querySelector(".image_containor")
     const subcontainors = containor.querySelectorAll("div")
-
-
-
-
 
     function containorIsExist(doms, id) {
         return Array.from(doms)
@@ -433,15 +446,15 @@ const createImageContainor = state => new Promise((res, rej) => {
             .length > 0
     }
 
-    if (containorIsExist(subcontainors, sanitizeID(state.containorID))) {
-        openContainor = containor.querySelector(`#${sanitizeID(state.containorID)} .open`)
-        crossContainor = containor.querySelector(`#${sanitizeID(state.containorID)} .cross`)
-        state.open_images = Array.from(openContainor.querySelectorAll("img"))
-        state.cross_images = Array.from(crossContainor.querySelectorAll("img"))
-        res(state)
+    if (containorIsExist(subcontainors, state.containorID)) {
+        openContainor = containor.querySelector(`#${state.containorID} .open`)
+        crossContainor = containor.querySelector(`#${state.containorID} .cross`)
+        const open_imgs = Array.from(openContainor.querySelectorAll("img"))
+        const cross_imgs = Array.from(crossContainor.querySelectorAll("img"))
+        res({ open: open_imgs, cross: cross_imgs })
     } else {
         subcontainor = document.createElement("div")
-        subcontainor.id = sanitizeID(state.containorID)
+        subcontainor.id = state.containorID
         openContainor = document.createElement("div")
         openContainor.classList = ["open"]
         crossContainor = document.createElement("div")
@@ -451,24 +464,22 @@ const createImageContainor = state => new Promise((res, rej) => {
         subcontainor.appendChild(crossContainor)
         containor.appendChild(subcontainor)
 
-
-
         Promise.all([
             Promise.all(state.open_image_srcs.map(src => loadImageSrc(src))),
             Promise.all(state.cross_image_srcs.map(src => loadImageSrc(src)))
         ])
             .then(imgDOMs => {
-                state.open_images = imgDOMs[0].map(img => {
+                const open_imgs = imgDOMs[0].map(img => {
                     openContainor.appendChild(img)
                     return img
                 })
 
-                state.cross_images = imgDOMs[1].map(img => {
+                const cross_imgs = imgDOMs[1].map(img => {
                     crossContainor.appendChild(img)
                     return img
                 })
 
-                return res(state)
+                res({ open: open_imgs, cross: cross_imgs })
             })
     }
 })
@@ -847,6 +858,7 @@ rock_selector.addEventListener(
     "change",
     e => rockNameSelectHandler(state)
         .then(createImageContainor)
+        .then(updateImages(state))
         .then(firstView)
         .then(hideLoadingAnimation)
         .catch(console.log),

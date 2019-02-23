@@ -1,0 +1,18 @@
+{
+    "list_of_sample": [
+        {
+            "package-name": "Q27_quartz",
+            "list-name": {
+                "ja": "流紋岩中の石英",
+                "en": "Quartz in rhyolite"
+            }
+        },
+        {
+            "package-name": "Grc-1_quartz",
+            "list-name": {
+                "ja": "花崗岩中の波動消光を示す石英",
+                "en": "Quartz with wavy extinction in granite"
+            }
+        }
+    ]
+}
