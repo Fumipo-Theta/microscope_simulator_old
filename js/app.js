@@ -95,14 +95,14 @@ let viewer_ctx = viewer.getContext("2d")
 
 
 
-const sampleListPresenter = state => response => new Promise((res, rej) => {
+const sampleListPresenter = language => response => new Promise((res, rej) => {
     const sampleList = response["list_of_sample"];
     const sampleSelectDOM = document.querySelector("#rock_selector");
     sampleSelectDOM.innerHTML = "<option value='' disabled selected style='display:none;'>Select sample</option>";
     const options = sampleList.map(v => {
         const option = document.createElement("option")
         option.value = v["package-name"];
-        option.innerHTML = v["list-name"][state.language]
+        option.innerHTML = v["list-name"][language]
         return option
     })
     options.forEach(v => {
@@ -115,7 +115,7 @@ const sampleListLoader = state => new Promise((res, rej) => {
     const listURL = staticSettings.getSampleListURL();
     fetch(listURL)
         .then(response => response.json())
-        .then(sampleListPresenter(state))
+        .then(sampleListPresenter(state.language))
         .then(_ => res(state))
         .catch(rej)
 })
@@ -451,7 +451,8 @@ const createImageContainor = state => new Promise((res, rej) => {
         crossContainor = containor.querySelector(`#${state.containorID} .cross`)
         const open_imgs = Array.from(openContainor.querySelectorAll("img"))
         const cross_imgs = Array.from(crossContainor.querySelectorAll("img"))
-        res({ open: open_imgs, cross: cross_imgs })
+        updateImages(state)({ open: open_imgs, cross: cross_imgs })
+            .then(res)
     } else {
         subcontainor = document.createElement("div")
         subcontainor.id = state.containorID
@@ -479,8 +480,10 @@ const createImageContainor = state => new Promise((res, rej) => {
                     return img
                 })
 
-                res({ open: open_imgs, cross: cross_imgs })
+                return { open: open_imgs, cross: cross_imgs }
             })
+            .then(updateImages(state))
+            .then(res)
     }
 })
 
@@ -616,12 +619,6 @@ const updateState = (state, newState) => new Promise((res, rej) => {
     res(_state)
 })
 
-const firstView = (state) => {
-    clearView(state)
-    blobToCanvas(state)
-    drawHairLine(state)
-    drawScale(state)
-}
 
 const updateView = (state) => {
     clearView(state)
@@ -858,8 +855,7 @@ rock_selector.addEventListener(
     "change",
     e => rockNameSelectHandler(state)
         .then(createImageContainor)
-        .then(updateImages(state))
-        .then(firstView)
+        .then(updateView)
         .then(hideLoadingAnimation)
         .catch(console.log),
     false
