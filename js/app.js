@@ -3,6 +3,39 @@
  *  Images must be taken by each 15 degree.
  */
 
+class StaticManager {
+    constructor(
+        sampleListURL,
+        imageDataPathPrefix
+    ) {
+        this.sampleListURL = sampleListURL
+        this.imageDataPathPrefix = imageDataPathPrefix
+    }
+
+    getSampleListURL() {
+        return this.sampleListURL
+    }
+
+    getImageDataPath(packageName) {
+        return this.imageDataPathPrefix + packageName + ".zip"
+    }
+}
+
+staticSettings = new StaticManager(
+    "./dynamic/rock_list.json",
+    "./zipped/"
+)
+
+
+function selectCountry() {
+    const code = (window.navigator.languages && window.navigator.languages[0]) ||
+        window.navigator.language ||
+        window.navigator.userLanguage ||
+        window.navigator.browserLanguage;
+
+    return code === "ja" ? "ja" : "en";
+}
+
 const stepBy = unit => val => Math.floor(val / unit)
 
 const cycleBy = unit => val => {
@@ -52,6 +85,7 @@ const resetState = () => ({
     "isCrossNicol": false,
     "metaContainor": {},
     "zipContainor": {},
+    "language": selectCountry(),
 })
 
 const state = resetState()
@@ -59,6 +93,32 @@ const state = resetState()
 let viewer = document.querySelector("#main-viewer")
 let viewer_ctx = viewer.getContext("2d")
 
+
+
+const sampleListPresenter = state => response => new Promise((res, rej) => {
+    const sampleList = response["list_of_sample"];
+    const sampleSelectDOM = document.querySelector("#rock_selector");
+    sampleSelectDOM.innerHTML = "<option value='' disabled selected style='display:none;'>Select sample</option>";
+    const options = sampleList.map(v => {
+        const option = document.createElement("option")
+        option.value = v["package-name"];
+        option.innerHTML = v["list-name"][state.language]
+        return option
+    })
+    options.forEach(v => {
+        sampleSelectDOM.appendChild(v)
+    })
+    res(response);
+})
+
+const sampleListLoader = state => new Promise((res, rej) => {
+    const listURL = staticSettings.getSampleListURL();
+    fetch(listURL)
+        .then(response => response.json())
+        .then(sampleListPresenter(state))
+        .then(_ => res(state))
+        .catch(rej)
+})
 
 const windowResizeHandler = state => new Promise((res, rej) => {
     state.canvasWidth = getMinimumWindowSize() - 20
@@ -85,11 +145,11 @@ const loadImageSrc = (src) => new Promise((res, rej) => {
 
 
 
-const updateStateByMeta = (state, directory_name) => (response) => new Promise((res, rej) => {
+const updateStateByMeta = (state, containorID) => (response) => new Promise((res, rej) => {
 
     const { meta, zip } = response;
 
-    state.containorID = sanitizeID(directory_name);
+    state.containorID = containorID;
     state.isClockwise = meta.rotate_clockwise
     state.location = (meta.hasOwnProperty("location"))
         ? meta.location
@@ -305,35 +365,47 @@ const registerZip = (state, key) => response => {
     return response
 }
 
-const zipUrlHandler = (state, url) => new Promise((res, rej) => {
 
-    const key = sanitizeID(url)
+const markDownloadedOption = packageName => response => new Promise((res, rej) => {
+    Array.from(document.querySelectorAll(`#rock_selector>option[value=${packageName}]`)).forEach(option => {
+        label = option.innerHTML
+        option.innerHTML = "✓" + label
+    })
+    res(response)
+})
+
+const zipUrlHandler = (state, packageName) => new Promise((res, rej) => {
+
+    const key = sanitizeID(packageName)
+    const zipURL = staticSettings.getImageDataPath(packageName)
 
     if (key in state.zipContainor) {
         reselectFile(state, key)
             .then(res)
     } else {
-        unziper(url)
+        unziper(zipURL)
             .then(extractFile)
             .then(registerZip(state, key))
+            .then(markDownloadedOption(packageName))
             .then(res)
             .catch(rej)
     }
 })
 
+
+
 const rockNameSelectHandler = state => {
     return new Promise((res, rej) => {
         const rock_selector = document.querySelector("#rock_selector")
-        const directory_name = `./zipped/${rock_selector.options[rock_selector.selectedIndex].value}/`
-        const zipfileName = `./zipped/${rock_selector.options[rock_selector.selectedIndex].value}.zip`
+        const packageName = rock_selector.options[rock_selector.selectedIndex].value
 
         showLoadingAnimation(state)
         hideWelcomeBoard(state)
         showViewer(state)
         showNicolButton(state)
 
-        zipUrlHandler(state, zipfileName)
-            .then(updateStateByMeta(state, zipfileName))
+        zipUrlHandler(state, packageName)
+            .then(updateStateByMeta(state, packageName))
             .then(updateViewDiscription)
             .then(res)
             .catch(rej)
@@ -848,6 +920,7 @@ viewer.addEventListener(
 
 //window.onload = e => {
 windowResizeHandler(state)
+    .then(sampleListLoader)
     .then(hideLoadingAnimation)
     .catch(hideLoadingAnimation)
 
