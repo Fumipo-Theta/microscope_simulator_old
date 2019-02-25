@@ -23,8 +23,111 @@ class StaticManager {
 
 staticSettings = new StaticManager(
     "./dynamic/rock_list.json",
-    "./zipped/"
+    "./zipped/",
 )
+
+
+
+class DatabaseHandler {
+    constructor(db_name, version, storeName, primaryKeyName) {
+        this.db = window.indexedDB;
+        this.db_name = db_name;
+        this.db_version = version;
+        this.storeName = storeName;
+        this.primaryKey = primaryKeyName;
+    }
+
+    schemeDef(db) {
+        db.createObjectStore(this.storeName, { keyPath: this.primaryKey, autoIncrement: true });
+    }
+
+    connect() {
+        const dbp = new Promise((resolve, reject) => {
+            const req = this.db.open(this.db_name, this.db_version);
+            req.onsuccess = ev => resolve(ev.target.result);
+            req.onerror = ev => reject('fails to open db');
+            req.onupgradeneeded = ev => this.schemeDef(ev.target.result);
+        });
+        dbp.then(d => d.onerror = ev => alert("error: " + ev.target.errorCode));
+        return dbp;
+    }
+
+    async put(db, obj) { // returns obj in IDB
+        return new Promise((resolve, reject) => {
+            const docs = db.transaction([this.storeName], 'readwrite').objectStore(this.storeName);
+            const req = docs.put(obj);
+            req.onsuccess = () => resolve({ [this.primaryKey]: req.result, ...obj });
+            req.onerror = reject;
+        });
+    }
+
+    async get(db, id) { // NOTE: if not found, resolves with undefined.
+        return new Promise((resolve, reject) => {
+            const docs = db.transaction([this.storeName,]).objectStore(this.storeName);
+            const req = docs.get(id);
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = reject;
+        });
+    }
+
+    async loadAll(db) {
+        return new Promise(async (resolve, reject) => {
+            const saves = [];
+            const req = db.transaction([this.storeName]).objectStore(this.storeName).openCursor();
+            const onfinished = () => {
+                console.log(`${saves.length} saves found.`);
+                resolve(saves);
+            };
+            req.onerror = reject;
+            req.onsuccess = (ev) => {
+                const cur = ev.target.result;
+                if (cur) {
+                    saves.push(cur.value);
+                    cur.continue();
+                } else {
+                    onfinished();
+                }
+            };
+        });
+    }
+}
+
+
+class DummyDatabaseHandler extends DatabaseHandler {
+    constructor(db_name, version, storeName, primaryKeyName) {
+        console.warn("IndexedDB is not available !")
+        super(db_name, version, storeName, primaryKeyName)
+        this.storage = {}
+    }
+
+    connect() {
+        return {}
+    }
+
+    put(db, obj) {
+        if (db.hasOwnProperty(obj[this.primaryKey])) {
+            var old = db[obj[this.primaryKey]]
+        } else {
+            var old = {}
+        }
+        const new_entry = Object.assign(old, obj)
+        db[obj[this.primaryKey]] = new_entry;
+        return { [obj[this.primaryKey]]: new_entry }
+    }
+
+    get(db, id) {
+        if (db.hasOwnProperty(id)) {
+            return db[id]
+        } else {
+            return undefined
+        }
+    }
+
+    loadAll(db) {
+        return Object.entries(db)
+    }
+}
+
 
 
 function selectCountry() {
@@ -83,10 +186,17 @@ const resetState = () => ({
     "rotate_axis_translate": [],
     "isClockwise": true,
     "isCrossNicol": false,
-    "metaContainor": {},
-    "zipContainor": {},
     "language": selectCountry(),
 })
+
+async function connectDatabase(state) {
+    state.zipDBHandler = (window.indexedDB)
+        ? new DatabaseHandler("zipfiles", 1, "zip", "id")
+        : new DummyDatabaseHandler("zipfiles", 1, "zip", "id")
+    //state.zipDBHandler = new DummyDatabaseHandler("zipfiles", 1, "zip", "id")
+    state.zipDB = await state.zipDBHandler.connect()
+    return state
+}
 
 const state = resetState()
 
@@ -95,14 +205,14 @@ let viewer_ctx = viewer.getContext("2d")
 
 
 
-const sampleListPresenter = language => response => new Promise((res, rej) => {
+const sampleListPresenter = state => response => new Promise((res, rej) => {
     const sampleList = response["list_of_sample"];
     const sampleSelectDOM = document.querySelector("#rock_selector");
     sampleSelectDOM.innerHTML = "<option value='' disabled selected style='display:none;'>Select sample</option>";
     const options = sampleList.map(v => {
         const option = document.createElement("option")
         option.value = v["package-name"];
-        option.innerHTML = v["list-name"][language]
+        option.innerHTML = v["list-name"][state.language]
         return option
     })
     options.forEach(v => {
@@ -115,7 +225,7 @@ const sampleListLoader = state => new Promise((res, rej) => {
     const listURL = staticSettings.getSampleListURL();
     fetch(listURL)
         .then(response => response.json())
-        .then(sampleListPresenter(state.language))
+        .then(sampleListPresenter(state))
         .then(_ => res(state))
         .catch(rej)
 })
@@ -145,9 +255,9 @@ const loadImageSrc = (src) => new Promise((res, rej) => {
 
 
 
-const updateStateByMeta = (state, containorID) => (response) => new Promise((res, rej) => {
+const updateStateByMeta = (state, containorID) => (zip) => new Promise((res, rej) => {
 
-    const { meta, zip } = response;
+    const meta = JSON.parse(buffer_to_string(zip["manifest.json"]))
 
     state.containorID = sanitizeID(containorID);
     state.isClockwise = meta.rotate_clockwise
@@ -236,13 +346,13 @@ const updateStateByMeta = (state, containorID) => (response) => new Promise((res
     }
     state.open_image_srcs = Array(image_number - 1)
         .fill(0)
-        .map((_, i) => zip.files["o" + (i + 1) + ".JPG"])
-        .map(image => "data:image/png;base64," + base64String(image.inflate()))
+        .map((_, i) => zip["o" + (i + 1) + ".JPG"])
+        .map(image => "data:image/png;base64," + base64String(image))
 
     state.cross_image_srcs = Array(image_number - 1)
         .fill(0)
-        .map((_, i) => zip.files["c" + (i + 1) + ".JPG"])
-        .map(image => "data:image/png;base64," + base64String(image.inflate()))
+        .map((_, i) => zip["c" + (i + 1) + ".JPG"])
+        .map(image => "data:image/png;base64," + base64String(image))
     res(state)
 })
 
@@ -337,56 +447,71 @@ const unziper = (url) => new Promise((res, rej) => {
     Zip.inflate_file(url, res, rej, progressHandler, completeHandler)
 })
 
-const extractFile = zip => {
-    meta = zip.files["manifest.json"]
+
+function buffer_to_string(buf) {
     const decoder = new TextDecoder("UTF-8");
+    return decoder.decode(new Uint8Array(buf))
+}
 
-    function buffer_to_string(buf) {
-        return decoder.decode(new Uint8Array(buf))
-    }
 
-    return {
-        "meta": JSON.parse(buffer_to_string(meta.inflate())),
-        "zip": zip
-    }
+/**
+ *
+ * @param {*} zip
+ * @return {Object[meta,zip]}
+ */
+const extractFile = zipByte => {
+    const zip = Zip.inflate(zipByte)
+    const inflated_zip = {}
+    Object.entries(zip.files).forEach(kv => {
+        inflated_zip[kv[0]] = kv[1].inflate()
+    })
+
+    return inflated_zip
 }
 
 /**
- * Reselect from memory
+ *
  * @param {*} state
  * @param {*} key
+ * @return {Object[meta,zip]}
  */
-const reselectFile = (state, key) => new Promise((res, rej) => {
-    res({
-        "meta": state.metaContainor[key],
-        "zip": state.zipContainor[key]
+const registerZip = (state, key) => async inflated_zip => {
+    state.zipDBHandler.put(state.zipDB, {
+        "id": key,
+        "zip": inflated_zip
     })
-})
 
-const registerZip = (state, key) => response => {
-    const { meta, zip } = response;
-    state.metaContainor[key] = meta;
-    state.zipContainor[key] = zip
-    return response
+    return inflated_zip
 }
 
-
-const markDownloadedOption = packageName => response => new Promise((res, rej) => {
+/**
+ *
+ * @param {*} packageName
+ * @return {Object[meta,zip]}
+ */
+const markDownloadedOption = packageName => inflated_zip => new Promise((res, rej) => {
     Array.from(document.querySelectorAll(`#rock_selector>option[value=${packageName}]`)).forEach(option => {
         label = option.innerHTML
         option.innerHTML = "✓ " + label
     })
-    res(response)
+    res(inflated_zip)
 })
 
-const zipUrlHandler = (state, packageName) => new Promise((res, rej) => {
+/**
+ * package をどこかから取得する
+ * @param {*} state
+ * @param {*} packageName
+ */
+const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
 
     const key = sanitizeID(packageName)
     const zipURL = staticSettings.getImageDataPath(packageName)
 
-    if (key in state.zipContainor) {
-        reselectFile(state, key)
-            .then(res)
+    const storedData = await state.zipDBHandler.get(state.zipDB, key)
+
+
+    if (storedData !== undefined) {
+        res(storedData.zip)
     } else {
         unziper(zipURL)
             .then(extractFile)
@@ -926,8 +1051,12 @@ viewer.addEventListener(
 
 
 
-//window.onload = e => {
+/**
+ *
+ * Entry point function !
+ */
 windowResizeHandler(state)
+    .then(connectDatabase)
     .then(sampleListLoader)
     .then(hideLoadingAnimation)
     .catch(hideLoadingAnimation)

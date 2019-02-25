@@ -207,7 +207,7 @@
       var blob = xhr.response;
       var bytes = new Uint8Array(blob);
 
-      callback(Zip_inflate(bytes));
+      callback(bytes);
     };
     xhr.onprogress = function (evt) {
       progressHandler(evt)
