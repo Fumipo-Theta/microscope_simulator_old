@@ -1,11 +1,11 @@
-const VERSION = "0.1";
+const VERSION = "0.4";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
 
 const STATIC_CACHE_KEY = 'static-' + VERSION;
 const STATIC_FILES = [
-    ORIGIN + '/',
+    //ORIGIN + '/',
     //ORIGIN + '/css/main.css',
     //ORIGIN + '/js/app.js',
     ORIGIN + '/js/zip.js',

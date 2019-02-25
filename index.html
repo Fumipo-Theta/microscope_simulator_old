@@ -33,13 +33,16 @@
     <meta name="google-site-verification" content="-1sJ5n_gZ92tSdHs7KCPexogyau4A8MKl6WW3qe4gBk" />
 </head>
 <div id="fb-root"></div>
-<script>(function (d, s, id) {
+<script>
+    (function (d, s, id) {
+        if (location.hostname == 'localhost') return;
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
         js = d.createElement(s); js.id = id;
         js.src = 'https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.2';
         fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    }(document, 'script', 'facebook-jssdk'));
+</script>
 
 
 <body id="top" ontouchstart="">
@@ -49,58 +52,15 @@
         <div class="select-wrapper margin-between">
             <select id="rock_selector" name="rock_name">
                 <option value='' disabled selected style='display:none;'>Select sample</option>
-                <!--option value="Q27_quartz">流紋岩中の石英</option>
-                <option value="Grc-1_quartz">花崗岩中の波動消光を示す石英</option>
-                <option value="HNP1_plagioclase">斑れい岩中の斜長石</option>
-                <option value="Fuji-1_plagioclase">玄武岩中の斜長石</option>
-                <option value="E156_plagioclase">安山岩中の斜長石</option>
-                <option value="Grc-1_microcline">花崗岩中のカリ長石</option>
-
-
-                <option value="KL02_olivine">玄武岩中のかんらん石</option>
-                <option value="KL02_olivine_2">玄武岩中のかんらん石</option>
-                <option value="HWI-1_olivine">玄武岩中のかんらん石</option>
-
-
-                <option value="Z32_staurolite">結晶片岩中のざくろ石と十字石</option>
-
-                <option value="E156_hypersthene">安山岩中の直方輝石(ハイパーシン)</option>
-                <option value="F17_olivine">かんらん岩中の直方輝石(エンスタタイト)</option>
-                <option value="R74_augite">斑れい岩中の単斜輝石(普通輝石)</option>
-                <option value="F17_clinopyroxene">かんらん岩中の単斜輝石(普通輝石)</option>
-                <option value="X50_titan_augite">霞岩中の単斜輝石(チタンオージャイト)</option>
-
-                <option value="D43_brown_hornblende">斑れい岩中の普通角閃石(褐色)</option>
-                <option value="AB-1_hornblende">安山岩中の普通角閃石(褐色)</option>
-                <option value="S48_green_hornblende">閃緑岩中の普通角閃石(緑色)</option>
-                <option value="G1_granite">花崗岩中の普通角閃石(緑色)</option>
-                <option value="D110_actinolite">緑色片岩中のアクチノ閃石</option>
-                <option value="Glc-2_glaucophane">結晶片岩中の藍閃石</option>
-
-                <option value="IH85_biotite">花崗岩中の黒雲母</option>
-                <option value="Z58_biotite">結晶片岩中の黒雲母</option>
-                <option value="HK48_muscovite">結晶片岩中の白雲母</option>
-
-                <option value="PS4_epidote">結晶片岩中の緑簾石</option>
-                <option value="L39_piemontite">結晶片岩中の紅簾石</option>
-
-                <option value="TT70_calcite">カーボナタイト中の方解石</option>
-
-                <option value="B59_graphic_texture">花崗岩の文象構造</option>
-                <option value="B59_graphic_texture_2">花崗岩の文象構造2</option>
-                <option value="KM-2_komatiite">かんらん石のスピニフェックス構造</option>
-                <option value="GS913_green_schist">緑色片岩</option>
-                <option value="DM_serpentine">結晶周辺が蛇紋石に変化したかんらん岩</option>
-                <option value="SR_serpentine">蛇紋岩</option>
-
-                <option value="test_1">Test 1</option>
-                <option value="test_2">Test 2</option-->
             </select>
-
-
         </div>
 
-
+        <!--div class="select-wrapper margin-between">
+            <select id="language_selector" name="language_name">
+                <option value='Japanese' selected>Ja</option>
+                <option value='English'>En</option>
+            </select>
+        </div-->
 
 
     </div>

@@ -195,8 +195,6 @@ a {
 }
 
 .select-wrapper {
-    width: 390px;
-    max-width: 100%;
     padding: 0 10px;
 }
 
@@ -254,6 +252,14 @@ select:after {
 
 #rock_selector {
     animation: pulsation 1s linear 4s 2;
+}
+
+#rock_selector {
+    flex-grow: inherit;
+}
+
+#language_selector {
+    width: 3rem;
 }
 
 #app-wrapper {

@@ -13,6 +13,223 @@
                 "ja": "花崗岩中の波動消光を示す石英",
                 "en": "Quartz showing wavy extinction in granite"
             }
+        },
+        {
+            "package-name": "HNP1_plagioclase",
+            "list-name": {
+                "ja": "斑れい岩中の斜長石",
+                "en": "Plagioclase in gabbro"
+            }
+        },
+        {
+            "package-name": "Fuji-1_plagioclase",
+            "list-name": {
+                "ja": "玄武岩中の斜長石",
+                "en": "Plagioclase in basalt"
+            }
+        },
+        {
+            "package-name": "E156_plagioclase",
+            "list-name": {
+                "ja": "安山岩中の斜長石",
+                "en": "Plagioclase in andesite"
+            }
+        },
+        {
+            "package-name": "Grc-1_microcline",
+            "list-name": {
+                "ja": "花崗岩中のカリ長石",
+                "en": "K-feldspar in granite"
+            }
+        },
+        {
+            "package-name": "KL02_olivine",
+            "list-name": {
+                "ja": "玄武岩中のかんらん石",
+                "en": "Olivine in basalt"
+            }
+        },
+        {
+            "package-name": "KL02_olivine_2",
+            "list-name": {
+                "ja": "玄武岩中のかんらん石",
+                "en": "Olivine in basalt"
+            }
+        },
+        {
+            "package-name": "HWI-1_olivine",
+            "list-name": {
+                "ja": "玄武岩中のかんらん石",
+                "en": "Olivine in basalt"
+            }
+        },
+        {
+            "package-name": "Z32_staurolite",
+            "list-name": {
+                "ja": "結晶片岩中のざくろ石と十字石",
+                "en": "Garnet and staurolite in schist"
+            }
+        },
+        {
+            "package-name": "E156_hypersthene",
+            "list-name": {
+                "ja": "安山岩中の直方輝石(ハイパーシン)",
+                "en": "Orthopyroxene (hypersthene) in andesite"
+            }
+        },
+        {
+            "package-name": "F17_olivine",
+            "list-name": {
+                "ja": "かんらん岩中の直方輝石(エンスタタイト)",
+                "en": "Orthopyroxene (enstatite) in peridotite"
+            }
+        },
+        {
+            "package-name": "R74_augite",
+            "list-name": {
+                "ja": "斑れい岩中の単斜輝石(普通輝石)",
+                "en": "Clinopyroxene (augite) in gabbro"
+            }
+        },
+        {
+            "package-name": "F17_clinopyroxene",
+            "list-name": {
+                "ja": "かんらん岩中の単斜輝石(普通輝石)",
+                "en": "Clinopyroxene (diopside) in peridotite"
+            }
+        },
+        {
+            "package-name": "X50_titan_augite",
+            "list-name": {
+                "ja": "霞岩中の単斜輝石(チタンオージャイト)",
+                "en": "Clinopyroxene (Ti-augite) in nephelinite"
+            }
+        },
+        {
+            "package-name": "D43_brown_hornblende",
+            "list-name": {
+                "ja": "斑れい岩中の普通角閃石(褐色)",
+                "en": "Amphibole (hornblende) in gabbro"
+            }
+        },
+        {
+            "package-name": "AB-1_hornblende",
+            "list-name": {
+                "ja": "安山岩中の普通角閃石(褐色)",
+                "en": "Amphibole (hornblende) in andesite"
+            }
+        },
+        {
+            "package-name": "S48_green_hornblende",
+            "list-name": {
+                "ja": "閃緑岩中の普通角閃石(緑色)",
+                "en": "Amphibole (hornblende) in diorite"
+            }
+        },
+        {
+            "package-name": "G1_granite",
+            "list-name": {
+                "ja": "花崗岩中の普通角閃石(緑色)",
+                "en": "Amphibole (hornblende) in granite"
+            }
+        },
+        {
+            "package-name": "D110_actinolite",
+            "list-name": {
+                "ja": "緑色片岩中のアクチノ閃石",
+                "en": "Amphibole (actinolite) in green schist"
+            }
+        },
+        {
+            "package-name": "Glc-2_glaucophane",
+            "list-name": {
+                "ja": "結晶片岩中の藍閃石",
+                "en": "Amphibole (glaucophane) in schist"
+            }
+        },
+        {
+            "package-name": "IH85_biotite",
+            "list-name": {
+                "ja": "花崗岩中の黒雲母",
+                "en": "Mica (biotite) in granite"
+            }
+        },
+        {
+            "package-name": "Z58_biotite",
+            "list-name": {
+                "ja": "結晶片岩中の黒雲母",
+                "en": "Mica (biotite) in schist"
+            }
+        },
+        {
+            "package-name": "HK48_muscovite",
+            "list-name": {
+                "ja": "結晶片岩中の白雲母",
+                "en": "Mica (muscovite) in schist"
+            }
+        },
+        {
+            "package-name": "PS4_epidote",
+            "list-name": {
+                "ja": "結晶片岩中の緑簾石",
+                "en": "Epidote in schist"
+            }
+        },
+        {
+            "package-name": "L39_piemontite",
+            "list-name": {
+                "ja": "結晶片岩中の紅簾石",
+                "en": "Piemontite in schist"
+            }
+        },
+        {
+            "package-name": "TT70_calcite",
+            "list-name": {
+                "ja": "カーボナタイト中の方解石",
+                "en": "Calcite in carbonatite"
+            }
+        },
+        {
+            "package-name": "B59_graphic_texture",
+            "list-name": {
+                "ja": "花崗岩の文象構造",
+                "en": "Graphic texture in granite"
+            }
+        },
+        {
+            "package-name": "B59_graphic_texture_2",
+            "list-name": {
+                "ja": "花崗岩の文象構造",
+                "en": "Graphic texture in granite"
+            }
+        },
+        {
+            "package-name": "KM-2_komatiite",
+            "list-name": {
+                "ja": "コマチアイト中のかんらん石のスピニフェックス組織",
+                "en": "Spinifex texture of olivine in komatiite"
+            }
+        },
+        {
+            "package-name": "GS913_green_schist",
+            "list-name": {
+                "ja": "緑色片岩",
+                "en": "Green schist"
+            }
+        },
+        {
+            "package-name": "DM_serpentine",
+            "list-name": {
+                "ja": "結晶周辺が蛇紋石に変化したかんらん岩",
+                "en": "Olivine partly altered to serpentine"
+            }
+        },
+        {
+            "package-name": "SR_serpentine",
+            "list-name": {
+                "ja": "蛇紋岩",
+                "en": "Serpentinite"
+            }
         }
     ]
 }
