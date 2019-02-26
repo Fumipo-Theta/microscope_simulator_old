@@ -1,13 +1,13 @@
-const VERSION = "0.4";
+const VERSION = "1.0";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
 
 const STATIC_CACHE_KEY = 'static-' + VERSION;
 const STATIC_FILES = [
-    //ORIGIN + '/',
-    //ORIGIN + '/css/main.css',
-    //ORIGIN + '/js/app.js',
+    ORIGIN + '/',
+    ORIGIN + '/css/main.css',
+    ORIGIN + '/js/app.js',
     ORIGIN + '/js/zip.js',
     ORIGIN + '/js/jsinflate.js',
     "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js",

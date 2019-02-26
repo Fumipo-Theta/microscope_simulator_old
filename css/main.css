@@ -196,6 +196,8 @@ a {
 
 .select-wrapper {
     padding: 0 10px;
+    flex-grow: 1;
+    max-width: 400px;
 }
 
 select {
@@ -221,10 +223,8 @@ select option {
     color: #eeeeff;
 }
 
-select:after {
-    content: "▼";
-    position: relative;
-    right: 10px;
+select option.downloaded {
+    background-color: #15609e;
 }
 
 @keyframes slideBelow {
@@ -247,19 +247,22 @@ select:after {
     font-size: 1.25rem;
     opacity: 0;
     box-shadow: 0px 1px 15px 0px rgba(0, 0, 0, 0.5);
+}
+
+#top-navigation.isready {
     animation: opacity0_1 1s ease 2s forwards, slideBelow 1s ease 2s forwards;
 }
 
-#rock_selector {
+#rock_selector.isready {
     animation: pulsation 1s linear 4s 2;
 }
 
-#rock_selector {
-    flex-grow: inherit;
+#rock_selector_wrapper {
+    flex-grow: 3;
 }
 
 #language_selector {
-    width: 3rem;
+    width: 7rem;
 }
 
 #app-wrapper {

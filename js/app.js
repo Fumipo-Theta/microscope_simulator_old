@@ -56,7 +56,7 @@ class DatabaseHandler {
         return new Promise((resolve, reject) => {
             const docs = db.transaction([this.storeName], 'readwrite').objectStore(this.storeName);
             const req = docs.put(obj);
-            req.onsuccess = () => resolve({ [this.primaryKey]: req.result, ...obj });
+            req.onsuccess = () => resolve(Object.assign({ [this.primaryKey]: req.result }, obj));
             req.onerror = reject;
         });
     }
@@ -70,25 +70,40 @@ class DatabaseHandler {
         });
     }
 
+    async delete(db, id) {
+        return new Promise((resolve, reject) => {
+            const docs = db.transaction([this.storeName,], 'readwrite')
+                .objectStore(this.storeName);
+            const req = docs.delete(id);
+            req.onsuccess = () => resolve(id);
+            req.onerror = reject;
+        })
+    }
+
     async loadAll(db) {
         return new Promise(async (resolve, reject) => {
             const saves = [];
             const req = db.transaction([this.storeName]).objectStore(this.storeName).openCursor();
-            const onfinished = () => {
-                console.log(`${saves.length} saves found.`);
-                resolve(saves);
-            };
-            req.onerror = reject;
-            req.onsuccess = (ev) => {
-                const cur = ev.target.result;
-                if (cur) {
-                    saves.push(cur.value);
-                    cur.continue();
-                } else {
-                    onfinished();
-                }
-            };
+            resolve(req)
         });
+    }
+
+    async getAllKeys(db) {
+        return new Promise(async (resolve, reject) => {
+
+            const req = db.transaction([this.storeName]).objectStore(this.storeName)
+
+            if (req.getAllKeys) {
+                req.getAllKeys().onsuccess = function (event) {
+                    const rows = event.target.result;
+                    resolve(rows);
+                }
+            } else {
+                const entries = await this.loadAll(db)
+                resolve(Object.keys(entries))
+            }
+            registerZip.onerror = reject
+        })
     }
 }
 
@@ -123,11 +138,27 @@ class DummyDatabaseHandler extends DatabaseHandler {
         }
     }
 
+    delete(db, id) {
+        if (db.hasOwnProperty(id)) {
+            db[id] = null;
+            return id
+        } else {
+            return undefined
+        }
+    }
+
     loadAll(db) {
         return Object.entries(db)
     }
+
+    getAllKeys(db) {
+        return Object.keys(db)
+    }
 }
 
+function es6Available() {
+    return (typeof Symbol === "function" && typeof Symbol() === "symbol")
+}
 
 
 function selectCountry() {
@@ -135,6 +166,8 @@ function selectCountry() {
         window.navigator.language ||
         window.navigator.userLanguage ||
         window.navigator.browserLanguage;
+
+    document.querySelector(`option[value=${code}]`).selected = true
 
     return code === "ja" ? "ja" : "en";
 }
@@ -187,14 +220,17 @@ const resetState = () => ({
     "isClockwise": true,
     "isCrossNicol": false,
     "language": selectCountry(),
+    "storedKeys": [],
 })
 
 async function connectDatabase(state) {
     state.zipDBHandler = (window.indexedDB)
-        ? new DatabaseHandler("zipfiles", 1, "zip", "id")
-        : new DummyDatabaseHandler("zipfiles", 1, "zip", "id")
-    //state.zipDBHandler = new DummyDatabaseHandler("zipfiles", 1, "zip", "id")
+        ? (navigator.userAgent.match("Edge"))
+            ? new DatabaseHandler("zipfiles", 2, "zip", "id")
+            : new DummyDatabaseHandler("zipfiles", 2, "zip", "id")
+        : new DummyDatabaseHandler("zipfiles", 2, "zip", "id")
     state.zipDB = await state.zipDBHandler.connect()
+    state.storedKeys = await state.zipDBHandler.getAllKeys(state.zipDB)
     return state
 }
 
@@ -204,28 +240,46 @@ let viewer = document.querySelector("#main-viewer")
 let viewer_ctx = viewer.getContext("2d")
 
 
+/**
+ * サンプルリストをselectタグ内に追加する
+ * @param {*} state
+ */
+const sampleListPresenter = state => response => new Promise(async (res, rej) => {
 
-const sampleListPresenter = state => response => new Promise((res, rej) => {
+    const savedSampleNames = state.storedKeys;
+
     const sampleList = response["list_of_sample"];
     const sampleSelectDOM = document.querySelector("#rock_selector");
     sampleSelectDOM.innerHTML = "<option value='' disabled selected style='display:none;'>Select sample</option>";
     const options = sampleList.map(v => {
         const option = document.createElement("option")
         option.value = v["package-name"];
-        option.innerHTML = v["list-name"][state.language]
+        option.innerHTML = (savedSampleNames.includes(v["package-name"]) ? "✓ " : "") + v["list-name"][state.language]
+        if (savedSampleNames.includes(v["package-name"])) {
+            option.classList.add("downloaded")
+        }
         return option
     })
     options.forEach(v => {
         sampleSelectDOM.appendChild(v)
     })
+
+    document.querySelector("#top-navigation").classList.add("isready");
+    sampleSelectDOM.classList.add("isready")
     res(response);
 })
 
-const sampleListLoader = state => new Promise((res, rej) => {
+const sampleListLoader = state => new Promise(async (res, rej) => {
     const listURL = staticSettings.getSampleListURL();
-    fetch(listURL)
-        .then(response => response.json())
-        .then(sampleListPresenter(state))
+    try {
+        var response = await fetch(listURL)
+            .catch((e) => { throw Error(e) })
+            .then(r => r.json())
+    } catch (e) {
+        var response = { "list_of_sample": [] }
+    }
+
+    sampleListPresenter(state)(response)
         .then(_ => res(state))
         .catch(rej)
 })
@@ -475,11 +529,25 @@ const extractFile = zipByte => {
  * @param {*} key
  * @return {Object[meta,zip]}
  */
-const registerZip = (state, key) => async inflated_zip => {
-    state.zipDBHandler.put(state.zipDB, {
+const registerZip = (state, key, timestamp) => async inflated_zip => {
+
+    const newOne = await state.zipDBHandler.put(state.zipDB, {
         "id": key,
-        "zip": inflated_zip
+        "zip": inflated_zip,
+        "lastModified": timestamp
     })
+
+    state.storedKeys.push(key)
+
+    if (state.storedKeys.length > 20) {
+        const oldest = state.storedKeys.shift()
+        const deleted = await state.zipDBHandler.delete(state.zipDB, oldest)
+        Array.from(document.querySelectorAll(`#rock_selector>option[value=${oldest}]`)).forEach(option => {
+            label = option.innerHTML.replace("✓ ", "")
+            option.innerHTML = label
+            option.classList.remove("downloaded")
+        })
+    }
 
     return inflated_zip
 }
@@ -491,8 +559,9 @@ const registerZip = (state, key) => async inflated_zip => {
  */
 const markDownloadedOption = packageName => inflated_zip => new Promise((res, rej) => {
     Array.from(document.querySelectorAll(`#rock_selector>option[value=${packageName}]`)).forEach(option => {
-        label = option.innerHTML
+        label = option.innerHTML.replace("✓ ", "")
         option.innerHTML = "✓ " + label
+        option.classList.add("downloaded")
     })
     res(inflated_zip)
 })
@@ -503,19 +572,32 @@ const markDownloadedOption = packageName => inflated_zip => new Promise((res, re
  * @param {*} packageName
  */
 const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
-
     const key = sanitizeID(packageName)
     const zipURL = staticSettings.getImageDataPath(packageName)
+
+    try {
+        const header = await fetch(zipURL, { method: 'HEAD' }).catch(e => { throw Error(e) })
+        var lastModified = header.headers.get("last-modified")
+    } catch (e) {
+        var lastModified = "none"
+        var networkDisconnected = true
+    }
 
     const storedData = await state.zipDBHandler.get(state.zipDB, key)
 
 
-    if (storedData !== undefined) {
+    if (storedData !== undefined && storedData.lastModified === lastModified) {
         res(storedData.zip)
+    } else if (networkDisconnected) {
+        if (storedData !== undefined) {
+            res(storedData.zip)
+        } else {
+            res()
+        }
     } else {
         unziper(zipURL)
             .then(extractFile)
-            .then(registerZip(state, key))
+            .then(registerZip(state, key, lastModified))
             .then(markDownloadedOption(packageName))
             .then(res)
             .catch(rej)
@@ -734,7 +816,7 @@ const drawScale = state => {
         scalePixel *= 0.5
         scaleNumber *= 0.5
     }
-    scaleBar.style.width = scalePixel;
+    scaleBar.style.width = scalePixel + "px";
     scaleBar.querySelector("div:first-child").innerHTML = `${scaleNumber} ${scaleUnit}`;
 }
 
@@ -1051,30 +1133,61 @@ viewer.addEventListener(
 
 
 
+function languageChangeHundler(state) {
+    return function (e) {
+        return new Promise((res, rej) => {
+            const languageSelector = document.querySelector("#language_selector")
+            const lang = languageSelector.options[languageSelector.selectedIndex].value;
+            state.language = lang
+            res(state)
+        })
+    }
+}
+
+const languageSelector = document.querySelector("#language_selector")
+
+languageSelector.addEventListener("change",
+    e => languageChangeHundler(state)(e)
+        .then(sampleListLoader),
+    false
+)
+
 /**
  *
  * Entry point function !
  */
-windowResizeHandler(state)
-    .then(connectDatabase)
-    .then(sampleListLoader)
-    .then(hideLoadingAnimation)
-    .catch(hideLoadingAnimation)
+function init(state) {
+    const userAgent = navigator.userAgent;
 
+    // スマートフォンの場合はorientationchangeイベントを監視する
+    if (userAgent.indexOf("iPhone") >= 0 || userAgent.indexOf("iPad") >= 0 || userAgent.indexOf("Android") >= 0)
+        window.addEventListener(
+            "orientationchange",
+            e => windowResizeHandler(state).then(updateView),
+            false
+        );
+    else
+        window.addEventListener(
+            "resize",
+            e => windowResizeHandler(state).then(updateView),
+            false
+        );
 
+    if (userAgent.match("Edge")) {
+        document.querySelector("#welcome-card div img").src = "./images/SCOPin_rock_logo.png"
+    }
 
-const userAgent = navigator.userAgent;
+    if (!es6Available()) {
+        var warnningCard = document.getElementById("please_use_modern_browser")
+        warnningCard.classList.remove("inactive")
 
-// スマートフォンの場合はorientationchangeイベントを監視する
-if (userAgent.indexOf("iPhone") >= 0 || userAgent.indexOf("iPad") >= 0 || userAgent.indexOf("Android") >= 0)
-    window.addEventListener(
-        "orientationchange",
-        e => windowResizeHandler(state).then(updateView),
-        false
-    );
-else
-    window.addEventListener(
-        "resize",
-        e => windowResizeHandler(state).then(updateView),
-        false
-    );
+    } else {
+        windowResizeHandler(state)
+            .then(connectDatabase)
+            .then(sampleListLoader)
+            .then(hideLoadingAnimation)
+            .catch(hideLoadingAnimation)
+    }
+}
+
+init(state)
