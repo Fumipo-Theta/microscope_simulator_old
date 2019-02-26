@@ -225,7 +225,7 @@ const resetState = () => ({
 
 async function connectDatabase(state) {
     state.zipDBHandler = (window.indexedDB)
-        ? (navigator.userAgent.match("Edge"))
+        ? (!navigator.userAgent.match("Edge"))
             ? new DatabaseHandler("zipfiles", 2, "zip", "id")
             : new DummyDatabaseHandler("zipfiles", 2, "zip", "id")
         : new DummyDatabaseHandler("zipfiles", 2, "zip", "id")
