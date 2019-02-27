@@ -161,15 +161,17 @@ function es6Available() {
 }
 
 
-function selectCountry() {
+function selectLanguageCode() {
     const code = (window.navigator.languages && window.navigator.languages[0]) ||
         window.navigator.language ||
         window.navigator.userLanguage ||
         window.navigator.browserLanguage;
 
-    document.querySelector(`option[value=${code}]`).selected = true
+    const lang = code.match("ja") ? "ja" : "en";
 
-    return code === "ja" ? "ja" : "en";
+    document.querySelector("option[value=" + lang + "]").selected = true
+
+    return lang
 }
 
 const stepBy = unit => val => Math.floor(val / unit)
@@ -219,9 +221,14 @@ const resetState = () => ({
     "rotate_axis_translate": [],
     "isClockwise": true,
     "isCrossNicol": false,
-    "language": selectCountry(),
+    "language": selectLanguageCode(),
     "storedKeys": [],
 })
+
+const state = resetState()
+
+let viewer = document.querySelector("#main-viewer")
+let viewer_ctx = viewer.getContext("2d")
 
 async function connectDatabase(state) {
     state.zipDBHandler = (window.indexedDB)
@@ -232,12 +239,7 @@ async function connectDatabase(state) {
     state.zipDB = await state.zipDBHandler.connect()
     state.storedKeys = await state.zipDBHandler.getAllKeys(state.zipDB)
     return state
-}
-
-const state = resetState()
-
-let viewer = document.querySelector("#main-viewer")
-let viewer_ctx = viewer.getContext("2d")
+};
 
 
 /**

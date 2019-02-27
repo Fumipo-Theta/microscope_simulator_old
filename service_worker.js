@@ -1,17 +1,15 @@
-const VERSION = "1.1";
+const VERSION = "1.1.2";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
 
 const STATIC_CACHE_KEY = 'static-' + VERSION;
 const STATIC_FILES = [
-    ORIGIN + '/',
-    ORIGIN + '/css/main.css',
-    ORIGIN + '/js/app.js',
-    ORIGIN + '/js/zip.js',
-    ORIGIN + '/js/jsinflate.js',
-    "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js",
-    "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding.js",
+    //ORIGIN + '/',
+    //ORIGIN + '/css/main.css',
+    //ORIGIN + '/js/app.js',
+    //ORIGIN + '/js/zip.js',
+    //ORIGIN + '/js/jsinflate.js',
 
     ORIGIN + '/images/SCOPin_rock_logo.svg',
     ORIGIN + '/images/SCOPin_image.svg',
