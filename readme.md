@@ -8,7 +8,7 @@ Deployed web application is [here](https://microscope.fumipo-theta.com).
 
 ## Application
 
-The web browser corresponding to ES6 is required. Please view by the latest version Google Chrome, Safari, FireFox, or Microsoft Edge.
+The web browser corresponding to ES6 is required. Please view by the latest version Google Chrome, Safari, Firefox, or Microsoft Edge.
 
 *Internet Explorer does not correspond*.
 
