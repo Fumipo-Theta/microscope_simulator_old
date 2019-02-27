@@ -1,0 +1,31 @@
+{
+    "location": "String of sample locality",
+    "geographic-coordinate": {
+        "system": "String of coordinate system (latitude-longitude)",
+        "position": {
+            "latitude": "Number of latitude. Positive in northern hemisphere",
+            "longitude": "Number of longitude. Positive in eastern hemisphere"
+        }
+    },
+    "magnify": "Number of magnification of view",
+    "scale-unit": "String of label of scale",
+    "scale-pixel": "Number of pixels of scale length on pictures",
+    "image_width": "Number of pixels of picture width",
+    "image_height": "Number of pixels of picture height",
+    "rotate_center": [
+        "Number of lateral distance of rotate center from left-top of pictures",
+        "Number of vertical distance of rotate center from left-top of pictures"
+    ],
+    "cycle_rotate_degree": "Number of rotation degrees of the most rotated picture",
+    "rotate_clockwise": "true if rotation direction of pictures is clockwise, else false",
+    "rotate_by_degree": "Number of difference of rotation degrees between asjusent pictures",
+    "rock_type": {
+        "ja": "String of rock name in Japanese",
+        "en": "String of rock name in English"
+    },
+    "owner": "String of owner of the sample",
+    "discription": {
+        "ja": "String of discriotion in Japanese",
+        "en": "String of discription in English"
+    }
+}

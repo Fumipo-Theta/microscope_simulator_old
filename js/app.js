@@ -1,6 +1,5 @@
 /**
- *  Images are: 12 images for both open and cross nickol.
- *  Images must be taken by each 15 degree.
+ *  Language code of sample list is such as "ja" or "en".
  */
 
 class StaticManager {
@@ -156,6 +155,45 @@ class DummyDatabaseHandler extends DatabaseHandler {
     }
 }
 
+class NativeLocalStorage {
+    constructor() {
+        this.db = window.localStorage
+    }
+
+    put(key, value) {
+        this.db.setItem(key, value);
+    }
+
+    get(key) {
+        const value = this.db.getItem(key)
+        return (value == null)
+            ? undefined
+            : value
+    }
+}
+
+class DummyLocalStorage {
+    constructor() {
+        this.db = {}
+    }
+
+    put(key, value) {
+        this.db[key] = value;
+    }
+
+    get(key) {
+        return (this.db.hasOwnProperty("key"))
+            ? this.db[key]
+            : undefined
+    }
+}
+
+function ISmallStorageFactory() {
+    return (window.localStorage)
+        ? new NativeLocalStorage()
+        : new DummyLocalStorage()
+}
+
 function es6Available() {
     return (typeof Symbol === "function" && typeof Symbol() === "symbol")
 }
@@ -169,9 +207,39 @@ function selectLanguageCode() {
 
     const lang = code.match("ja") ? "ja" : "en";
 
-    document.querySelector("option[value=" + lang + "]").selected = true
-
     return lang
+}
+
+/**
+ *
+ * @param {String,Object[String,String]} multiLanguageTextObj
+ * @return {String}
+ */
+function multiLanguage(multiLanguageTextObj, languageCode) {
+    if (typeof (multiLanguageTextObj) === "string") {
+        return multiLanguageTextObj
+    } else if (typeof (multiLanguageTextObj) === "object") {
+        if (multiLanguageTextObj.hasOwnProperty(languageCode)) {
+            return multiLanguageTextObj[languageCode]
+        } else {
+            const keys = Object.keys(multiLanguageTextObj)
+            return (keys.length > 0)
+                ? multiLanguageTextObj[keys[0]]
+                : ""
+        }
+    } else {
+        return ""
+    }
+}
+
+function overwrideLanguageByLocalStorage(state) {
+    const langInLocalStorage = state.localStorage.get("language")
+    const lang = (langInLocalStorage !== undefined)
+        ? langInLocalStorage
+        : state.language;
+    state.language = lang
+    document.querySelector("option[value=" + lang + "]").selected = true
+    return state
 }
 
 const stepBy = unit => val => Math.floor(val / unit)
@@ -241,6 +309,11 @@ async function connectDatabase(state) {
     return state
 };
 
+function connectLocalStorage(state) {
+    state.localStorage = ISmallStorageFactory();
+    return state
+}
+
 
 /**
  * サンプルリストをselectタグ内に追加する
@@ -279,6 +352,7 @@ const sampleListLoader = state => new Promise(async (res, rej) => {
             .then(r => r.json())
     } catch (e) {
         var response = { "list_of_sample": [] }
+        console.warn(e)
     }
 
     sampleListPresenter(state)(response)
@@ -427,18 +501,23 @@ const handleErrors = (response) => {
     }
 }
 
+
+
 const updateViewDiscription = state => {
-    const discription = document.querySelector("#view_discription")
+    const discriptionBox = document.querySelector("#view_discription")
+    const lang = state.language
 
-    const textTemplate = state => {
-        return `<ul style="list-style-type:none;">
-            <li>${state.rockType} ${state.location ? "at " + state.location : ""}</li>
-            <li>${state.discription}</li>
-            <li>Owner: ${state.owner}</li>
+    const rockFrom = `${multiLanguage(state.rockType, lang)} ${state.location ? "(" + multiLanguage(state.location, lang) + ")" : ""}`
+    const rockDisc = multiLanguage(state.discription, lang)
+    const rockOwner = multiLanguage(state.owner, lang)
+
+    const textTemplate = `<ul style="list-style-type:none;">
+            <li>${rockFrom}</li>
+            <li>${rockDisc}</li>
+            <li>Owner: ${rockOwner}</li>
         </ul>`
-    }
 
-    discription.innerHTML = textTemplate(state);
+    discriptionBox.innerHTML = textTemplate;
     return state
 }
 
@@ -1141,16 +1220,19 @@ function languageChangeHundler(state) {
             const languageSelector = document.querySelector("#language_selector")
             const lang = languageSelector.options[languageSelector.selectedIndex].value;
             state.language = lang
+            state.localStorage.put("language", lang)
             res(state)
         })
     }
 }
 
+
 const languageSelector = document.querySelector("#language_selector")
 
 languageSelector.addEventListener("change",
     e => languageChangeHundler(state)(e)
-        .then(sampleListLoader),
+        .then(sampleListLoader)
+        .then(updateViewDiscription),
     false
 )
 
@@ -1185,10 +1267,15 @@ function init(state) {
 
     } else {
         windowResizeHandler(state)
+            .then(connectLocalStorage)
+            .then(overwrideLanguageByLocalStorage)
             .then(connectDatabase)
             .then(sampleListLoader)
             .then(hideLoadingAnimation)
-            .catch(hideLoadingAnimation)
+            .catch(e => {
+                console.error(e)
+                hideLoadingAnimation(e);
+            })
     }
 }
 
