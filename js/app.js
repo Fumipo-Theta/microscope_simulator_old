@@ -514,7 +514,7 @@ const updateViewDiscription = state => {
     const textTemplate = `<ul style="list-style-type:none;">
             <li>${rockFrom}</li>
             <li>${rockDisc}</li>
-            <li>Owner: ${rockOwner}</li>
+            <li>${rockOwner}</li>
         </ul>`
 
     discriptionBox.innerHTML = textTemplate;
@@ -1256,10 +1256,6 @@ function init(state) {
             e => windowResizeHandler(state).then(updateView),
             false
         );
-
-    if (userAgent.match("Edge")) {
-        document.querySelector("#welcome-card div img").src = "./images/SCOPin_rock_logo.png"
-    }
 
     if (!es6Available()) {
         var warnningCard = document.getElementById("please_use_modern_browser")
