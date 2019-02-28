@@ -1,6 +1,5 @@
 *.ipynb
 node_modules/
-*.jpg
 data/
 data-min/
 zipped/
