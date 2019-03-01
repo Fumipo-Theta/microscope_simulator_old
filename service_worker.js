@@ -1,4 +1,4 @@
-const VERSION = "1.1.2";
+const VERSION = "1.1.9";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
@@ -6,12 +6,15 @@ console.log(location.protocol, location.hostname)
 const STATIC_CACHE_KEY = 'static-' + VERSION;
 const STATIC_FILES = [
     //ORIGIN + '/',
-    //ORIGIN + '/css/main.css',
-    //ORIGIN + '/js/app.js',
-    //ORIGIN + '/js/zip.js',
-    //ORIGIN + '/js/jsinflate.js',
+    ORIGIN + '/index_offline.html',
+    ORIGIN + '/css/main_offline.css',
+    ORIGIN + '/js/app_offline.js',
+    ORIGIN + '/js/zip.js',
+    ORIGIN + '/js/jsinflate.js',
+    "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js",
+    "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding.js",
 
-    ORIGIN + '/images/SCOPin_rock_logo.svg',
+    //ORIGIN + '/images/SCOPin_rock_logo.svg',
     ORIGIN + '/images/SCOPin_image.svg',
     ORIGIN + '/images/ProfilePhoto.jpg',
     ORIGIN + '/images/facebook-brands.svg',
@@ -35,6 +38,7 @@ const STATIC_FILES = [
     ORIGIN + "/js/apigClient.js",
     ORIGIN + "/js/payment.js",
     "https://js.stripe.com/v3/",
+    ORIGIN + "/js/app_social_connection.js",
     "https://www.googletagmanager.com/gtag/js?id=UA-134075472-1",
 ];
 
@@ -57,11 +61,35 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request);
-        })
-    );
+
+    if ([location.origin + "/", location.origin + "/index.html"].includes(event.request.url)) {
+        event.respondWith(
+            caches.match(event.request).then(async response => {
+                if (response) {
+                    return response
+                } else {
+                    try {
+                        var r = await fetch(event.request)
+                    } catch (e) {
+                        r = await caches.match(location.origin + "/index_offline.html", {
+                            method: "GET"
+                        })
+
+                    }
+                    return r
+                }
+            })
+        );
+    } else {
+
+        event.respondWith(
+            caches.match(event.request).then(response => {
+                return response || new Promise((res, rej) => {
+                    fetch(event.request).then(res).catch(rej)
+                })
+            })
+        );
+    }
 });
 
 self.addEventListener('activate', event => {
