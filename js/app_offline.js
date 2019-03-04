@@ -748,54 +748,39 @@ const updateImages = state => imgSets => new Promise((res, rej) => {
 const createImageContainor = state => new Promise((res, rej) => {
 
     const containor = document.querySelector(".image_containor")
-    const subcontainors = containor.querySelectorAll("div")
+    containor.innerHTML = ""
 
-    function containorIsExist(doms, id) {
-        return Array.from(doms)
-            .map(d => d.id)
-            .filter(d => d === id)
-            .length > 0
-    }
+    subcontainor = document.createElement("div")
+    subcontainor.id = state.containorID
+    openContainor = document.createElement("div")
+    openContainor.classList = ["open"]
+    crossContainor = document.createElement("div")
+    crossContainor.classList = ["cross"]
 
-    if (containorIsExist(subcontainors, state.containorID)) {
-        openContainor = containor.querySelector(`#${state.containorID} .open`)
-        crossContainor = containor.querySelector(`#${state.containorID} .cross`)
-        const open_imgs = Array.from(openContainor.querySelectorAll("img"))
-        const cross_imgs = Array.from(crossContainor.querySelectorAll("img"))
-        updateImages(state)({ open: open_imgs, cross: cross_imgs })
-            .then(res)
-    } else {
-        subcontainor = document.createElement("div")
-        subcontainor.id = state.containorID
-        openContainor = document.createElement("div")
-        openContainor.classList = ["open"]
-        crossContainor = document.createElement("div")
-        crossContainor.classList = ["cross"]
+    subcontainor.appendChild(openContainor)
+    subcontainor.appendChild(crossContainor)
+    containor.appendChild(subcontainor)
 
-        subcontainor.appendChild(openContainor)
-        subcontainor.appendChild(crossContainor)
-        containor.appendChild(subcontainor)
-
-        Promise.all([
-            Promise.all(state.open_image_srcs.map(src => loadImageSrc(src))),
-            Promise.all(state.cross_image_srcs.map(src => loadImageSrc(src)))
-        ])
-            .then(imgDOMs => {
-                const open_imgs = imgDOMs[0].map(img => {
-                    openContainor.appendChild(img)
-                    return img
-                })
-
-                const cross_imgs = imgDOMs[1].map(img => {
-                    crossContainor.appendChild(img)
-                    return img
-                })
-
-                return { open: open_imgs, cross: cross_imgs }
+    Promise.all([
+        Promise.all(state.open_image_srcs.map(src => loadImageSrc(src))),
+        Promise.all(state.cross_image_srcs.map(src => loadImageSrc(src)))
+    ])
+        .then(imgDOMs => {
+            const open_imgs = imgDOMs[0].map(img => {
+                openContainor.appendChild(img)
+                return img
             })
-            .then(updateImages(state))
-            .then(res)
-    }
+
+            const cross_imgs = imgDOMs[1].map(img => {
+                crossContainor.appendChild(img)
+                return img
+            })
+
+            return { open: open_imgs, cross: cross_imgs }
+        })
+        .then(updateImages(state))
+        .then(res)
+
 })
 
 /**
