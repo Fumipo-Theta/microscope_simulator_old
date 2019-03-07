@@ -1,13 +1,19 @@
 class PackageManifest {
     constructor() {
+        this.packageID = null
         this.location = {}
         this.rockType = {}
         this.discription = {}
+        this.geoSystem = ""
+        this.geoPosition = [null, null]
+        this.rotateCenter = [undefined, undefined]
+        this.rotateDirection = "clockwise"
+        this.imageSize = { "width": 0, "height": 0 }
     }
 
     toJSON() {
         return {
-            "location": this.getLocation(),
+            "location": this.getSampleLocation(),
             "geographic-coordinate": this.getGeoLocation(),
             "magnify": this.getMagnify(),
             "scale-unit": this.getScaleUnit(),
@@ -24,12 +30,21 @@ class PackageManifest {
         }
     }
 
-    setLocation(lang, disc) {
+    setPackageID(id) {
+        this.packageID = id
+        return this
+    }
+
+    getPackageID() {
+        return this.packageID.replace(/\//g, "_").replace(/\./g, "")
+    }
+
+    setSampleLocation(lang, disc) {
         this.location[lang] = disc;
         return this
     }
 
-    getLocation() {
+    getSampleLocation() {
         return this.location;
     }
 
@@ -58,8 +73,8 @@ class PackageManifest {
         return this.magnify
     }
 
-    setScaleUnit(scaleLength, scaleUnit) {
-        this.scaleUnit = str(scaleLength) + scaleUnit;
+    setScaleUnit(scaleUnit) {
+        this.scaleUnit = scaleUnit;
         return this
     }
 
@@ -100,21 +115,25 @@ class PackageManifest {
     getRotateCenter() {
         return [
             this.rotateCenter[0] === undefined
-                ? this.getImageWidth * 0.5
+                ? this.getImageWidth() * 0.5
                 : this.rotateCenter[0],
             this.rotateCenter[1] === undefined
-                ? this.getImageHeight * 0.5
+                ? this.getImageHeight() * 0.5
                 : this.rotateCenter[1]
         ]
     }
 
-    setRotateSectionDegree(degree) {
-        this.geoPosition.rotateSectionDegree = degree
+    setImagesNumber(value) {
+        this.imagesNumber = value
         return this
     }
 
+    getImagesNumber() {
+        return this.imagesNumber
+    }
+
     getRotateSectionDegree() {
-        return this.rotateSectionDegree
+        return this.getEachRotateDegree() * this.getImagesNumber()
     }
 
     setRotateDirection(direction) {

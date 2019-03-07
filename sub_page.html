@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" user-zoom="no">
     <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
     <link rel="stylesheet" href="./css/main.css" charset="utf-8">
+    <link rel="stylesheet" href="./css/uploader.css" charset="utf-8">
     <title>Data uploader for SCOPin rock</title>
 </head>
 
@@ -281,35 +282,50 @@
         </div>
 
     </div>
-    <div id="app-wrapper">
+    <div id="wrapper">
         <from>
-            <input type="text" placeholder="Package name">
-            <div>Select Files
+            <select id="select_language">
+                <option value="ja">日本語</option>
+                <option value="en">English</option>
+            </select>
+
+            <input id="input_package_name" type="text" placeholder="Package name">
+
+            <input id="input_rotation_interval" type="number" placeholder="Each rotation degrees">
+
+            <div id="select_image_wrapper" class="inactive">Select Files
                 <div>Open Nicol images
-                    <input type="file">
+                    <input id="open_nicol_images" type="file" accept="image/*" multiple>
                 </div>
                 <div>Cross Nicol images
-                    <input type="file">
+                    <input id="cross_nicol_images" type="file" accept="image/*" multiple>
                 </div>
             </div>
 
             <div>Rotate direction
-                <input type="radio" value="Clockwise">
-                <input type="radio" value="Unti-clockwise">
+                <select id="select_rotate_direction">
+                    <option value="clockwise">Clockwise</option>
+                    <option value="unti-clockwise">Unti-clockwise</option>
+                </select>
             </div>
-            <input type="number" placeholder="Each rotation degrees">
-            <input type="number" placeholder="Lateral distance of rotate center from left-top">
-            <input type="number" placeholder="Vertical distance of rotate center from left-top">
 
-            <input type="text" placeholder="Unit of scale">
-            <input type="number" placeholder="Scale length(px)">
-            <input type="number" placeholder="Magnification of the view">
-            <input type="text" placeholder="Sample location">
-            <input type="text" placeholder="岩石名・鉱物名">
-            <input type="text" placeholder="サンプルの説明">
-            <input type="text" placeholder="Rock name or mineral name">
-            <input type="text" placeholder="Discription for the sample">
-            <input type="text" placeholder="Owner of the sample">
+
+            <input id="input_scale_unit" type="text" placeholder="Unit of scale">
+            <input id="input_scale_length" type="number" placeholder="Scale length(px)">
+            <input id="input_magnification" type="number" placeholder="Magnification of the view">
+
+            <input id="input_sample_location" type="text" placeholder="Sample location">
+            <input id="input_owner" type="text" placeholder="Owner of the sample">
+
+            <div class="language ja">
+                <input class="input_sample_type" type="text" placeholder="岩石名・鉱物名">
+                <input class="input_discription" type="text" placeholder="サンプルの説明">
+            </div>
+
+            <div class="language en inactive">
+                <input class="input_sample_type" type="text" placeholder="Rock name or mineral name">
+                <input class="input_discription" type="text" placeholder="Discription for the sample">
+            </div>
         </from>
     </div>
 
@@ -332,13 +348,26 @@
             <input id="change_nicol" type="checkbox" checked />
             <label for="change_nicol" data-on-label="Open" data-off-label="Cross"></label>
 
+            <input id="change_validation" type="checkbox" checked />
+            <label for="change_validation" data-on-label="Validate" data-off-label="Preview"></label>
+
         </div>
 
         <div id="view_discription" class="align-center column-direction">
         </div>
+
+        <form>
+            <div id="create_package_button" class="button">Create package</div>
+            <a id="working_anchor" class="inactive"></a>
+        </form>
     </div>
 
-    <div></div>
+    <div class="image_containor"></div>
+    <canvas class="inactive" id="working_canvas"></canvas>
+    <script src="./js/app.js"></script>
+    <script src="./js/package_manifest.js"></script>
+    <script src="./js/jszip.min.js"></script>
+    <script src="./js/uploader.js"></script>
 </body>
 
 </html>

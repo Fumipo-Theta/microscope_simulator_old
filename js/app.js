@@ -291,6 +291,7 @@ const resetState = () => ({
     "isCrossNicol": false,
     "language": selectLanguageCode(),
     "storedKeys": [],
+    "drawHairLine": true
 })
 
 //const state = resetState()
@@ -388,9 +389,8 @@ const loadImageSrc = (src) => new Promise((res, rej) => {
 
 
 
-const updateStateByMeta = (state, containorID) => (zip) => new Promise((res, rej) => {
+const updateStateByMeta = (state, containorID) => (meta) => new Promise((res, rej) => {
 
-    const meta = JSON.parse(buffer_to_string(zip["manifest.json"]))
 
     state.containorID = sanitizeID(containorID);
     state.isClockwise = meta.rotate_clockwise
@@ -407,6 +407,9 @@ const updateStateByMeta = (state, containorID) => (zip) => new Promise((res, rej
         ? meta.discription
         : "No discription. "
     state.rotate_center = getRotationCenter(meta)
+
+    state.imageWidth = meta.image_width;
+    state.imageHeight = meta.image_height;
 
     function getRotationCenter(meta) {
         return (meta.hasOwnProperty("rotate_center"))
@@ -451,7 +454,7 @@ const updateStateByMeta = (state, containorID) => (zip) => new Promise((res, rej
     const mirror_at = (image_number - 1)
     const total_step = (image_number - 1) * 2
 
-    state.getImageNumber = getImageNumber = cycle_degree > 0
+    state.getImageNumber = cycle_degree > 0
         ? degree => cycleBy(image_number - 1)(
             stepBy(rotate_degree_step)(state.isClockwise ? 360 - degree : degree)
         )
@@ -468,26 +471,34 @@ const updateStateByMeta = (state, containorID) => (zip) => new Promise((res, rej
         return 1 - (degree - rotate_degree_step * nth) / rotate_degree_step
     }
 
-    function base64String(buffer) {
-        var binary = '';
-        var bytes = new Uint8Array(buffer);
-        var len = bytes.byteLength;
-        for (var i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
-    }
-    state.open_image_srcs = Array(image_number - 1)
-        .fill(0)
-        .map((_, i) => zip["o" + (i + 1) + ".JPG"])
-        .map(image => "data:image/png;base64," + base64String(image))
-
-    state.cross_image_srcs = Array(image_number - 1)
-        .fill(0)
-        .map((_, i) => zip["c" + (i + 1) + ".JPG"])
-        .map(image => "data:image/png;base64," + base64String(image))
     res(state)
 })
+
+function base64String(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+}
+
+function updateImageSrc(zip) {
+    return (state) => new Promise((res, rej) => {
+        state.open_image_srcs = Array(state.image_number - 1)
+            .fill(0)
+            .map((_, i) => zip["o" + (i + 1) + ".JPG"])
+            .map(image => "data:image/png;base64," + base64String(image))
+
+        state.cross_image_srcs = Array(state.image_number - 1)
+            .fill(0)
+            .map((_, i) => zip["c" + (i + 1) + ".JPG"])
+            .map(image => "data:image/png;base64," + base64String(image))
+
+        res(state)
+    })
+}
 
 const handleErrors = (response) => {
     if (response.ok) {
@@ -708,10 +719,12 @@ const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
     }
 })
 
-
+function extractManifestFromZip(zip) {
+    return JSON.parse(buffer_to_string(zip["manifest.json"]))
+}
 
 const rockNameSelectHandler = state => {
-    return new Promise((res, rej) => {
+    return new Promise(async (res, rej) => {
         const rock_selector = document.querySelector("#rock_selector")
         const packageName = rock_selector.options[rock_selector.selectedIndex].value
 
@@ -720,8 +733,10 @@ const rockNameSelectHandler = state => {
         showViewer(state)
         showNicolButton(state)
 
-        zipUrlHandler(state, packageName)
-            .then(updateStateByMeta(state, packageName))
+        const zip = await zipUrlHandler(state, packageName)
+        const manifest = await extractManifestFromZip(zip)
+        updateStateByMeta(state, packageName)(manifest)
+            .then(updateImageSrc(zip))
             .then(updateViewDiscription)
             .then(res)
             .catch(rej)
@@ -874,7 +889,7 @@ const blobToCanvas = (state) => {
 }
 
 const drawHairLine = state => {
-    //viewer_ctx.save()
+    if (!state.drawHairLine) return
     viewer_ctx.strokeStyle = state.isCrossNicol
         ? "white"
         : "black";
@@ -886,7 +901,6 @@ const drawHairLine = state => {
     viewer_ctx.lineTo(state.canvasWidth * 0.5 - VIEW_PADDING, 0)
     viewer_ctx.closePath()
     viewer_ctx.stroke()
-    //viewer_ctx.restore()
 }
 
 const scaleLength = (canvasWidth, imageWidth, scaleWidth) => canvasWidth * scaleWidth / imageWidth
@@ -921,6 +935,7 @@ const updateView = (state) => {
     blobToCanvas(state)
     drawHairLine(state)
     drawScale(state)
+    return state
 }
 
 

@@ -73,36 +73,37 @@ input[type=checkbox] {
     display: none;
 }
 
-input+label,
-input+label::before,
-input+label::after {
+input[type=checkbox]+label,
+input[type=checkbox]+label::before,
+input[type=checkbox]+label::after {
     -webkit-transition: all .2s;
     transition: all .2s;
 }
 
-input+label {
+input[type=checkbox]+label {
     display: inline-block;
     position: relative;
     width: 120px;
     height: 48px;
     border-radius: 24px;
     cursor: pointer;
+    background-color: #444;
 }
 
-input+label::before {
+input[type=checkbox]+label::before {
     display: block;
     content: attr(data-off-label);
     position: absolute;
     top: 14px;
     right: 7px;
-    color: #fff;
     font-family: Arial, sans-serif;
     font-size: 18px;
+    color: #dfdfdf;
 }
 
 /* 移動体 */
 
-input+label::after {
+input[type=checkbox]+label::after {
     content: "";
     position: absolute;
     top: 1px;
@@ -116,14 +117,18 @@ input+label::after {
     transform: rotate(-360deg);
 }
 
-input:checked+label::before {
+input[type=checkbox]:checked+label {
+    background-color: #efefef;
+}
+
+input[type=checkbox]:checked+label::before {
     content: attr(data-on-label);
     left: 7px;
     right: auto;
-    color: #fff;
+    color: #888;
 }
 
-input:checked+label::after {
+input[type=checkbox]:checked+label::after {
     left: 73px;
     transform: rotate(0deg);
 }
@@ -131,20 +136,7 @@ input:checked+label::after {
 /* change_nicol */
 
 #change_nicol+label {
-    background-color: #444;
     animation: fadeIn 1s, pulsation 1s linear 4s 2;
-}
-
-#change_nicol+label::before {
-    color: #dfdfdf;
-}
-
-#change_nicol:checked+label {
-    background-color: #efefef;
-}
-
-#change_nicol:checked+label::before {
-    color: #888;
 }
 
 .title {
