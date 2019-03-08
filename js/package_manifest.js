@@ -133,7 +133,7 @@ class PackageManifest {
     }
 
     getRotateSectionDegree() {
-        return this.getEachRotateDegree() * this.getImagesNumber()
+        return this.getEachRotateDegree() * (this.getImagesNumber() - 1)
     }
 
     setRotateDirection(direction) {

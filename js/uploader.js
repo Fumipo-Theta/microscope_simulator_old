@@ -270,7 +270,7 @@ function base64ToBlob(base64, mime) {
     });
 }
 
-function compressImageSrc(src, size = 150000) {
+function compressImageSrc(src, size = 125000) {
     const image = new Image()
     image.src = src
     const w = image.width
@@ -281,25 +281,38 @@ function compressImageSrc(src, size = 150000) {
     const ctx = cvs.getContext("2d")
     ctx.drawImage(image, 0, 0, w, h)
 
-    const originalBinary = cvs.toDataURL("image/jpeg"); //画質落とさずバイナリ化
+    const originalBinary = cvs.toDataURL("image/webp"); //画質落とさずバイナリ化
     const mime = originalBinary.match(/(:)([a-z\/]+)(;)/)[2]
 
     const originalBlob = base64ToBlob(originalBinary.split(",")[1], mime);
 
     if (size < originalBlob["size"]) {
         const capacityRatio = size / originalBlob["size"];
-        const processingBinary = cvs.toDataURL("image/jpeg", capacityRatio); //画質落としてバイナリ化
+        const processingBinary = cvs.toDataURL("image/webp", capacityRatio); //画質落としてバイナリ化
         return base64ToBlob(processingBinary.split(",")[1], mime);
     } else {
         return originalBlob
     }
 }
 
+const sample_list_entry = {
+    "package-name": undefined,
+    "list-name": {
+        "ja": undefined,
+        "en": undefined
+    }
+};
+
+function send_sample_list_entry(json_obj) {
+    document.querySelector("#dev_sample_list_entry").innerHTML = JSON.stringify(json_obj, null, 2)
+};
+
 (function (state) {
-    document.querySelector("#input_package_name").addEventListener(
+    document.querySelector("#input_package_id").addEventListener(
         "change",
         e => {
             package.setPackageID(e.target.value)
+            sample_list_entry["package-name"] = e.target.value;
         },
         false
     )
@@ -326,6 +339,7 @@ function compressImageSrc(src, size = 150000) {
         false
     )
 
+    /*
     document.querySelector("#select_language").addEventListener(
         "change",
         e => {
@@ -334,6 +348,7 @@ function compressImageSrc(src, size = 150000) {
         },
         false
     )
+    */
 
     const inputRotationInterval = document.querySelector("#input_rotation_interval")
     inputRotationInterval.addEventListener(
@@ -376,7 +391,7 @@ function compressImageSrc(src, size = 150000) {
     inputSampleLocation.addEventListener(
         "change",
         e => {
-            package.setSampleLocation(state.language, e.target.value)
+            package.setSampleLocation(e.target.dataset.lang, e.target.value)
         }
     )
 
@@ -385,7 +400,7 @@ function compressImageSrc(src, size = 150000) {
         dom.addEventListener(
             "change",
             e => {
-                package.setRockType(state.language, e.target.value)
+                package.setRockType(e.target.dataset.lang, e.target.value)
             },
             false
         )
@@ -396,11 +411,21 @@ function compressImageSrc(src, size = 150000) {
         dom.addEventListener(
             "change",
             e => {
-                package.setDiscription(state.language, e.target.value)
+                package.setDiscription(e.target.dataset.lang, e.target.value)
             },
             false
         )
     })
+
+    Array.from(document.querySelectorAll(".input_sample_title"))
+        .forEach(dom => {
+            dom.addEventListener(
+                "change",
+                e => {
+                    sample_list_entry["list-name"][e.target.dataset.lang] = e.target.value
+                }
+            )
+        })
 
     const toggleNicolButton = document.querySelector("#change_nicol")
     const toggleNicolLabel = document.querySelector("#change_nicol + label")
@@ -563,12 +588,14 @@ function compressImageSrc(src, size = 150000) {
             zip.file("manifest.json", meta)
 
             state.open_image_srcs.forEach((src, i) => {
-                zip.file(`o${i + 1}.jpg`, compressImageSrc(src))
+                zip.file(`o${i + 1}.webp`, compressImageSrc(src))
             })
 
             state.cross_image_srcs.forEach((src, i) => {
-                zip.file(`c${i + 1}.jpg`, compressImageSrc(src))
+                zip.file(`c${i + 1}.webp`, compressImageSrc(src))
             })
+
+            send_sample_list_entry(sample_list_entry)
 
             zip.generateAsync({ type: "blob" })
                 .then(function (content) {

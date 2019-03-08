@@ -488,13 +488,13 @@ function updateImageSrc(zip) {
     return (state) => new Promise((res, rej) => {
         state.open_image_srcs = Array(state.image_number - 1)
             .fill(0)
-            .map((_, i) => zip["o" + (i + 1) + ".JPG"])
-            .map(image => "data:image/png;base64," + base64String(image))
+            .map((_, i) => zip["o" + (i + 1) + ".JPG"] || zip["o" + (i + 1) + ".jpg"] || zip["o" + (i + 1) + ".webp"])
+            .map(image => "data:image/jpeg;base64," + base64String(image))
 
         state.cross_image_srcs = Array(state.image_number - 1)
             .fill(0)
-            .map((_, i) => zip["c" + (i + 1) + ".JPG"])
-            .map(image => "data:image/png;base64," + base64String(image))
+            .map((_, i) => zip["c" + (i + 1) + ".JPG"] || zip["c" + (i + 1) + ".jpg"] || zip["c" + (i + 1) + ".webp"])
+            .map(image => "data:image/jpeg;base64," + base64String(image))
 
         res(state)
     })

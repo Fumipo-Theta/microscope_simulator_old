@@ -78,7 +78,7 @@
             }
         },
         {
-            "package-name": "F17_olivine",
+            "package-name": "F17_olivine_webp",
             "list-name": {
                 "ja": "かんらん岩中の直方輝石(エンスタタイト)",
                 "en": "Orthopyroxene (enstatite) in peridotite"
@@ -229,6 +229,181 @@
             "list-name": {
                 "ja": "蛇紋岩",
                 "en": "Serpentinite"
+            }
+        },
+        {
+            "package-name": "G-10_shell",
+            "list-name": {
+                "ja": "炭酸塩質の生物起源砕屑物",
+                "en": "Calcareous bioclast"
+            }
+        },
+        {
+            "package-name": "G-10-2_beachsand_webp",
+            "list-name": {
+                "ja": "円磨された粒子からなる海岸の砂",
+                "en": "Rounded beach sand"
+            }
+        },
+        {
+            "package-name": "G-4_ss",
+            "list-name": {
+                "ja": "花崗岩由来の川砂",
+                "en": "River sand originated from granite"
+            }
+        },
+        {
+            "package-name": "K-902_ol_sand_webp",
+            "list-name": {
+                "ja": "かんらん石に富む海岸の砂",
+                "en": "Olivine rich beach sand"
+            }
+        },
+        {
+            "package-name": "G5_river_sand_webp",
+            "list-name": {
+                "ja": "花崗岩に由来する川砂",
+                "en": "River sand originated from granite"
+            }
+        },
+        {
+            "package-name": "S12_serpentine_ss_webp",
+            "list-name": {
+                "ja": "蛇紋岩起源の砂岩",
+                "en": "Serpentine sandstone"
+            }
+        },
+        {
+            "package-name": "TF4_crystaltuff_webp",
+            "list-name": {
+                "ja": "高温石英を含む凝灰岩",
+                "en": "Tuff including high quartz"
+            }
+        },
+        {
+            "package-name": "Q-3_hydrothermal_vein_webp",
+            "list-name": {
+                "ja": "熱水由来の石英からなる鉱物脈",
+                "en": "Hydrothermal vein quartz"
+            }
+        },
+        {
+            "package-name": "G-1_till_webp",
+            "list-name": {
+                "ja": "氷河堆積物",
+                "en": "Glacier deposits"
+            }
+        },
+        {
+            "package-name": "G-2_tillite_webp",
+            "list-name": {
+                "ja": "氷河堆積物からなる堆積岩",
+                "en": "Tillite"
+            }
+        },
+        {
+            "package-name": "G-6_riversand_webp",
+            "list-name": {
+                "ja": "円磨された粒子からなる川砂",
+                "en": "Rounded river sand"
+            }
+        },
+        {
+            "package-name": "G-5_riversand_webp",
+            "list-name": {
+                "ja": "花崗岩に由来する川砂",
+                "en": "River sand originated from granite"
+            }
+        },
+        {
+            "package-name": "G-8_beachsand_webp",
+            "list-name": {
+                "ja": "生物起源粒子に富む海岸の砂",
+                "en": "Bioclast rich beach sand"
+            }
+        },
+        {
+            "package-name": "G-9_bioclasticsand_webp",
+            "list-name": {
+                "ja": "生物起源粒子に富む砂",
+                "en": "Bioclastic sand"
+            }
+        },
+        {
+            "package-name": "G-12_ironsand_webp",
+            "list-name": {
+                "ja": "砂鉄",
+                "en": "Iron sand"
+            }
+        },
+        {
+            "package-name": "G-13_dunesand_webp",
+            "list-name": {
+                "ja": "海岸砂丘堆積物",
+                "en": "Coastal dune sand"
+            }
+        },
+        {
+            "package-name": "G-15_dunesand_webp",
+            "list-name": {
+                "ja": "魚卵石を含む海岸砂丘堆積物",
+                "en": "Oolite bearing coastal dune sand"
+            }
+        },
+        {
+            "package-name": "K901-2_beachsand_webp",
+            "list-name": {
+                "ja": "輝石に富む海岸の砂",
+                "en": "Pyroxene rich beach sand"
+            }
+        },
+        {
+            "package-name": "Hoshizuna_webp",
+            "list-name": {
+                "ja": "ホシズナ",
+                "en": "Star sand"
+            }
+        },
+        {
+            "package-name": "S3_orthoquartzite_webp",
+            "list-name": {
+                "ja": "正珪岩",
+                "en": "Orthoquartzite"
+            }
+        },
+        {
+            "package-name": "S4_metaquartzite_webp",
+            "list-name": {
+                "ja": "変質珪岩",
+                "en": "Metaquartzite"
+            }
+        },
+        {
+            "package-name": "S6_feldspathic_ss_webp",
+            "list-name": {
+                "ja": "長石に富む砂岩",
+                "en": "Feldspathic sandstone"
+            }
+        },
+        {
+            "package-name": "S7_conglomerate_webp",
+            "list-name": {
+                "ja": "礫岩",
+                "en": "Oligomictic conglomerate"
+            }
+        },
+        {
+            "package-name": "S8_conglomerate_webp",
+            "list-name": {
+                "ja": "火山岩由来の粒子からなる礫岩",
+                "en": "Volcanic lithic conglomerate"
+            }
+        },
+        {
+            "package-name": "S11_glauconite_ss_webp",
+            "list-name": {
+                "ja": "海緑石を含む砂岩",
+                "en": "Glauconite sandstone"
             }
         }
     ]
