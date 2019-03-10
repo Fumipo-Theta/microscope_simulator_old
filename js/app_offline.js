@@ -698,18 +698,51 @@ function buffer_to_string(buf) {
     return decoder.decode(new Uint8Array(buf))
 }
 
+function base64ToBlob(base64, mime) {
+    var binary = atob(base64);
+    var buffer = new Uint8Array(binary.length)
+    for (var i = 0; i < binary.length; i++) {
+        buffer[i] = binary.charCodeAt(i);
+    }
+    return new Blob([buffer.buffer], {
+        type: mime
+    });
+}
+
+function base64ToArrayBuffer(base64) {
+    var binary_string = window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
 
 /**
  *
  * @param {*} zip
  * @return {Object[meta,zip]}
  */
-const extractFile = zipByte => {
+const extractFile = async zipByte => {
     const zip = Zip.inflate(zipByte)
     const inflated_zip = {}
-    Object.entries(zip.files).forEach(kv => {
-        inflated_zip[kv[0]] = kv[1].inflate()
-    })
+    await Promise.all(Object.entries(zip.files).map(async kv => {
+        if (kv[0].includes(".json")) {
+            inflated_zip[kv[0]] = kv[1].inflate()
+        } else {
+            const type = kv[0].match(/.*\.(\w+)$/)[1]
+            const base64 = await imageDecoder.decode(kv[1].inflate(), type)
+            const mime = base64.match(/^data:(image\/\w+);/)[1]
+            const mime_type = mime.split("/")[1]
+
+            const new_file_name = kv[0].split(".")[0] + "." + mime_type
+
+            inflated_zip[new_file_name] = new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))
+        }
+
+        return true
+    }))
 
     return inflated_zip
 }
