@@ -1,4 +1,4 @@
-const VERSION = "1.1.11";
+const VERSION = "1.1.13";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
@@ -12,6 +12,7 @@ const STATIC_FILES = [
     ORIGIN + '/js/event-handler_offline.js',
     ORIGIN + '/js/zip.js',
     ORIGIN + '/js/jsinflate.js',
+    ORIGIN + '/js/webp.js',
     "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js",
     "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding.js",
 

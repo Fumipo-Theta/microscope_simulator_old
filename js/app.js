@@ -188,6 +188,78 @@ class DummyLocalStorage {
     }
 }
 
+async function detectWebpSupport() {
+
+    const testImageSources = [
+        "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAACyAgCdASoCAAEALmk0mk0iIiIiIgBoSygABc6zbAAA/v56QAAAAA==",
+        "data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//73v/+BiOh/AAA="
+    ]
+
+    const testImage = (src) => {
+        return new Promise((resolve, reject) => {
+            var img = document.createElement("img")
+            img.onerror = error => resolve(false)
+            img.onload = () => resolve(true)
+            img.src = src
+        })
+    }
+
+    const results = await Promise.all(testImageSources.map(testImage))
+
+    return results.every(result => !!result)
+}
+
+const relax = () => new Promise(resolve => requestAnimationFrame(resolve))
+
+
+class ImageDecoder {
+    constructor() {
+        this.webp = new Webp()
+        this.supportWebp = detectWebpSupport;
+        const canvas = document.createElement("canvas")
+        this.canvas = canvas
+    }
+
+    /** decode
+     *
+     * @param {Buffer} buffer
+     * @return {Promise<string>}
+     */
+    async decode(buffer, type = "webp") {
+
+
+        //if (this.busy) throw new Error("webp-machine decode error: busy")
+        this.busy = true
+
+        var bytes = new Uint8Array(buffer);
+
+
+        if (await this.supportWebp() || type !== "webp") {
+            var binary = '';
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return `data:image/${type};base64,` + window.btoa(binary);
+        }
+
+        try {
+            await relax()
+            this.webp.setCanvas(this.canvas)
+            this.webp.webpToSdl(bytes, bytes.length)
+            this.busy = false
+            return this.canvas.toDataURL("image/jpeg")
+        }
+        catch (error) {
+            this.busy = false
+            error.message = `webp-machine decode error: ${error.message}`
+            throw error
+        }
+    }
+}
+
+const imageDecoder = new ImageDecoder()
+
 function ISmallStorageFactory() {
     return (window.localStorage)
         ? new NativeLocalStorage()
@@ -376,6 +448,9 @@ const windowResizeHandler = state => new Promise((res, rej) => {
     res(state)
 })
 
+/**
+ * @parameter src {dataURL}
+ */
 const loadImageSrc = (src) => new Promise((res, rej) => {
     const returnImg = (img) => e => {
         res(img)
@@ -474,27 +549,31 @@ const updateStateByMeta = (state, containorID) => (meta) => new Promise((res, re
     res(state)
 })
 
-function base64String(buffer) {
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
+function selectImageFromZip(zip, prefix) {
+    if (prefix + ".JPG" in zip) {
+        return ["jpeg", zip[prefix + ".JPG"]]
+    } else if (prefix + ".jpg" in zip) {
+        return ["jpeg", zip[prefix + ".jpg"]]
+    } else if (prefix + ".jpeg" in zip) {
+        return ["jpeg", zip[prefix + ".jpeg"]]
+    } else if (prefix + ".webp" in zip) {
+        return ["webp", zip[prefix + ".webp"]]
     }
-    return window.btoa(binary);
 }
 
 function updateImageSrc(zip) {
-    return (state) => new Promise((res, rej) => {
-        state.open_image_srcs = Array(state.image_number - 1)
+    return (state) => new Promise(async (res, rej) => {
+        state.open_image_srcs = await Promise.all(Array(state.image_number - 1)
             .fill(0)
-            .map((_, i) => zip["o" + (i + 1) + ".JPG"] || zip["o" + (i + 1) + ".jpg"] || zip["o" + (i + 1) + ".webp"])
-            .map(image => "data:image/jpeg;base64," + base64String(image))
+            .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
+            .map(async (type_image) => await imageDecoder.decode(type_image[1], type_image[0]))
+        )
 
-        state.cross_image_srcs = Array(state.image_number - 1)
+        state.cross_image_srcs = await Promise.all(Array(state.image_number - 1)
             .fill(0)
-            .map((_, i) => zip["c" + (i + 1) + ".JPG"] || zip["c" + (i + 1) + ".jpg"] || zip["c" + (i + 1) + ".webp"])
-            .map(image => "data:image/jpeg;base64," + base64String(image))
+            .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
+            .map(async (type_image) => await imageDecoder.decode(type_image[1], type_image[0]))
+        )
 
         res(state)
     })

@@ -405,6 +405,153 @@
                 "ja": "海緑石を含む砂岩",
                 "en": "Glauconite sandstone"
             }
+        },
+        {
+            "package-name": "A-1_kaolinite_book_webp",
+            "list-name": {
+                "ja": "カオリナイトを含む変質した凝灰岩",
+                "en": "Kaolinite books in laterized tuff"
+            }
+        },
+        {
+            "package-name": "A-3_sericite_webp",
+            "list-name": {
+                "ja": "セリサイトを含む変質した凝灰岩",
+                "en": "Sericite in altered tuff"
+            }
+        },
+        {
+            "package-name": "S1-7_jaspilite_webp",
+            "list-name": {
+                "ja": "碧玉",
+                "en": "Jaspilite"
+            }
+        },
+        {
+            "package-name": "C-14_manganese_lens_webp",
+            "list-name": {
+                "ja": "放散虫を含む頁岩",
+                "en": "Radiolarian shale"
+            }
+        },
+        {
+            "package-name": "Iwaizaki_fusulina_webp",
+            "list-name": {
+                "ja": "フズリナ石灰岩",
+                "en": "Fusulina bearing limestone"
+            }
+        },
+        {
+            "package-name": "Iwaizaki-2_fusulina_webp",
+            "list-name": {
+                "ja": "フズリナ石灰岩",
+                "en": "Fusulina bearing limestone"
+            }
+        },
+        {
+            "package-name": "Zagros-TA84_webp",
+            "list-name": {
+                "ja": "石灰岩",
+                "en": "石灰岩"
+            }
+        },
+        {
+            "package-name": "CP-1_tubeworm_webp",
+            "list-name": {
+                "ja": "チューブワームを含む石灰岩",
+                "en": "Tube-worm bearing limestone"
+            }
+        },
+        {
+            "package-name": "G-11_olivine_sand_webp",
+            "list-name": {
+                "ja": "かんらん石に富む砂",
+                "en": "Olivine rich sand"
+            }
+        },
+        {
+            "package-name": "G-7_garnet_sand_webp",
+            "list-name": {
+                "ja": "ざくろ石に富む砂",
+                "en": "Garnet rich sand"
+            }
+        },
+        {
+            "package-name": "G-1_ss_webp",
+            "list-name": {
+                "ja": "空隙を含む砂岩",
+                "en": "Porous sandstone"
+            }
+        },
+        {
+            "package-name": "G-2_ss_webp",
+            "list-name": {
+                "ja": "空隙を含む砂岩",
+                "en": "Porous sandstone"
+            }
+        },
+        {
+            "package-name": "Q-3-2_hydrothermal_vein_webp",
+            "list-name": {
+                "ja": "熱水由来の石英からなる鉱物脈",
+                "en": "Hydrothermal vein quartz"
+            }
+        },
+        {
+            "package-name": "Q-4_volcanic_sand_webp",
+            "list-name": {
+                "ja": "珪化した火山岩由来の粒子",
+                "en": "Silicified volcanic rock"
+            }
+        },
+        {
+            "package-name": "Q-7b_chert_webp",
+            "list-name": {
+                "ja": "チャート由来の砂",
+                "en": "Sand originated from chert"
+            }
+        },
+        {
+            "package-name": "Q-7c_chert_webp",
+            "list-name": {
+                "ja": "チャート",
+                "en": "Chert"
+            }
+        },
+        {
+            "package-name": "Q-8_porous_ss_webp",
+            "list-name": {
+                "ja": "空隙を含む砂岩",
+                "en": "Porous sandstone"
+            }
+        },
+        {
+            "package-name": "K901_beachsand_webp",
+            "list-name": {
+                "ja": "輝石に富む砂",
+                "en": "Pyroxene rich sand"
+            }
+        },
+        {
+            "package-name": "S1-6_chalcedonie_webp",
+            "list-name": {
+                "ja": "赤白珪石",
+                "en": "Akashiro Keiseki"
+            }
+        },
+        {
+            "package-name": "Q-5_chert_webp",
+            "list-name": {
+                "ja": "再結晶したチャート",
+                "en": "Recrystallized chert"
+            }
+        },
+        {
+            "package-name": "Q-6_shist_webp",
+            "list-name": {
+                "ja": "石英片岩",
+                "en": "Quartz shist"
+            }
         }
     ]
 }
