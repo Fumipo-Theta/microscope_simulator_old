@@ -1,4 +1,4 @@
-const VERSION = "1.2.1";
+const VERSION = "1.2.9";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
@@ -13,8 +13,8 @@ const STATIC_FILES = [
     ORIGIN + '/js/zip.js',
     ORIGIN + '/js/jsinflate.js',
     ORIGIN + '/js/webp.js',
-    "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js",
-    "https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding.js",
+    ORIGIN + "/js/encoding-indexes.js",
+    ORIGIN + "/js/encoding.js",
 
     //ORIGIN + '/images/SCOPin_rock_logo.svg',
     ORIGIN + '/images/SCOPin_image.svg',
@@ -86,8 +86,13 @@ self.addEventListener('fetch', event => {
 
         event.respondWith(
             caches.match(event.request).then(response => {
-                return response || new Promise((res, rej) => {
-                    fetch(event.request).then(res).catch(rej)
+                return response || new Promise(async (res, rej) => {
+                    try {
+                        var r = await fetch(event.request)
+                    } catch (e) {
+                        console.warn(`${event.request.url} cannot be fetched`)
+                    }
+                    res(r)
                 })
             })
         );

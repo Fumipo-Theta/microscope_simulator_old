@@ -846,12 +846,16 @@ const rockNameSelectHandler = state => {
         showNicolButton(state)
 
         const zip = await zipUrlHandler(state, packageName)
-        const manifest = await extractManifestFromZip(zip)
-        updateStateByMeta(state, packageName)(manifest)
-            .then(updateImageSrc(zip))
-            .then(updateViewDiscription)
-            .then(res)
-            .catch(rej)
+
+        try {
+            const manifest = await extractManifestFromZip(zip)
+            const r = updateStateByMeta(state, packageName)(manifest)
+                .then(updateImageSrc(zip))
+                .then(updateViewDiscription)
+            res(r)
+        } catch (e) {
+            rej(e)
+        }
     })
 }
 
