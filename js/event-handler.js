@@ -57,16 +57,17 @@
 
     rock_selector.addEventListener(
         "change",
-        e => rockNameSelectHandler(state)
-            .then(createImageContainor)
-            .then(updateView)
-            .then(hideErrorCard())
-            .then(hideLoadingAnimation)
-            .catch(e => {
-                console.log("Sample cannot be loaded because of network error.")
-                showErrorCard("<p>Internet disconnected.</p>")(e)
-                hideLoadingAnimation()
-            }),
+        e => {
+            rockNameSelectHandler(state)
+                .then(updateView)
+                .then(hideErrorCard())
+                .then(hideLoadingAnimation)
+                .catch(e => {
+                    console.log("Sample cannot be loaded because of network error.")
+                    showErrorCard("<p>Internet disconnected.</p>")(e)
+                    hideLoadingAnimation()
+                })
+        },
         false
     )
 

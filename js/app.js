@@ -245,7 +245,7 @@ class ImageDecoder {
         var bytes = new Uint8Array(buffer);
 
 
-        if (await this.supportWebp() || type !== "webp") {
+        if (!await this.supportWebp() || type !== "webp") {
             var binary = '';
             var len = bytes.byteLength;
             for (var i = 0; i < len; i++) {
@@ -545,6 +545,8 @@ const updateStateByMeta = (state, containorID) => (meta) => new Promise((res, re
         return 1 - (degree - rotate_degree_step * nth) / rotate_degree_step
     }
 
+    state.rotate = 0;
+
     res(state)
 })
 
@@ -561,20 +563,37 @@ function selectImageFromZip(zip, prefix) {
 }
 
 function updateImageSrc(zip) {
-    return (state) => new Promise(async (res, rej) => {
-        state.open_image_srcs = await Promise.all(Array(state.image_number - 1)
-            .fill(0)
-            .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
-            .map(async (type_image) => await imageDecoder.decode(type_image[1], type_image[0]))
-        )
+    return (state) => new Promise((res, rej) => {
+        Promise.race([
+            ...(Array(state.image_number - 1)
+                .fill(0)
+                .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
+                .map((type_image, i) => new Promise((_res, rej) => {
+                    Promise.resolve(imageDecoder.decode(type_image[1], type_image[0]))
+                        .then(loadImageSrc)
+                        .then(img => {
+                            state.open_images[i] = img;
+                            _res(`image o${i + 1} set`)
+                        })
+                }))
+            ),
 
-        state.cross_image_srcs = await Promise.all(Array(state.image_number - 1)
-            .fill(0)
-            .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
-            .map(async (type_image) => await imageDecoder.decode(type_image[1], type_image[0]))
-        )
-
-        res(state)
+            ...(Array(state.image_number - 1)
+                .fill(0)
+                .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
+                .map((type_image, i) => new Promise((_res, rej) => {
+                    imageDecoder.decode(type_image[1], type_image[0])
+                        .then(loadImageSrc)
+                        .then(img => {
+                            state.cross_images[i] = img;
+                            _res(`image c${i + 1} set`)
+                        })
+                }))
+            )])
+            .then(msg => {
+                console.log(msg)
+                res(state)
+            });
     })
 }
 
@@ -760,7 +779,7 @@ const extractFile = async zipByte => {
         await Promise.all(
             Object.entries(zip.files)
                 .map(inflate)
-                .map(polyfillWebp)
+            //.map(polyfillWebp)
         )
     )
 
@@ -862,7 +881,7 @@ const rockNameSelectHandler = state => {
         const rock_selector = document.querySelector("#rock_selector")
         const packageName = rock_selector.options[rock_selector.selectedIndex].value
 
-        showLoadingAnimation(state)
+        //showLoadingAnimation(state)
         hideWelcomeBoard(state)
         showViewer(state)
         showNicolButton(state)
@@ -871,10 +890,10 @@ const rockNameSelectHandler = state => {
 
         try {
             const manifest = await extractManifestFromZip(zip)
-            const r = updateStateByMeta(state, packageName)(manifest)
+            updateStateByMeta(state, packageName)(manifest)
                 .then(updateImageSrc(zip))
                 .then(updateViewDiscription)
-            res(r)
+                .then(res)
         } catch (e) {
             rej(e)
         }
@@ -902,10 +921,11 @@ function loadImageSrc(src) {
             res(img)
         }
 
-        img = document.createElement("img")
+        const img = new Image()
         img.src = src
-        img.addEventListener("load", returnImg(img), false)
-        img.addEventListener("error", returnImg(img), false)
+        res(img)
+        //img.addEventListener("load", returnImg(img), false)
+        //img.addEventListener("error", returnImg(img), false)
     })
 }
 
@@ -916,34 +936,14 @@ function loadImageSrc(src) {
  */
 const createImageContainor = state => new Promise((res, rej) => {
 
-    const containor = document.querySelector(".image_containor")
-    containor.innerHTML = ""
-
-    subcontainor = document.createElement("div")
-    subcontainor.id = state.containorID
-    openContainor = document.createElement("div")
-    openContainor.classList = ["open"]
-    crossContainor = document.createElement("div")
-    crossContainor.classList = ["cross"]
-
-    subcontainor.appendChild(openContainor)
-    subcontainor.appendChild(crossContainor)
-    containor.appendChild(subcontainor)
-
     Promise.all([
         Promise.all(state.open_image_srcs.map(src => loadImageSrc(src))),
         Promise.all(state.cross_image_srcs.map(src => loadImageSrc(src)))
     ])
         .then(imgDOMs => {
-            const open_imgs = imgDOMs[0].map(img => {
-                openContainor.appendChild(img)
-                return img
-            })
+            const open_imgs = imgDOMs[0]
 
-            const cross_imgs = imgDOMs[1].map(img => {
-                crossContainor.appendChild(img)
-                return img
-            })
+            const cross_imgs = imgDOMs[1]
 
             return { open: open_imgs, cross: cross_imgs }
         })
