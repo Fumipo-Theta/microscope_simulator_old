@@ -368,7 +368,7 @@ const resetState = () => ({
     "isMousedown": false,
     "drag_start": [0, 0],
     "drag_end": [0, 0],
-    "rotate": 45,
+    "rotate": 0,
     "rotate_axis_translate": [],
     "isClockwise": true,
     "isCrossNicol": false,
