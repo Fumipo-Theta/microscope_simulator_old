@@ -106,6 +106,17 @@ class DatabaseHandler {
     }
 }
 
+class TextNode {
+    constructor(selector) {
+        this.dom = document.querySelector(selector)
+    }
+
+    message(str) {
+        this.dom.innerHTML = str;
+    }
+}
+
+const loadingMessage = new TextNode("#loading_message")
 
 class DummyDatabaseHandler extends DatabaseHandler {
     constructor(db_name, version, storeName, primaryKeyName) {
@@ -448,19 +459,7 @@ const windowResizeHandler = state => new Promise((res, rej) => {
     res(state)
 })
 
-/**
- * @parameter src {dataURL}
- */
-const loadImageSrc = (src) => new Promise((res, rej) => {
-    const returnImg = (img) => e => {
-        res(img)
-    }
 
-    img = document.createElement("img")
-    img.src = src
-    img.addEventListener("load", returnImg(img), false)
-    img.addEventListener("error", returnImg(img), false)
-})
 
 
 
@@ -661,34 +660,33 @@ function showErrorCard(messageHTML) {
     }
 }
 
+function progressCircle(selector) {
+    const progress_circle = document.querySelector(selector)
+    const total = progress_circle.attributes["r"].value * 2 * Math.PI
+    progress_circle.attributes["stroke-dasharray"].value = total
+    progress_circle.attributes["stroke-dashoffset"].value = total
+
+    return (load) => {
+        progress_circle.attributes["stroke-dashoffset"].value = total * (1 - 0.5 * load)
+    }
+}
+
+function progressHandler(evt) {
+    const open_progress = progressCircle("#open-progress")
+    const cross_progress = progressCircle("#cross-progress")
+    const load = (100 * evt.loaded / evt.total | 0);
+    open_progress(load * 0.01)
+    cross_progress(load * 0.01)
+}
+
+function completeHandler() {
+    const open_progress = progressCircle("#open-progress")
+    const cross_progress = progressCircle("#cross-progress")
+    open_progress(0)
+    cross_progress(0)
+}
 
 const unziper = (url) => new Promise((res, rej) => {
-    function progressCircle(selector) {
-        const progress_circle = document.querySelector(selector)
-        const total = progress_circle.attributes["r"].value * 2 * Math.PI
-        progress_circle.attributes["stroke-dasharray"].value = total
-        progress_circle.attributes["stroke-dashoffset"].value = total
-
-        return (load) => {
-            progress_circle.attributes["stroke-dashoffset"].value = total * (1 - 0.5 * load)
-        }
-    }
-
-    function progressHandler(evt) {
-        const open_progress = progressCircle("#open-progress")
-        const cross_progress = progressCircle("#cross-progress")
-        const load = (100 * evt.loaded / evt.total | 0);
-        open_progress(load * 0.01)
-        cross_progress(load * 0.01)
-    }
-
-    function completeHandler() {
-        const open_progress = progressCircle("#open-progress")
-        const cross_progress = progressCircle("#cross-progress")
-        open_progress(0)
-        cross_progress(0)
-    }
-
     Zip.inflate_file(url, res, rej, progressHandler, completeHandler)
 })
 
@@ -719,6 +717,35 @@ function base64ToArrayBuffer(base64) {
     return bytes.buffer;
 }
 
+function objectFrom(keys_values) {
+    const o = {}
+    keys_values.forEach(kv => {
+        o[kv[0]] = kv[1]
+    })
+    return o
+}
+
+async function polyfillWebp(name_file, i, a) {
+    const [name, file] = name_file;
+
+    if (name.includes(".json")) {
+        return [name, file]
+    } else {
+        const type = name.match(/.*\.(\w+)$/)[1]
+        const base64 = await imageDecoder.decode(file, type)
+        const mime = base64.match(/^data:(image\/\w+);/)[1]
+        const mime_type = mime.split("/")[1]
+
+        const new_file_name = name.split(".")[0] + "." + mime_type
+        return [new_file_name, new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))]
+    }
+}
+
+function inflate(name_file) {
+    const [name, file] = name_file;
+    return [name, file.inflate()]
+}
+
 /**
  *
  * @param {*} zip
@@ -726,25 +753,18 @@ function base64ToArrayBuffer(base64) {
  */
 const extractFile = async zipByte => {
     const zip = Zip.inflate(zipByte)
-    const inflated_zip = {}
-    await Promise.all(Object.entries(zip.files).map(async kv => {
-        if (kv[0].includes(".json")) {
-            inflated_zip[kv[0]] = kv[1].inflate()
-        } else {
-            const type = kv[0].match(/.*\.(\w+)$/)[1]
-            const base64 = await imageDecoder.decode(kv[1].inflate(), type)
-            const mime = base64.match(/^data:(image\/\w+);/)[1]
-            const mime_type = mime.split("/")[1]
 
-            const new_file_name = kv[0].split(".")[0] + "." + mime_type
+    loadingMessage.message("Processing images")
 
-            inflated_zip[new_file_name] = new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))
-        }
+    const result = objectFrom(
+        await Promise.all(
+            Object.entries(zip.files)
+                .map(inflate)
+                .map(polyfillWebp)
+        )
+    )
 
-        return true
-    }))
-
-    return inflated_zip
+    return result
 }
 
 /**
@@ -796,6 +816,8 @@ const markDownloadedOption = packageName => inflated_zip => new Promise((res, re
  * @param {*} packageName
  */
 const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
+    loadingMessage.message("Loading images")
+
     const key = sanitizeID(packageName)
     const zipURL = staticSettings.getImageDataPath(packageName)
 
@@ -870,6 +892,22 @@ const updateImages = state => imgSets => new Promise((res, rej) => {
     res(state)
 })
 
+
+/**
+ * @parameter src {dataURL}
+ */
+function loadImageSrc(src) {
+    return new Promise((res, rej) => {
+        const returnImg = (img) => e => {
+            res(img)
+        }
+
+        img = document.createElement("img")
+        img.src = src
+        img.addEventListener("load", returnImg(img), false)
+        img.addEventListener("error", returnImg(img), false)
+    })
+}
 
 /**
  * Check images are in containor.

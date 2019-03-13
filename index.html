@@ -101,9 +101,15 @@
             position: fixed;
             z-index: 300;
             background-color: rgb(0, 0, 0);
+            flex-direction: column;
         }
 
-        .lds-css>svg {
+        #app-loader.inactive>div>svg,
+        #app-loader.inactive>div>.progress-circle {
+            animation: none;
+        }
+
+        .lds-css>div>svg {
             width: 10em;
             height: 10em;
             animation: lds-disk 1s infinite;
@@ -121,6 +127,28 @@
 
         .lds-css.inactive {
             animation: fadeOut 0.5s linear forwards;
+        }
+
+        #loading_message {
+            position: relative;
+            top: 40px;
+            color: white;
+            font-size: 1.2rem;
+            animation: blink 2s ease-in-out infinite
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeIn {
@@ -322,33 +350,36 @@
         </div>
     </div>
 
-    <div id="app-loader" class="lds-css ng-scope progress">
-
-        <svg viewBox="0 0 165 165">
-            <use xlink:href="#shadow-righttop"></use>
-            <use xlink:href="#shadow-leftbottom"></use>
-            <use xlink:href="#back-circle" opacity="1" fill="#000000" fill-opacity="1"></use>
-            <use class="hexagon" xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1"></use>
-        </svg>
-
-        <div class="progress-circle" data-percent="13%">
-            <svg width="300" height="300">
-                <linearGradient id="g_open">
-                    <stop offset="0.05" stop-color="white" />
-                    <stop offset="0.99" stop-color="#001a79" />
-                    <stop offset="1" stop-color="black" />
-                </linearGradient>
-                <linearGradient id="g_cross">
-                    <stop offset="0.05" stop-color="white" />
-                    <stop offset="0.99" stop-color="#510089" />
-                    <stop offset="1" stop-color="black" />
-                </linearGradient>
-                <circle id="open-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
-                    transform="rotate(225, 150,150)" />
-                <circle id="cross-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
-                    transform="rotate(45,150,150)" />
+    <div id="app-loader" class="lds-css ng-scope ">
+        <div class="align-center progress">
+            <svg viewBox="0 0 165 165">
+                <use xlink:href="#shadow-righttop"></use>
+                <use xlink:href="#shadow-leftbottom"></use>
+                <use xlink:href="#back-circle" opacity="1" fill="#000000" fill-opacity="1"></use>
+                <use class="hexagon" xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1"></use>
             </svg>
+            <div class="progress-circle" data-percent="13%">
+                <svg width="300" height="300">
+                    <linearGradient id="g_open">
+                        <stop offset="0.05" stop-color="white" />
+                        <stop offset="0.99" stop-color="#001a79" />
+                        <stop offset="1" stop-color="black" />
+                    </linearGradient>
+                    <linearGradient id="g_cross">
+                        <stop offset="0.05" stop-color="white" />
+                        <stop offset="0.99" stop-color="#510089" />
+                        <stop offset="1" stop-color="black" />
+                    </linearGradient>
+                    <circle id="open-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
+                        transform="rotate(225, 150,150)" />
+                    <circle id="cross-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
+                        transform="rotate(45,150,150)" />
+                </svg>
+            </div>
         </div>
+
+
+        <p id="loading_message"></p>
     </div>
 
 
