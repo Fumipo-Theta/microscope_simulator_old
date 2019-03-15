@@ -245,7 +245,7 @@ class ImageDecoder {
         var bytes = new Uint8Array(buffer);
 
 
-        if (!await this.supportWebp() || type !== "webp") {
+        if (await this.supportWebp() || type !== "webp") {
             var binary = '';
             var len = bytes.byteLength;
             for (var i = 0; i < len; i++) {
@@ -269,7 +269,71 @@ class ImageDecoder {
     }
 }
 
-const imageDecoder = new ImageDecoder()
+class ImageDecoderWorker {
+    constructor() {
+        this.supportWebp = detectWebpSupport;
+        const canvas = document.createElement("canvas")
+        this.canvas = canvas
+        this.ctx = this.canvas.getContext("2d");
+        this.worker = new Worker("/js/decode_webp_worker.js");
+        this.storage = {}
+        this.cnt = 0
+        this.resolves = {}
+        this.rejects = {}
+    }
+
+    async decode(u8array, type = "webp") {
+
+
+        if (await this.supportWebp() || type !== "webp") {
+            var binary = '';
+            var len = u8array.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(u8array[i]);
+            }
+            return `data:image/${type};base64,` + window.btoa(binary);
+        }
+
+
+        return new Promise((res, rej) => {
+            this.resolves[this.cnt] = res
+
+
+            //let sharedAb = new SharedArrayBuffer(u8array.byteLength)
+            //let sharedU8 = new Uint8Array(sharedAb)
+            //sharedU8.set(u8array, 0)
+
+            this.worker.onmessage = e => {
+                const id = e.data.imageData;
+                const num = e.data.num
+                const resolve = this.resolves[num]
+                delete this.resolves[num]
+                if (e.data.failed) {
+                    console.warn("WebP image convert failed")
+                }
+                this.canvas.width = id.width;
+                this.canvas.height = id.height;
+                this.ctx.putImageData(id, 0, 0);
+                //sharedAb = null
+                //sharedU8 = null
+                resolve(this.canvas.toDataURL("image/jpeg"))
+            }
+            this.worker.postMessage(
+                {
+                    binary: u8array,
+                    num: this.cnt
+                },
+                //[sharedAb]
+            )
+            this.cnt++;
+        })
+
+    }
+}
+
+const openImageDecoder = new ImageDecoder()
+const crossImageDecoder = new ImageDecoder()
+
 
 function ISmallStorageFactory() {
     return (window.localStorage)
@@ -564,12 +628,14 @@ function selectImageFromZip(zip, prefix) {
 
 function updateImageSrc(zip) {
     return (state) => new Promise((res, rej) => {
+        state.open_images = []
+        state.cross_images = []
         Promise.race([
             ...(Array(state.image_number - 1)
                 .fill(0)
                 .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
                 .map((type_image, i) => new Promise((_res, rej) => {
-                    Promise.resolve(imageDecoder.decode(type_image[1], type_image[0]))
+                    Promise.resolve(openImageDecoder.decode(type_image[1], type_image[0]))
                         .then(loadImageSrc)
                         .then(img => {
                             state.open_images[i] = img;
@@ -582,10 +648,11 @@ function updateImageSrc(zip) {
                 .fill(0)
                 .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
                 .map((type_image, i) => new Promise((_res, rej) => {
-                    imageDecoder.decode(type_image[1], type_image[0])
+                    crossImageDecoder.decode(type_image[1], type_image[0])
                         .then(loadImageSrc)
                         .then(img => {
                             state.cross_images[i] = img;
+
                             _res(`image c${i + 1} set`)
                         })
                 }))
@@ -881,7 +948,7 @@ const rockNameSelectHandler = state => {
         const rock_selector = document.querySelector("#rock_selector")
         const packageName = rock_selector.options[rock_selector.selectedIndex].value
 
-        //showLoadingAnimation(state)
+        showLoadingAnimation(state)
         hideWelcomeBoard(state)
         showViewer(state)
         showNicolButton(state)

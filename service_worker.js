@@ -1,4 +1,4 @@
-const VERSION = "1.2.9";
+const VERSION = "1.3.4";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
@@ -13,6 +13,7 @@ const STATIC_FILES = [
     ORIGIN + '/js/zip.js',
     ORIGIN + '/js/jsinflate.js',
     ORIGIN + '/js/webp.js',
+    ORIGIN + '/js/libwebp-0.2.0.min',
     ORIGIN + "/js/encoding-indexes.js",
     ORIGIN + "/js/encoding.js",
 

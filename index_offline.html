@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1" user-zoom="no">
     <link rel="manifest" href="./manifest.json">
-    <link rel="stylesheet" href="./css/main_offline.css" charset="utf-8">
+    <meta name="theme-color" content="#2196f3">
+    <link rel="stylesheet" href="./css/main.css" charset="utf-8">
 
     <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
     <title>SCOPin rock: polarizing microscope simulator</title>
@@ -100,9 +101,15 @@
             position: fixed;
             z-index: 300;
             background-color: rgb(0, 0, 0);
+            flex-direction: column;
         }
 
-        .lds-css>svg {
+        #app-loader.inactive>div>svg,
+        #app-loader.inactive>div>.progress-circle {
+            animation: none;
+        }
+
+        .lds-css>div>svg {
             width: 10em;
             height: 10em;
             animation: lds-disk 1s infinite;
@@ -120,6 +127,28 @@
 
         .lds-css.inactive {
             animation: fadeOut 0.5s linear forwards;
+        }
+
+        #loading_message {
+            position: relative;
+            top: 40px;
+            color: white;
+            font-size: 1.2rem;
+            animation: blink 2s ease-in-out infinite
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeIn {
@@ -321,33 +350,36 @@
         </div>
     </div>
 
-    <div id="app-loader" class="lds-css ng-scope progress">
-
-        <svg viewBox="0 0 165 165">
-            <use xlink:href="#shadow-righttop"></use>
-            <use xlink:href="#shadow-leftbottom"></use>
-            <use xlink:href="#back-circle" opacity="1" fill="#000000" fill-opacity="1"></use>
-            <use class="hexagon" xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1"></use>
-        </svg>
-
-        <div class="progress-circle" data-percent="13%">
-            <svg width="300" height="300">
-                <linearGradient id="g_open">
-                    <stop offset="0.05" stop-color="white" />
-                    <stop offset="0.99" stop-color="#001a79" />
-                    <stop offset="1" stop-color="black" />
-                </linearGradient>
-                <linearGradient id="g_cross">
-                    <stop offset="0.05" stop-color="white" />
-                    <stop offset="0.99" stop-color="#510089" />
-                    <stop offset="1" stop-color="black" />
-                </linearGradient>
-                <circle id="open-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
-                    transform="rotate(225, 150,150)" />
-                <circle id="cross-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
-                    transform="rotate(45,150,150)" />
+    <div id="app-loader" class="lds-css ng-scope ">
+        <div class="align-center progress">
+            <svg viewBox="0 0 165 165">
+                <use xlink:href="#shadow-righttop"></use>
+                <use xlink:href="#shadow-leftbottom"></use>
+                <use xlink:href="#back-circle" opacity="1" fill="#000000" fill-opacity="1"></use>
+                <use class="hexagon" xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1"></use>
             </svg>
+            <div class="progress-circle" data-percent="13%">
+                <svg width="300" height="300">
+                    <linearGradient id="g_open">
+                        <stop offset="0.05" stop-color="white" />
+                        <stop offset="0.99" stop-color="#001a79" />
+                        <stop offset="1" stop-color="black" />
+                    </linearGradient>
+                    <linearGradient id="g_cross">
+                        <stop offset="0.05" stop-color="white" />
+                        <stop offset="0.99" stop-color="#510089" />
+                        <stop offset="1" stop-color="black" />
+                    </linearGradient>
+                    <circle id="open-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
+                        transform="rotate(225, 150,150)" />
+                    <circle id="cross-progress" cx="150" cy="150" r="120" stroke-dasharray="754" stroke-dashoffset="754"
+                        transform="rotate(45,150,150)" />
+                </svg>
+            </div>
         </div>
+
+
+        <p id="loading_message"></p>
     </div>
 
 
@@ -415,7 +447,7 @@
 
     <div id='footer'>
 
-        <div id='footer_nav' class='footer_column '>
+        <div class='footer_column '>
             <div class="space-around" style="margin: 15px 0;">
                 <div class="sns_icon facebook_back"><a href="" target="_blank" title="Facebookでシェア"><img
                             src="./images/facebook-brands.svg" alt="facebook"></a></div>
@@ -431,7 +463,7 @@
 
             <div class="form-wrapper space-around column-direction">
                 <div class="card-icon">
-                    <img class="icon" src="./images/ProfilePhoto.jpg">
+                    <img class="icon" src="./images/ProfilePhoto.jpg" alt="Fumipo-Theta's icon">
                 </div>
                 <div class="spread">
                     <span class="important">Please donate</span> for maintenence and updating service ! <br>
@@ -479,7 +511,7 @@
             </div>
         </div>
 
-        <div id='footer_nav' class='footer_column'>
+        <div class='footer_column'>
 
             <div class="SCOPin_rock_logo">
                 <span>SC</span>
@@ -548,8 +580,8 @@
     <script src="./js/zip.js"></script>
     <script src="./js/jsinflate.js"></script>
     <script src="./js/webp.js"></script>
-    <script src="./js/app_offline.js"></script>
-    <script src="./js/event-handler_offline.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="./js/event-handler.js"></script>
 
 </body>
 

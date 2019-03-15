@@ -106,6 +106,17 @@ class DatabaseHandler {
     }
 }
 
+class TextNode {
+    constructor(selector) {
+        this.dom = document.querySelector(selector)
+    }
+
+    message(str) {
+        this.dom.innerHTML = str;
+    }
+}
+
+const loadingMessage = new TextNode("#loading_message")
 
 class DummyDatabaseHandler extends DatabaseHandler {
     constructor(db_name, version, storeName, primaryKeyName) {
@@ -258,7 +269,71 @@ class ImageDecoder {
     }
 }
 
-const imageDecoder = new ImageDecoder()
+class ImageDecoderWorker {
+    constructor() {
+        this.supportWebp = detectWebpSupport;
+        const canvas = document.createElement("canvas")
+        this.canvas = canvas
+        this.ctx = this.canvas.getContext("2d");
+        this.worker = new Worker("/js/decode_webp_worker.js");
+        this.storage = {}
+        this.cnt = 0
+        this.resolves = {}
+        this.rejects = {}
+    }
+
+    async decode(u8array, type = "webp") {
+
+
+        if (await this.supportWebp() || type !== "webp") {
+            var binary = '';
+            var len = u8array.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(u8array[i]);
+            }
+            return `data:image/${type};base64,` + window.btoa(binary);
+        }
+
+
+        return new Promise((res, rej) => {
+            this.resolves[this.cnt] = res
+
+
+            //let sharedAb = new SharedArrayBuffer(u8array.byteLength)
+            //let sharedU8 = new Uint8Array(sharedAb)
+            //sharedU8.set(u8array, 0)
+
+            this.worker.onmessage = e => {
+                const id = e.data.imageData;
+                const num = e.data.num
+                const resolve = this.resolves[num]
+                delete this.resolves[num]
+                if (e.data.failed) {
+                    console.warn("WebP image convert failed")
+                }
+                this.canvas.width = id.width;
+                this.canvas.height = id.height;
+                this.ctx.putImageData(id, 0, 0);
+                //sharedAb = null
+                //sharedU8 = null
+                resolve(this.canvas.toDataURL("image/jpeg"))
+            }
+            this.worker.postMessage(
+                {
+                    binary: u8array,
+                    num: this.cnt
+                },
+                //[sharedAb]
+            )
+            this.cnt++;
+        })
+
+    }
+}
+
+const openImageDecoder = new ImageDecoder()
+const crossImageDecoder = new ImageDecoder()
+
 
 function ISmallStorageFactory() {
     return (window.localStorage)
@@ -357,7 +432,7 @@ const resetState = () => ({
     "isMousedown": false,
     "drag_start": [0, 0],
     "drag_end": [0, 0],
-    "rotate": 45,
+    "rotate": 0,
     "rotate_axis_translate": [],
     "isClockwise": true,
     "isCrossNicol": false,
@@ -448,19 +523,7 @@ const windowResizeHandler = state => new Promise((res, rej) => {
     res(state)
 })
 
-/**
- * @parameter src {dataURL}
- */
-const loadImageSrc = (src) => new Promise((res, rej) => {
-    const returnImg = (img) => e => {
-        res(img)
-    }
 
-    img = document.createElement("img")
-    img.src = src
-    img.addEventListener("load", returnImg(img), false)
-    img.addEventListener("error", returnImg(img), false)
-})
 
 
 
@@ -546,6 +609,8 @@ const updateStateByMeta = (state, containorID) => (meta) => new Promise((res, re
         return 1 - (degree - rotate_degree_step * nth) / rotate_degree_step
     }
 
+    state.rotate = 0;
+
     res(state)
 })
 
@@ -562,20 +627,40 @@ function selectImageFromZip(zip, prefix) {
 }
 
 function updateImageSrc(zip) {
-    return (state) => new Promise(async (res, rej) => {
-        state.open_image_srcs = await Promise.all(Array(state.image_number - 1)
-            .fill(0)
-            .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
-            .map(async (type_image) => await imageDecoder.decode(type_image[1], type_image[0]))
-        )
+    return (state) => new Promise((res, rej) => {
+        state.open_images = []
+        state.cross_images = []
+        Promise.race([
+            ...(Array(state.image_number - 1)
+                .fill(0)
+                .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
+                .map((type_image, i) => new Promise((_res, rej) => {
+                    Promise.resolve(openImageDecoder.decode(type_image[1], type_image[0]))
+                        .then(loadImageSrc)
+                        .then(img => {
+                            state.open_images[i] = img;
+                            _res(`image o${i + 1} set`)
+                        })
+                }))
+            ),
 
-        state.cross_image_srcs = await Promise.all(Array(state.image_number - 1)
-            .fill(0)
-            .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
-            .map(async (type_image) => await imageDecoder.decode(type_image[1], type_image[0]))
-        )
+            ...(Array(state.image_number - 1)
+                .fill(0)
+                .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
+                .map((type_image, i) => new Promise((_res, rej) => {
+                    crossImageDecoder.decode(type_image[1], type_image[0])
+                        .then(loadImageSrc)
+                        .then(img => {
+                            state.cross_images[i] = img;
 
-        res(state)
+                            _res(`image c${i + 1} set`)
+                        })
+                }))
+            )])
+            .then(msg => {
+                console.log(msg)
+                res(state)
+            });
     })
 }
 
@@ -661,34 +746,33 @@ function showErrorCard(messageHTML) {
     }
 }
 
+function progressCircle(selector) {
+    const progress_circle = document.querySelector(selector)
+    const total = progress_circle.attributes["r"].value * 2 * Math.PI
+    progress_circle.attributes["stroke-dasharray"].value = total
+    progress_circle.attributes["stroke-dashoffset"].value = total
+
+    return (load) => {
+        progress_circle.attributes["stroke-dashoffset"].value = total * (1 - 0.5 * load)
+    }
+}
+
+function progressHandler(evt) {
+    const open_progress = progressCircle("#open-progress")
+    const cross_progress = progressCircle("#cross-progress")
+    const load = (100 * evt.loaded / evt.total | 0);
+    open_progress(load * 0.01)
+    cross_progress(load * 0.01)
+}
+
+function completeHandler() {
+    const open_progress = progressCircle("#open-progress")
+    const cross_progress = progressCircle("#cross-progress")
+    open_progress(0)
+    cross_progress(0)
+}
 
 const unziper = (url) => new Promise((res, rej) => {
-    function progressCircle(selector) {
-        const progress_circle = document.querySelector(selector)
-        const total = progress_circle.attributes["r"].value * 2 * Math.PI
-        progress_circle.attributes["stroke-dasharray"].value = total
-        progress_circle.attributes["stroke-dashoffset"].value = total
-
-        return (load) => {
-            progress_circle.attributes["stroke-dashoffset"].value = total * (1 - 0.5 * load)
-        }
-    }
-
-    function progressHandler(evt) {
-        const open_progress = progressCircle("#open-progress")
-        const cross_progress = progressCircle("#cross-progress")
-        const load = (100 * evt.loaded / evt.total | 0);
-        open_progress(load * 0.01)
-        cross_progress(load * 0.01)
-    }
-
-    function completeHandler() {
-        const open_progress = progressCircle("#open-progress")
-        const cross_progress = progressCircle("#cross-progress")
-        open_progress(0)
-        cross_progress(0)
-    }
-
     Zip.inflate_file(url, res, rej, progressHandler, completeHandler)
 })
 
@@ -719,6 +803,35 @@ function base64ToArrayBuffer(base64) {
     return bytes.buffer;
 }
 
+function objectFrom(keys_values) {
+    const o = {}
+    keys_values.forEach(kv => {
+        o[kv[0]] = kv[1]
+    })
+    return o
+}
+
+async function polyfillWebp(name_file, i, a) {
+    const [name, file] = name_file;
+
+    if (name.includes(".json")) {
+        return [name, file]
+    } else {
+        const type = name.match(/.*\.(\w+)$/)[1]
+        const base64 = await imageDecoder.decode(file, type)
+        const mime = base64.match(/^data:(image\/\w+);/)[1]
+        const mime_type = mime.split("/")[1]
+
+        const new_file_name = name.split(".")[0] + "." + mime_type
+        return [new_file_name, new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))]
+    }
+}
+
+function inflate(name_file) {
+    const [name, file] = name_file;
+    return [name, file.inflate()]
+}
+
 /**
  *
  * @param {*} zip
@@ -726,25 +839,18 @@ function base64ToArrayBuffer(base64) {
  */
 const extractFile = async zipByte => {
     const zip = Zip.inflate(zipByte)
-    const inflated_zip = {}
-    await Promise.all(Object.entries(zip.files).map(async kv => {
-        if (kv[0].includes(".json")) {
-            inflated_zip[kv[0]] = kv[1].inflate()
-        } else {
-            const type = kv[0].match(/.*\.(\w+)$/)[1]
-            const base64 = await imageDecoder.decode(kv[1].inflate(), type)
-            const mime = base64.match(/^data:(image\/\w+);/)[1]
-            const mime_type = mime.split("/")[1]
 
-            const new_file_name = kv[0].split(".")[0] + "." + mime_type
+    loadingMessage.message("Processing images")
 
-            inflated_zip[new_file_name] = new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))
-        }
+    const result = objectFrom(
+        await Promise.all(
+            Object.entries(zip.files)
+                .map(inflate)
+            //.map(polyfillWebp)
+        )
+    )
 
-        return true
-    }))
-
-    return inflated_zip
+    return result
 }
 
 /**
@@ -796,6 +902,8 @@ const markDownloadedOption = packageName => inflated_zip => new Promise((res, re
  * @param {*} packageName
  */
 const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
+    loadingMessage.message("Loading images")
+
     const key = sanitizeID(packageName)
     const zipURL = staticSettings.getImageDataPath(packageName)
 
@@ -849,10 +957,10 @@ const rockNameSelectHandler = state => {
 
         try {
             const manifest = await extractManifestFromZip(zip)
-            const r = updateStateByMeta(state, packageName)(manifest)
+            updateStateByMeta(state, packageName)(manifest)
                 .then(updateImageSrc(zip))
                 .then(updateViewDiscription)
-            res(r)
+                .then(res)
         } catch (e) {
             rej(e)
         }
@@ -872,40 +980,37 @@ const updateImages = state => imgSets => new Promise((res, rej) => {
 
 
 /**
+ * @parameter src {dataURL}
+ */
+function loadImageSrc(src) {
+    return new Promise((res, rej) => {
+        const returnImg = (img) => e => {
+            res(img)
+        }
+
+        const img = new Image()
+        img.src = src
+        res(img)
+        //img.addEventListener("load", returnImg(img), false)
+        //img.addEventListener("error", returnImg(img), false)
+    })
+}
+
+/**
  * Check images are in containor.
  * If true, set them in state object.
  * else, create img element and set them in state object.
  */
 const createImageContainor = state => new Promise((res, rej) => {
 
-    const containor = document.querySelector(".image_containor")
-    containor.innerHTML = ""
-
-    subcontainor = document.createElement("div")
-    subcontainor.id = state.containorID
-    openContainor = document.createElement("div")
-    openContainor.classList = ["open"]
-    crossContainor = document.createElement("div")
-    crossContainor.classList = ["cross"]
-
-    subcontainor.appendChild(openContainor)
-    subcontainor.appendChild(crossContainor)
-    containor.appendChild(subcontainor)
-
     Promise.all([
         Promise.all(state.open_image_srcs.map(src => loadImageSrc(src))),
         Promise.all(state.cross_image_srcs.map(src => loadImageSrc(src)))
     ])
         .then(imgDOMs => {
-            const open_imgs = imgDOMs[0].map(img => {
-                openContainor.appendChild(img)
-                return img
-            })
+            const open_imgs = imgDOMs[0]
 
-            const cross_imgs = imgDOMs[1].map(img => {
-                crossContainor.appendChild(img)
-                return img
-            })
+            const cross_imgs = imgDOMs[1]
 
             return { open: open_imgs, cross: cross_imgs }
         })
