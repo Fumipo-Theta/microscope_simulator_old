@@ -233,23 +233,20 @@ class ImageDecoder {
 
     /** decode
      *
-     * @param {Buffer} buffer
+     * @param {Uint8Array} u8array
+     * @param {String} type
      * @return {Promise<string>}
      */
-    async decode(buffer, type = "webp") {
-
+    async decode(u8array, type = "webp") {
 
         //if (this.busy) throw new Error("webp-machine decode error: busy")
         this.busy = true
 
-        var bytes = new Uint8Array(buffer);
-
-
         if (await this.supportWebp() || type !== "webp") {
             var binary = '';
-            var len = bytes.byteLength;
+            var len = u8array.byteLength;
             for (var i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
+                binary += String.fromCharCode(u8array[i]);
             }
             return `data:image/${type};base64,` + window.btoa(binary);
         }
@@ -257,7 +254,7 @@ class ImageDecoder {
         try {
             await relax()
             this.webp.setCanvas(this.canvas)
-            this.webp.webpToSdl(bytes, bytes.length)
+            this.webp.webpToSdl(u8array, u8array.length)
             this.busy = false
             return this.canvas.toDataURL("image/jpeg")
         }
@@ -283,7 +280,6 @@ class ImageDecoderWorker {
     }
 
     async decode(u8array, type = "webp") {
-
 
         if (await this.supportWebp() || type !== "webp") {
             var binary = '';
@@ -609,6 +605,9 @@ const updateStateByMeta = (state, containorID) => (meta) => new Promise((res, re
         return 1 - (degree - rotate_degree_step * nth) / rotate_degree_step
     }
 
+    state.open_images = []
+    state.cross_images = []
+
     state.rotate = 0;
 
     res(state)
@@ -627,9 +626,22 @@ function selectImageFromZip(zip, prefix) {
 }
 
 function updateImageSrc(zip) {
-    return (state) => new Promise((res, rej) => {
-        state.open_images = []
-        state.cross_images = []
+    return (state) => new Promise(async (res, rej) => {
+        state.open_images = await Promise.all(Array(state.image_number - 1)
+            .fill(0)
+            .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
+            .map((type_image, i) => openImageDecoder.decode(type_image[1], type_image[0])
+                .then(loadImageSrc)
+            ))
+
+        state.cross_images = await Promise.all(Array(state.image_number - 1)
+            .fill(0)
+            .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
+            .map((type_image, i) => crossImageDecoder.decode(type_image[1], type_image[0])
+                .then(loadImageSrc)
+            ))
+
+        /* 表示までの時間を短くしたい...
         Promise.race([
             ...(Array(state.image_number - 1)
                 .fill(0)
@@ -656,11 +668,15 @@ function updateImageSrc(zip) {
                             _res(`image c${i + 1} set`)
                         })
                 }))
-            )])
+            )
+        ])
             .then(msg => {
                 console.log(msg)
                 res(state)
             });
+        */
+
+        res(state)
     })
 }
 
@@ -813,6 +829,7 @@ function objectFrom(keys_values) {
 
 async function polyfillWebp(name_file, i, a) {
     const [name, file] = name_file;
+    const imageDecoder = new ImageDecoder()
 
     if (name.includes(".json")) {
         return [name, file]
@@ -1024,8 +1041,6 @@ const createImageContainor = state => new Promise((res, rej) => {
  */
 
 const clipGeometoryFromImageCenter = (imgDOM, state) => {
-    const img_height = imgDOM.height
-    const img_width = imgDOM.width
 
     return [
         state.rotate_center.to_right - state.imageRadius,
@@ -1035,13 +1050,12 @@ const clipGeometoryFromImageCenter = (imgDOM, state) => {
     ]
 }
 
-const clearView = state => {
-    //viewer_ctx.save()
+function clearView(state) {
     viewer_ctx.clearRect(-state.canvasWidth * 0.5, -state.canvasHeight * 0.5, state.canvasWidth, state.canvasHeight)
-    //viewer_ctx.restore()
+    return state
 }
 
-const blobToCanvas = (state) => {
+function blobToCanvas(state) {
 
     image_srcs = state.isCrossNicol
         ? state.cross_images
@@ -1060,9 +1074,6 @@ const blobToCanvas = (state) => {
     viewer_ctx.rotate(
         rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate) * 15) / 180 * Math.PI
     )
-
-    //viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate) * 15 * Math.PI / 180)
-
 
     viewer_ctx.globalAlpha = 1
     image1 = image_srcs[state.getImageNumber(state.rotate)]
@@ -1091,7 +1102,6 @@ const blobToCanvas = (state) => {
     viewer_ctx.rotate(
         rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate + 15) * 15) / 180 * Math.PI
     )
-    //viewer_ctx.rotate(rotateSign(state.isClockwise) * state.getImageNumber(state.rotate + 15) * 15 * Math.PI / 180)
 
     viewer_ctx.globalAlpha = 1 - alpha
     image2 = image_srcs[state.getImageNumber(state.rotate + 15)]
@@ -1107,9 +1117,10 @@ const blobToCanvas = (state) => {
 
     }
     viewer_ctx.restore()
+    return state
 }
 
-const drawHairLine = state => {
+function drawHairLine(state) {
     if (!state.drawHairLine) return
     viewer_ctx.strokeStyle = state.isCrossNicol
         ? "white"
@@ -1122,11 +1133,12 @@ const drawHairLine = state => {
     viewer_ctx.lineTo(state.canvasWidth * 0.5 - VIEW_PADDING, 0)
     viewer_ctx.closePath()
     viewer_ctx.stroke()
+    return state
 }
 
 const scaleLength = (canvasWidth, imageWidth, scaleWidth) => canvasWidth * scaleWidth / imageWidth
 
-const drawScale = state => {
+function drawScale(state) {
     if (!state["scaleWidth"]) return;
     let scalePixel = scaleLength(state.canvasWidth, state.imageRadius * 2, state.scaleWidth)
     const canvasWidth = state.canvasWidth;
@@ -1142,6 +1154,7 @@ const drawScale = state => {
     }
     scaleBar.style.width = scalePixel + "px";
     scaleBar.querySelector("div:first-child").innerHTML = `${scaleNumber} ${scaleUnit}`;
+    return state
 }
 
 const updateState = (state, newState) => new Promise((res, rej) => {
@@ -1151,7 +1164,7 @@ const updateState = (state, newState) => new Promise((res, rej) => {
 })
 
 
-const updateView = (state) => {
+function updateView(state) {
     clearView(state)
     blobToCanvas(state)
     drawHairLine(state)
@@ -1198,12 +1211,13 @@ const radiunBetween = (cx, cy) => (_x1, _y1, _x2, _y2) => {
  * @param {*} state
  * @param {*} e
  */
-const updateCoordinate = (state, e) => {
+function updateCoordinate(state, e) {
     state.drag_start = state.drag_end || undefined
     state.drag_end = canvasCoordinate(e)
 
     state.pinch_start = state.pinch_end || undefined
     state.pinch_end = canvasCoordinate(e, 1)
+    return state
 }
 
 /**
@@ -1213,7 +1227,7 @@ const updateCoordinate = (state, e) => {
  * @param {*} state
  * @param {*} e
  */
-const updateRotate = (state, e) => {
+function updateRotate(state, e) {
     if (state.drag_start === undefined) return
     // delta rotate radius
     const rotate_end = radiunBetween(
@@ -1227,6 +1241,7 @@ const updateRotate = (state, e) => {
     } else if (state.rotate < 0) {
         state.rotate += 360
     }
+    return state
 }
 
 
@@ -1238,7 +1253,7 @@ const rotateImage = (state, e) => () => {
     drawHairLine(state)
 }
 
-const updateMagnifyByPinch = (state, e) => {
+function updateMagnifyByPinch(state, e) {
     if (state.drag_start === undefined) return
     if (state.pinch_start === undefined) return
 
@@ -1257,10 +1272,10 @@ const updateMagnifyByPinch = (state, e) => {
         : (newRadius < 100)
             ? 100
             : newRadius
-
+    return state
 }
 
-const updateMagnifyByWheel = (state, e) => {
+function updateMagnifyByWheel(state, e) {
     const scrolled = canvasCoordinate(e)[1]
 
     const newRadius = state.imageRadius + scrolled
@@ -1269,7 +1284,7 @@ const updateMagnifyByWheel = (state, e) => {
         : (newRadius < 100)
             ? 100
             : newRadius
-
+    return state
 }
 
 const pinchImage = (state, e) => () => {

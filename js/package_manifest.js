@@ -1,6 +1,7 @@
 class PackageManifest {
     constructor() {
         this.packageID = null
+        this.listName = {}
         this.location = {}
         this.rockType = {}
         this.discription = {}
@@ -13,6 +14,8 @@ class PackageManifest {
 
     toJSON() {
         return {
+            "package-id": this.getPackageID(),
+            "list-name": this.getListName(),
             "location": this.getSampleLocation(),
             "geographic-coordinate": this.getGeoLocation(),
             "magnify": this.getMagnify(),
@@ -30,6 +33,13 @@ class PackageManifest {
         }
     }
 
+    getSampleListEntry() {
+        return {
+            "package-name": this.getPackageID(),
+            "list-name": this.getListName()
+        }
+    }
+
     setPackageID(id) {
         this.packageID = id
         return this
@@ -37,6 +47,15 @@ class PackageManifest {
 
     getPackageID() {
         return this.packageID.replace(/\//g, "_").replace(/\./g, "")
+    }
+
+    setListName(s, lang) {
+        this.listName[lang] = s;
+        return this;
+    }
+
+    getListName() {
+        return this.listName;
     }
 
     setSampleLocation(lang, disc) {

@@ -295,13 +295,6 @@ function compressImageSrc(src, size = 125000) {
     }
 }
 
-const sample_list_entry = {
-    "package-name": undefined,
-    "list-name": {
-        "ja": undefined,
-        "en": undefined
-    }
-};
 
 function send_sample_list_entry(json_obj) {
     document.querySelector("#dev_sample_list_entry").innerHTML = JSON.stringify(json_obj, null, 2)
@@ -312,7 +305,6 @@ function send_sample_list_entry(json_obj) {
         "change",
         e => {
             package.setPackageID(e.target.value)
-            sample_list_entry["package-name"] = e.target.value;
         },
         false
     )
@@ -422,7 +414,8 @@ function send_sample_list_entry(json_obj) {
             dom.addEventListener(
                 "change",
                 e => {
-                    sample_list_entry["list-name"][e.target.dataset.lang] = e.target.value
+                    package.setListName(e.target.value, e.target.dataset.lang)
+
                 }
             )
         })
@@ -595,7 +588,7 @@ function send_sample_list_entry(json_obj) {
                 zip.file(`c${i + 1}.webp`, compressImageSrc(src))
             })
 
-            send_sample_list_entry(sample_list_entry)
+            send_sample_list_entry(package.getSampleListEntry())
 
             zip.generateAsync({ type: "blob" })
                 .then(function (content) {
