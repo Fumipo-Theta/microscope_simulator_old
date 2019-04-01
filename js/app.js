@@ -587,17 +587,20 @@ function loadImageSrc(state) {
 
         const img = new Image()
         const [src, mime] = src_set.pop()
-        img.src = handleImgSrc(src)
+
         img.onload = _ => {
             updateView(state)
             hideLoadingAnimation(state)
+            this.onnerror = null;
             res([img, mime])
         }
-        img.onerror = _ => {
+        img.onerror = e => {
             loadImageSrc(state)(src_set)
                 .then(res)
                 .catch(rej)
         }
+
+        img.src = handleImgSrc(src)
     })
 }
 
@@ -623,26 +626,23 @@ function updateImageSrc(packageName, response) {
         Promise.all([
             ...(Array(state.image_number - 1)
                 .fill(0)
-                .map((_, i) => selectImageSrc(state, response, packageName, `o${i + 1}`))
+                .map((_, i) =>
+                    [
+                        selectImageSrc(state, response, packageName, `o${i + 1}`),
+                        selectImageSrc(state, response, packageName, `c${i + 1}`),
+                    ])
+                .reduce((acc, e) => [...acc, ...e], [])
                 .map((src, i) => loadImageSrc(state)(src)
                     .then(result => {
                         const img = result[0]
                         const mime = result[1]
-                        state.open_images[i] = img;
-                        return [`o${i + 1}`, mime, img]
-                    }).catch(e => false)
-                )
-            ),
-
-            ...(Array(state.image_number - 1)
-                .fill(0)
-                .map((_, i) => selectImageSrc(state, response, packageName, `c${i + 1}`))
-                .map((src, i) => loadImageSrc(state)(src)
-                    .then(result => {
-                        const img = result[0]
-                        const mime = result[1]
-                        state.cross_images[i] = img;
-                        return [`c${i + 1}`, mime, img]
+                        if (i % 2 === 0) {
+                            state.open_images[i / 2] = img;
+                            return [`o${i / 2 + 1}`, mime, img]
+                        } else {
+                            state.cross_images[(i - 1) / 2] = img;
+                            return [`c${(i - 1) / 2 + 1}`, mime, img]
+                        }
                     }).catch(e => false)
                 )
             )
