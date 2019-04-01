@@ -172,6 +172,7 @@
         } else {
             windowResizeHandler(state)
                 .then(connectLocalStorage)
+                .then(checkSupportImageFormat)
                 .then(overwrideLanguageByLocalStorage)
                 .then(connectDatabase)
                 .then(sampleListLoader)
@@ -188,4 +189,5 @@
         init(state),
         false
     )
+
 })(resetState())
