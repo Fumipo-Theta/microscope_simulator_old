@@ -1355,3 +1355,31 @@ function languageChangeHundler(state) {
         })
     }
 }
+
+
+function contact_handler() {
+    return async function (e) {
+        const form = document.querySelector("#form-contact")
+        const selection = form.querySelector("#select-contact_topic")
+        const topic = selection[selection.selectedIndex].value
+        const message = form.querySelector("textarea").value
+        const from = form.querySelector("input[type=email").value
+        const obj = {
+            "from": from,
+            "title": topic,
+            "body": message
+        }
+
+        const method = "POST";
+        const body = JSON.stringify(obj);
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        console.log({ method, headers, body })
+
+        const response = await fetch("./contact", { method, headers, body })
+        return false
+    }
+}
