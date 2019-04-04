@@ -1309,3 +1309,35 @@ function languageChangeHundler(state) {
         })
     }
 }
+
+
+function contact_handler() {
+    return async function (e) {
+        const form = document.querySelector("#form-contact")
+        const selection = form.querySelector("#select-contact_topic")
+        const topic = selection[selection.selectedIndex].value
+        const message = form.querySelector("textarea").value
+        const from = form.querySelector("input[type=email").value
+        const obj = {
+            "from": from,
+            "title": topic,
+            "body": message
+        }
+
+        const method = "POST";
+        const body = JSON.stringify(obj);
+        const headers = {
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+
+        };
+
+        console.log({ method, headers, body })
+
+
+
+        const response = await fetch("https://dgo96yhuni.execute-api.us-east-1.amazonaws.com/contactapi/", { method, headers, body, 'mode': 'cors' })
+        return false
+    }
+}

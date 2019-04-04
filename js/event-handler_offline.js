@@ -143,6 +143,12 @@
         false
     )
 
+    document.querySelector("#form-contact div.button").addEventListener(
+        "click",
+        contact_handler(),
+        false
+    )
+
 
     /**
      *
