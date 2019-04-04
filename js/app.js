@@ -1374,12 +1374,16 @@ function contact_handler() {
         const body = JSON.stringify(obj);
         const headers = {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+
         };
 
         console.log({ method, headers, body })
 
-        const response = await fetch("./contact", { method, headers, body })
+
+
+        const response = await fetch("https://dgo96yhuni.execute-api.us-east-1.amazonaws.com/contactapi/", { method, headers, body, 'mode': 'cors' })
         return false
     }
 }

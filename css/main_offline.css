@@ -133,6 +133,12 @@ input[type=checkbox]:checked+label::after {
     transform: rotate(0deg);
 }
 
+input[type="email"],
+input[type="text"] {
+    width: 100%;
+    font-size: 1.2rem;
+}
+
 /* change_nicol */
 
 #change_nicol+label {
