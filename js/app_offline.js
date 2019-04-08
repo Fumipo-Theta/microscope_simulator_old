@@ -5,10 +5,14 @@
 class StaticManager {
     constructor(
         sampleListURL,
-        imageDataPathPrefix
+        imageDataPathPrefix,
+        dbName,
+        storageName
     ) {
         this.sampleListURL = sampleListURL
         this.imageDataPathPrefix = imageDataPathPrefix
+        this.indexedDBName = dbName
+        this.storageName = storageName
     }
 
     getSampleListURL() {
@@ -16,13 +20,23 @@ class StaticManager {
     }
 
     getImageDataPath(packageName) {
-        return this.imageDataPathPrefix + packageName + ".zip"
+        return this.imageDataPathPrefix + packageName + "/"
+    }
+
+    getDBName() {
+        return this.indexedDBName;
+    }
+
+    getStorageName() {
+        return this.storageName
     }
 }
 
 staticSettings = new StaticManager(
     "./dynamic/rock_list.json",
-    "./zipped/",
+    "./data/",
+    "db_v2", // "zipfiles"
+    "files" //"zip"
 )
 
 
@@ -89,8 +103,11 @@ class DatabaseHandler {
 
     async getAllKeys(db) {
         return new Promise(async (resolve, reject) => {
-
-            const req = db.transaction([this.storeName]).objectStore(this.storeName)
+            try {
+                var req = db.transaction([this.storeName]).objectStore(this.storeName)
+            } catch (e) {
+                return resolve([])
+            }
 
             if (req.getAllKeys) {
                 req.getAllKeys().onsuccess = function (event) {
@@ -101,7 +118,7 @@ class DatabaseHandler {
                 const entries = await this.loadAll(db)
                 resolve(Object.keys(entries))
             }
-            registerZip.onerror = reject
+            req.onerror = reject
         })
     }
 }
@@ -223,112 +240,24 @@ async function detectWebpSupport() {
 const relax = () => new Promise(resolve => requestAnimationFrame(resolve))
 
 
-class ImageDecoder {
-    constructor() {
-        this.webp = new Webp()
-        this.supportWebp = detectWebpSupport;
-        const canvas = document.createElement("canvas")
-        this.canvas = canvas
-    }
+async function detectJ2kSupport() {
+    const testImageSources = [
+        'data:image/jp2;base64,AAAADGpQICANCocKAAAAFGZ0eXBqcDIgAAAAAGpwMiAAAAAtanAyaAAAABZpaGRyAAAABAAAAAQAAw8HAAAAAAAPY29scgEAAAAAABAAAABpanAyY/9P/1EALwAAAAAABAAAAAQAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAw8BAQ8BAQ8BAf9SAAwAAAABAQAEBAAB/1wABECA/5AACgAAAAAAGAAB/5PP/BAQFABcr4CA/9k='
+    ]
 
-    /** decode
-     *
-     * @param {Uint8Array} u8array
-     * @param {String} type
-     * @return {Promise<string>}
-     */
-    async decode(u8array, type = "webp") {
-
-        //if (this.busy) throw new Error("webp-machine decode error: busy")
-        this.busy = true
-
-        if (await this.supportWebp() || type !== "webp") {
-            var binary = '';
-            var len = u8array.byteLength;
-            for (var i = 0; i < len; i++) {
-                binary += String.fromCharCode(u8array[i]);
-            }
-            return `data:image/${type};base64,` + window.btoa(binary);
-        }
-
-        try {
-            await relax()
-            this.webp.setCanvas(this.canvas)
-            this.webp.webpToSdl(u8array, u8array.length)
-            this.busy = false
-            return this.canvas.toDataURL("image/jpeg")
-        }
-        catch (error) {
-            this.busy = false
-            error.message = `webp-machine decode error: ${error.message}`
-            throw error
-        }
-    }
-}
-
-class ImageDecoderWorker {
-    constructor() {
-        this.supportWebp = detectWebpSupport;
-        const canvas = document.createElement("canvas")
-        this.canvas = canvas
-        this.ctx = this.canvas.getContext("2d");
-        this.worker = new Worker("/js/decode_webp_worker.js");
-        this.storage = {}
-        this.cnt = 0
-        this.resolves = {}
-        this.rejects = {}
-    }
-
-    async decode(u8array, type = "webp") {
-
-        if (await this.supportWebp() || type !== "webp") {
-            var binary = '';
-            var len = u8array.byteLength;
-            for (var i = 0; i < len; i++) {
-                binary += String.fromCharCode(u8array[i]);
-            }
-            return `data:image/${type};base64,` + window.btoa(binary);
-        }
-
-
-        return new Promise((res, rej) => {
-            this.resolves[this.cnt] = res
-
-
-            //let sharedAb = new SharedArrayBuffer(u8array.byteLength)
-            //let sharedU8 = new Uint8Array(sharedAb)
-            //sharedU8.set(u8array, 0)
-
-            this.worker.onmessage = e => {
-                const id = e.data.imageData;
-                const num = e.data.num
-                const resolve = this.resolves[num]
-                delete this.resolves[num]
-                if (e.data.failed) {
-                    console.warn("WebP image convert failed")
-                }
-                this.canvas.width = id.width;
-                this.canvas.height = id.height;
-                this.ctx.putImageData(id, 0, 0);
-                //sharedAb = null
-                //sharedU8 = null
-                resolve(this.canvas.toDataURL("image/jpeg"))
-            }
-            this.worker.postMessage(
-                {
-                    binary: u8array,
-                    num: this.cnt
-                },
-                //[sharedAb]
-            )
-            this.cnt++;
+    const testImage = (src) => {
+        return new Promise((resolve, reject) => {
+            var img = document.createElement("img")
+            img.onerror = error => resolve(false)
+            img.onload = () => resolve(true)
+            img.src = src
         })
-
     }
-}
 
-const openImageDecoder = new ImageDecoder()
-const crossImageDecoder = new ImageDecoder()
+    const results = await Promise.all(testImageSources.map(testImage))
+
+    return results.every(result => !!result)
+}
 
 
 function ISmallStorageFactory() {
@@ -434,10 +363,9 @@ const resetState = () => ({
     "isCrossNicol": false,
     "language": selectLanguageCode(),
     "storedKeys": [],
-    "drawHairLine": true
+    "drawHairLine": true,
 })
 
-//const state = resetState()
 
 let viewer = document.querySelector("#main-viewer")
 let viewer_ctx = viewer.getContext("2d")
@@ -445,13 +373,19 @@ let viewer_ctx = viewer.getContext("2d")
 async function connectDatabase(state) {
     state.zipDBHandler = (window.indexedDB)
         ? (!navigator.userAgent.match("Edge"))
-            ? new DatabaseHandler("zipfiles", 2, "zip", "id")
-            : new DummyDatabaseHandler("zipfiles", 2, "zip", "id")
-        : new DummyDatabaseHandler("zipfiles", 2, "zip", "id")
+            ? new DatabaseHandler(staticSettings.getDBName(), 2, staticSettings.getStorageName(), "id")
+            : new DummyDatabaseHandler(staticSettings.getDBName(), 2, staticSettings.getStorageName(), "id")
+        : new DummyDatabaseHandler(staticSettings.getDBName(), 2, staticSettings.getStorageName(), "id")
     state.zipDB = await state.zipDBHandler.connect()
     state.storedKeys = await state.zipDBHandler.getAllKeys(state.zipDB)
     return state
 };
+
+async function checkSupportImageFormat(state) {
+    state.supportWebp = await detectWebpSupport();
+    state.supportJ2k = await detectJ2kSupport();
+    return state
+}
 
 function connectLocalStorage(state) {
     state.localStorage = ISmallStorageFactory();
@@ -523,7 +457,7 @@ const windowResizeHandler = state => new Promise((res, rej) => {
 
 
 
-const updateStateByMeta = (state, containorID) => (meta) => new Promise((res, rej) => {
+const updateStateByMeta = (state) => (containorID, meta) => new Promise((res, rej) => {
 
 
     state.containorID = sanitizeID(containorID);
@@ -613,74 +547,192 @@ const updateStateByMeta = (state, containorID) => (meta) => new Promise((res, re
     res(state)
 })
 
-function selectImageFromZip(zip, prefix) {
-    if (prefix + ".JPG" in zip) {
-        return ["jpeg", zip[prefix + ".JPG"]]
-    } else if (prefix + ".jpg" in zip) {
-        return ["jpeg", zip[prefix + ".jpg"]]
-    } else if (prefix + ".jpeg" in zip) {
-        return ["jpeg", zip[prefix + ".jpeg"]]
-    } else if (prefix + ".webp" in zip) {
-        return ["webp", zip[prefix + ".webp"]]
+function selectImageSrc(state, response, packageName, prefix) {
+    if (prefix in response.zip) {
+        return [response.zip[prefix]]
+    }
+
+    const srcDir = staticSettings.getImageDataPath(packageName);
+
+    if (state.supportWebp) {
+        return [
+            [srcDir + prefix + ".JPG", "image/jpeg"],
+            [srcDir + prefix + ".jpg", "image/jpeg"],
+            [srcDir + prefix + ".webp", "image/webp"]
+        ]
+    } else if (state.supportJ2k) {
+        return [
+            [srcDir + prefix + ".JPG", "image/jpeg"],
+            [srcDir + prefix + ".jpg", "image/jpeg"],
+            [srcDir + prefix + ".jp2", "image/jp2"]
+        ]
+    } else {
+        return [
+            [srcDir + prefix + ".JPG", "image/jpeg"],
+            [srcDir + prefix + ".jpg", "image/jpeg"]
+        ]
+    }
+
+}
+
+function handleImgSrc(src) {
+    if (src instanceof Blob) {
+        const url = window.URL || window.webkitURL;
+        return url.createObjectURL(src)
+    } else if (src instanceof String) {
+        return src
+    } else {
+        return src
     }
 }
 
-function updateImageSrc(zip) {
-    return (state) => new Promise(async (res, rej) => {
-        state.open_images = await Promise.all(Array(state.image_number - 1)
-            .fill(0)
-            .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
-            .map((type_image, i) => openImageDecoder.decode(type_image[1], type_image[0])
-                .then(loadImageSrc)
-            ))
+/**
+ * @parameter src {dataURL}
+ */
+function loadImageSrc(state) {
+    return src_set => new Promise((res, rej) => {
 
-        state.cross_images = await Promise.all(Array(state.image_number - 1)
-            .fill(0)
-            .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
-            .map((type_image, i) => crossImageDecoder.decode(type_image[1], type_image[0])
-                .then(loadImageSrc)
-            ))
+        const img = new Image()
+        const [src, mime] = src_set.pop()
 
-        /* 表示までの時間を短くしたい...
-        Promise.race([
-            ...(Array(state.image_number - 1)
-                .fill(0)
-                .map((_, i) => selectImageFromZip(zip, `o${i + 1}`))
-                .map((type_image, i) => new Promise((_res, rej) => {
-                    Promise.resolve(openImageDecoder.decode(type_image[1], type_image[0]))
-                        .then(loadImageSrc)
-                        .then(img => {
-                            state.open_images[i] = img;
-                            _res(`image o${i + 1} set`)
-                        })
-                }))
-            ),
+        img.onload = _ => {
+            updateView(state)
+            this.onnerror = null;
+            res([img, mime])
+        }
+        img.onerror = e => {
+            loadImageSrc(state)(src_set)
+                .then(res)
+                .catch(rej)
+        }
 
-            ...(Array(state.image_number - 1)
-                .fill(0)
-                .map((_, i) => selectImageFromZip(zip, `c${i + 1}`))
-                .map((type_image, i) => new Promise((_res, rej) => {
-                    crossImageDecoder.decode(type_image[1], type_image[0])
-                        .then(loadImageSrc)
-                        .then(img => {
-                            state.cross_images[i] = img;
-
-                            _res(`image c${i + 1} set`)
-                        })
-                }))
-            )
-        ])
-            .then(msg => {
-                console.log(msg)
-                res(state)
-            });
-        */
-
-        res(state)
+        img.src = handleImgSrc(src)
     })
 }
 
-const handleErrors = (response) => {
+function ImageToBlob(img, mime_type) {
+    return new Promise(async (res, rej) => {
+        // New Canvas
+        await relax()
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        // Draw Image
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        // To Base64
+        canvas.toBlob(res, mime_type);
+    })
+}
+
+function ImageToBase64(img, mime_type) {
+    return new Promise(async (res, rej) => {
+        // New Canvas
+        await relax()
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        // Draw Image
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        // To Base64
+        res(canvas.toDataURL(mime_type));
+    })
+}
+
+function updateImageSrc(packageName, response) {
+    return (state) => new Promise(async (res, rej) => {
+
+        /* 表示までの時間を短くしたい...*/
+        Promise.all([
+            ...(Array(state.image_number - 1)
+                .fill(0)
+                .map((_, i) =>
+                    [
+                        selectImageSrc(state, response, packageName, `o${i + 1}`),
+                        selectImageSrc(state, response, packageName, `c${i + 1}`),
+                    ])
+                .reduce((acc, e) => [...acc, ...e], [])
+                .map((src, i) => loadImageSrc(state)(src)
+                    .then(result => {
+                        const img = result[0]
+                        const mime = result[1]
+                        if (i % 2 === 0) {
+                            state.open_images[i / 2] = img;
+                            return [`o${i / 2 + 1}`, mime, img]
+                        } else {
+                            state.cross_images[(i - 1) / 2] = img;
+                            return [`c${(i - 1) / 2 + 1}`, mime, img]
+                        }
+                    }).catch(e => false)
+                )
+            )
+        ]).then(results => res([results, response]))
+    })
+}
+
+if (!HTMLCanvasElement.prototype.toBlob) {
+    Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+        value: function (callback, type, quality) {
+
+            var binStr = atob(this.toDataURL(type, quality).split(',')[1]),
+                len = binStr.length,
+                arr = new Uint8Array(len);
+
+            for (var i = 0; i < len; i++) {
+                arr[i] = binStr.charCodeAt(i);
+            }
+
+            callback(new Blob([arr], { type: type || 'image/png' }));
+        }
+    });
+}
+
+function serializeImages(isNewData) {
+    if (!isNewData) return;
+    return _ => new Promise((res, rej) => {
+        const [results, response] = _
+        if (!results.every(_ => _)) {
+            rej()
+        }
+
+        Promise.all(
+            results.map((v) => {
+                return new Promise(async (resolve) => {
+                    const [name, mime, img] = v
+                    resolve([name, [
+                        await ImageToBase64(img, mime),
+                        mime
+                    ]])
+                })
+            })
+        ).then(data => {
+            response.zip = Object.assign(
+                response.zip,
+                objectFrom(data)
+            )
+            return response
+        }).then(res)
+
+        /*
+        const data = results.map((v) => {
+            const [name, mime, img] = v
+            return [name, [
+                ImageToBase64(img, mime),
+                mime
+            ]]
+        })
+
+        response.zip = Object.assign(
+            response.zip,
+            objectFrom(data)
+        )
+        res(response)
+        */
+    })
+}
+
+function handleErrors(response) {
     if (response.ok) {
         return response;
     }
@@ -716,14 +768,18 @@ const updateViewDiscription = state => {
 }
 
 const showLoadingAnimation = state => {
-    const anime = document.querySelector(".lds-css.ng-scope")
-    anime.classList.remove("inactive")
+    const anime = document.querySelectorAll(".lds-css.ng-scope")
+    Array.from(anime).forEach(d => {
+        d.classList.remove("inactive")
+    })
     return state
 }
 
 const hideLoadingAnimation = state => {
-    const anime = document.querySelector(".lds-css.ng-scope")
-    anime.classList.add("inactive")
+    const anime = document.querySelectorAll(".lds-css.ng-scope")
+    Array.from(anime).forEach(d => {
+        d.classList.add("inactive")
+    })
     return state
 }
 
@@ -773,25 +829,6 @@ function progressCircle(selector) {
     }
 }
 
-function progressHandler(evt) {
-    const open_progress = progressCircle("#open-progress")
-    const cross_progress = progressCircle("#cross-progress")
-    const load = (100 * evt.loaded / evt.total | 0);
-    open_progress(load * 0.01)
-    cross_progress(load * 0.01)
-}
-
-function completeHandler() {
-    const open_progress = progressCircle("#open-progress")
-    const cross_progress = progressCircle("#cross-progress")
-    open_progress(0)
-    cross_progress(0)
-}
-
-const unziper = (url) => new Promise((res, rej) => {
-    Zip.inflate_file(url, res, rej, progressHandler, completeHandler)
-})
-
 
 function buffer_to_string(buf) {
     const decoder = new TextDecoder("UTF-8");
@@ -827,48 +864,7 @@ function objectFrom(keys_values) {
     return o
 }
 
-async function polyfillWebp(name_file, i, a) {
-    const [name, file] = name_file;
-    const imageDecoder = new ImageDecoder()
 
-    if (name.includes(".json")) {
-        return [name, file]
-    } else {
-        const type = name.match(/.*\.(\w+)$/)[1]
-        const base64 = await imageDecoder.decode(file, type)
-        const mime = base64.match(/^data:(image\/\w+);/)[1]
-        const mime_type = mime.split("/")[1]
-
-        const new_file_name = name.split(".")[0] + "." + mime_type
-        return [new_file_name, new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))]
-    }
-}
-
-function inflate(name_file) {
-    const [name, file] = name_file;
-    return [name, file.inflate()]
-}
-
-/**
- *
- * @param {*} zip
- * @return {Object[meta,zip]}
- */
-const extractFile = async zipByte => {
-    const zip = Zip.inflate(zipByte)
-
-    loadingMessage.message("Processing images")
-
-    const result = objectFrom(
-        await Promise.all(
-            Object.entries(zip.files)
-                .map(inflate)
-            //.map(polyfillWebp)
-        )
-    )
-
-    return result
-}
 
 /**
  *
@@ -876,27 +872,38 @@ const extractFile = async zipByte => {
  * @param {*} key
  * @return {Object[meta,zip]}
  */
-const registerZip = (state, key, timestamp) => async inflated_zip => {
+function registerZip(state) {
+    return async (entry) => {
 
-    const newOne = await state.zipDBHandler.put(state.zipDB, {
-        "id": key,
-        "zip": inflated_zip,
-        "lastModified": timestamp
-    })
+        const newOne = await state.zipDBHandler.put(state.zipDB, entry)
 
-    state.storedKeys.push(key)
+        state.storedKeys.push(entry.id)
 
-    if (state.storedKeys.length > 20) {
-        const oldest = state.storedKeys.shift()
-        const deleted = await state.zipDBHandler.delete(state.zipDB, oldest)
-        Array.from(document.querySelectorAll(`#rock_selector>option[value=${oldest}]`)).forEach(option => {
-            label = option.innerHTML.replace("✓ ", "")
-            option.innerHTML = label
-            option.classList.remove("downloaded")
+        if (state.storedKeys.length > 20) {
+            const oldest = state.storedKeys.shift()
+            const deleted = await state.zipDBHandler.delete(state.zipDB, oldest)
+            Array.from(document.querySelectorAll(`#rock_selector>option[value=${oldest}]`)).forEach(option => {
+                label = option.innerHTML.replace("✓ ", "")
+                option.innerHTML = label
+                option.classList.remove("downloaded")
+            })
+        }
+
+        return state
+    }
+}
+
+function register(state, isNewData) {
+    if (isNewData) {
+        return _ => new Promise((res, rej) => {
+            registerZip(state)(_)
+                .then(res)
+        })
+    } else {
+        return _ => new Promise((res, rej) => {
+            res(state)
         })
     }
-
-    return inflated_zip
 }
 
 /**
@@ -904,13 +911,13 @@ const registerZip = (state, key, timestamp) => async inflated_zip => {
  * @param {*} packageName
  * @return {Object[meta,zip]}
  */
-const markDownloadedOption = packageName => inflated_zip => new Promise((res, rej) => {
+const markDownloadedOption = packageName => manifest => new Promise((res, rej) => {
     Array.from(document.querySelectorAll(`#rock_selector>option[value=${packageName}]`)).forEach(option => {
         label = option.innerHTML.replace("✓ ", "")
         option.innerHTML = "✓ " + label
         option.classList.add("downloaded")
     })
-    res(inflated_zip)
+    res(manifest)
 })
 
 /**
@@ -922,10 +929,10 @@ const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
     loadingMessage.message("Loading images")
 
     const key = sanitizeID(packageName)
-    const zipURL = staticSettings.getImageDataPath(packageName)
+    const manifestURL = staticSettings.getImageDataPath(packageName) + "manifest.json"
 
     try {
-        const header = await fetch(zipURL, { method: 'HEAD' }).catch(e => {
+        const header = await fetch(manifestURL, { method: 'HEAD' }).catch(e => {
             console.log("Package metadata cannot be fetched.")
             throw Error(e)
         })
@@ -939,25 +946,29 @@ const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
 
 
     if (storedData !== undefined && storedData.lastModified === lastModified) {
-        res(storedData.zip)
+        res([storedData, false])
     } else if (networkDisconnected) {
         if (storedData !== undefined) {
-            res(storedData.zip)
+            res([storedData, false])
         } else {
             res()
         }
     } else {
-        unziper(zipURL, rej)
-            .then(extractFile)
-            .then(registerZip(state, key, lastModified))
-            .then(markDownloadedOption(packageName))
-            .then(res)
-            .catch(rej)
+        const response = {
+            zip: {
+                "manifest.json": await fetch(manifestURL)
+                    .then(response => response.text())
+                    .then(markDownloadedOption(packageName))
+            },
+            id: key,
+            lastModified: lastModified
+        }
+        res([response, true])
     }
 })
 
 function extractManifestFromZip(zip) {
-    return JSON.parse(buffer_to_string(zip["manifest.json"]))
+    return JSON.parse((zip["manifest.json"]))
 }
 
 const rockNameSelectHandler = state => {
@@ -970,12 +981,14 @@ const rockNameSelectHandler = state => {
         showViewer(state)
         showNicolButton(state)
 
-        const zip = await zipUrlHandler(state, packageName)
 
         try {
-            const manifest = await extractManifestFromZip(zip)
-            updateStateByMeta(state, packageName)(manifest)
-                .then(updateImageSrc(zip))
+            const [response, isNewData] = await zipUrlHandler(state, packageName)
+            const manifest = extractManifestFromZip(response.zip)
+            updateStateByMeta(state)(packageName, manifest)
+                .then(updateImageSrc(packageName, response))
+                .then(serializeImages(isNewData))
+                .then(register(state, isNewData))
                 .then(updateViewDiscription)
                 .then(res)
         } catch (e) {
@@ -995,23 +1008,6 @@ const updateImages = state => imgSets => new Promise((res, rej) => {
     res(state)
 })
 
-
-/**
- * @parameter src {dataURL}
- */
-function loadImageSrc(src) {
-    return new Promise((res, rej) => {
-        const returnImg = (img) => e => {
-            res(img)
-        }
-
-        const img = new Image()
-        img.src = src
-        res(img)
-        //img.addEventListener("load", returnImg(img), false)
-        //img.addEventListener("error", returnImg(img), false)
-    })
-}
 
 /**
  * Check images are in containor.
@@ -1374,12 +1370,16 @@ function contact_handler() {
         const body = JSON.stringify(obj);
         const headers = {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+
         };
 
         console.log({ method, headers, body })
 
-        const response = await fetch("./contact", { method, headers, body })
+
+
+        const response = await fetch("https://dgo96yhuni.execute-api.us-east-1.amazonaws.com/contactapi/", { method, headers, body, 'mode': 'cors' })
         return false
     }
 }

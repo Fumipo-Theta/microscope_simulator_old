@@ -120,19 +120,20 @@
         }
 
         .lds-css {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            /*display: flex;*/
+            position: fixed;
+            top: 40px;
         }
 
         .lds-css.inactive {
+            display: none;
             animation: fadeOut 0.5s linear forwards;
         }
 
         #loading_message {
             position: relative;
-            top: 40px;
-            color: white;
+            /*top: 40px;*/
+            color: #2196f3;
             font-size: 1.2rem;
             animation: blink 2s ease-in-out infinite
         }
@@ -350,7 +351,7 @@
         </div>
     </div>
 
-    <div id="app-loader" class="lds-css ng-scope ">
+    <!--div id="app-loader" class="lds-css ng-scope ">
         <div class="align-center progress">
             <svg viewBox="0 0 165 165">
                 <use xlink:href="#shadow-righttop"></use>
@@ -377,10 +378,7 @@
                 </svg>
             </div>
         </div>
-
-
-        <p id="loading_message"></p>
-    </div>
+    </div-->
 
 
     <div id='app-wrapper' class=" align-center column-direction">
@@ -392,7 +390,8 @@
                         <use xlink:href="#shadow-righttop"></use>
                         <use xlink:href="#shadow-leftbottom"></use>
                         <use xlink:href="#back-circle" opacity="1" fill="#000000" fill-opacity="1"></use>
-                        <use class="hexagon" xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1"></use>
+                        <use class="hexagon" xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1">
+                        </use>
                     </svg>
                     <span>P</span>
                     <div>
@@ -417,6 +416,38 @@
 
         <div id="error_notification" class="inactive align-center column-direction"
             style="color: #c000ff;font-size:2em">
+        </div>
+
+        <div class="lds-css ng-scope inactive">
+            <!--div class="align-center progress">
+                <svg viewBox="0 0 165 165">
+                    <use xlink:href="#shadow-righttop"></use>
+                    <use xlink:href="#shadow-leftbottom"></use>
+                    <use xlink:href="#back-circle" opacity="1" fill="#000000" fill-opacity="1"></use>
+                    <use class="hexagon" xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1"></use>
+                </svg>
+                <div class="progress-circle" data-percent="13%">
+                    <svg width="300" height="300">
+                        <linearGradient id="g_open">
+                            <stop offset="0.05" stop-color="white" />
+                            <stop offset="0.99" stop-color="#001a79" />
+                            <stop offset="1" stop-color="black" />
+                        </linearGradient>
+                        <linearGradient id="g_cross">
+                            <stop offset="0.05" stop-color="white" />
+                            <stop offset="0.99" stop-color="#510089" />
+                            <stop offset="1" stop-color="black" />
+                        </linearGradient>
+                        <circle id="open-progress" cx="150" cy="150" r="120" stroke-dasharray="754"
+                            stroke-dashoffset="754" transform="rotate(225, 150,150)" />
+                        <circle id="cross-progress" cx="150" cy="150" r="120" stroke-dasharray="754"
+                            stroke-dashoffset="754" transform="rotate(45,150,150)" />
+                    </svg>
+                </div>
+            </div-->
+
+
+            <p id="loading_message"></p>
         </div>
 
         <div id='viewer_wrapper' class="inactive align-center column-direction">
@@ -529,14 +560,6 @@
                     We will not hold any personal information.
                 </div>
 
-                <div id="form-loader" class="lds-css ng-scope ">
-                    <svg viewBox="0 0 165 165">
-                        <use xlink:href="#shadow-righttop"></use>
-                        <use xlink:href="#shadow-leftbottom"></use>
-                        <use xlink:href="#back-circle" opacity="1" fill="#000000" fill-opacity="1"></use>
-                        <use xlink:href="#hexagon" opacity="1" fill="#ffffff" fill-opacity="1"></use>
-                    </svg>
-                </div>
 
                 <form id="payment-form" class="spread inactive">
                     <div class="space-around column-direction">

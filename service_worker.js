@@ -1,4 +1,4 @@
-const VERSION = "1.3.6";
+const VERSION = "1.3.12";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 console.log(location.protocol, location.hostname)
@@ -10,12 +10,12 @@ const STATIC_FILES = [
     ORIGIN + '/css/main_offline.css',
     ORIGIN + '/js/app_offline.js',
     ORIGIN + '/js/event-handler_offline.js',
-    ORIGIN + '/js/zip.js',
-    ORIGIN + '/js/jsinflate.js',
-    ORIGIN + '/js/webp.js',
-    ORIGIN + '/js/libwebp-0.2.0.min',
-    ORIGIN + "/js/encoding-indexes.js",
-    ORIGIN + "/js/encoding.js",
+    //ORIGIN + '/js/zip.js',
+    //ORIGIN + '/js/jsinflate.js',
+    //ORIGIN + '/js/webp.js',
+    //ORIGIN + '/js/libwebp-0.2.0.min',
+    //ORIGIN + "/js/encoding-indexes.js",
+    //ORIGIN + "/js/encoding.js",
 
     //ORIGIN + '/images/SCOPin_rock_logo.svg',
     ORIGIN + '/images/SCOPin_image.svg',

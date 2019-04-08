@@ -556,16 +556,21 @@ function selectImageSrc(state, response, packageName, prefix) {
 
     if (state.supportWebp) {
         return [
+            [srcDir + prefix + ".JPG", "image/jpeg"],
             [srcDir + prefix + ".jpg", "image/jpeg"],
             [srcDir + prefix + ".webp", "image/webp"]
         ]
     } else if (state.supportJ2k) {
         return [
+            [srcDir + prefix + ".JPG", "image/jpeg"],
             [srcDir + prefix + ".jpg", "image/jpeg"],
             [srcDir + prefix + ".jp2", "image/jp2"]
         ]
     } else {
-        return [[srcDir + prefix + ".jpg", "image/jpeg"]]
+        return [
+            [srcDir + prefix + ".JPG", "image/jpeg"],
+            [srcDir + prefix + ".jpg", "image/jpeg"]
+        ]
     }
 
 }
@@ -574,6 +579,8 @@ function handleImgSrc(src) {
     if (src instanceof Blob) {
         const url = window.URL || window.webkitURL;
         return url.createObjectURL(src)
+    } else if (src instanceof String) {
+        return src
     } else {
         return src
     }
@@ -590,7 +597,6 @@ function loadImageSrc(state) {
 
         img.onload = _ => {
             updateView(state)
-            hideLoadingAnimation(state)
             this.onnerror = null;
             res([img, mime])
         }
@@ -601,6 +607,21 @@ function loadImageSrc(state) {
         }
 
         img.src = handleImgSrc(src)
+    })
+}
+
+function ImageToBlob(img, mime_type) {
+    return new Promise(async (res, rej) => {
+        // New Canvas
+        await relax()
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        // Draw Image
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        // To Base64
+        canvas.toBlob(res, mime_type);
     })
 }
 
@@ -615,7 +636,7 @@ function ImageToBase64(img, mime_type) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
         // To Base64
-        canvas.toBlob(res, mime_type);
+        res(canvas.toDataURL(mime_type));
     })
 }
 
@@ -648,6 +669,23 @@ function updateImageSrc(packageName, response) {
             )
         ]).then(results => res([results, response]))
     })
+}
+
+if (!HTMLCanvasElement.prototype.toBlob) {
+    Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+        value: function (callback, type, quality) {
+
+            var binStr = atob(this.toDataURL(type, quality).split(',')[1]),
+                len = binStr.length,
+                arr = new Uint8Array(len);
+
+            for (var i = 0; i < len; i++) {
+                arr[i] = binStr.charCodeAt(i);
+            }
+
+            callback(new Blob([arr], { type: type || 'image/png' }));
+        }
+    });
 }
 
 function serializeImages(isNewData) {
@@ -730,14 +768,18 @@ const updateViewDiscription = state => {
 }
 
 const showLoadingAnimation = state => {
-    const anime = document.querySelector(".lds-css.ng-scope")
-    anime.classList.remove("inactive")
+    const anime = document.querySelectorAll(".lds-css.ng-scope")
+    Array.from(anime).forEach(d => {
+        d.classList.remove("inactive")
+    })
     return state
 }
 
 const hideLoadingAnimation = state => {
-    const anime = document.querySelector(".lds-css.ng-scope")
-    anime.classList.add("inactive")
+    const anime = document.querySelectorAll(".lds-css.ng-scope")
+    Array.from(anime).forEach(d => {
+        d.classList.add("inactive")
+    })
     return state
 }
 
@@ -887,7 +929,7 @@ const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
     loadingMessage.message("Loading images")
 
     const key = sanitizeID(packageName)
-    const manifestURL = staticSettings.getImageDataPath(packageName) + "/manifest.json"
+    const manifestURL = staticSettings.getImageDataPath(packageName) + "manifest.json"
 
     try {
         const header = await fetch(manifestURL, { method: 'HEAD' }).catch(e => {

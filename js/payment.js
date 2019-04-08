@@ -155,7 +155,6 @@ document.querySelector("#payment-form").addEventListener(
 window.addEventListener("load",
     e => {
         changeAmount(e)
-        loadingAnime.classList.add("inactive")
         formCard.classList.remove("inactive")
 
     },
