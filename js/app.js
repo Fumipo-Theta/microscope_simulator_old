@@ -714,21 +714,6 @@ function serializeImages(isNewData) {
             return response
         }).then(res)
 
-        /*
-        const data = results.map((v) => {
-            const [name, mime, img] = v
-            return [name, [
-                ImageToBase64(img, mime),
-                mime
-            ]]
-        })
-
-        response.zip = Object.assign(
-            response.zip,
-            objectFrom(data)
-        )
-        res(response)
-        */
     })
 }
 
@@ -986,10 +971,10 @@ const rockNameSelectHandler = state => {
             const [response, isNewData] = await zipUrlHandler(state, packageName)
             const manifest = extractManifestFromZip(response.zip)
             updateStateByMeta(state)(packageName, manifest)
+                .then(updateViewDiscription)
                 .then(updateImageSrc(packageName, response))
                 .then(serializeImages(isNewData))
                 .then(register(state, isNewData))
-                .then(updateViewDiscription)
                 .then(res)
         } catch (e) {
             rej(e)
@@ -1354,12 +1339,36 @@ function languageChangeHundler(state) {
 
 
 function contact_handler() {
-    return async function (e) {
+    return async function (e, messageDOM) {
+        const button = e.target
+        button.classList.add("pending")
+
+        messageDOM.classList.add("inactive")
+        messageDOM.classList.remove("success")
+        messageDOM.classList.remove("error")
+
         const form = document.querySelector("#form-contact")
         const selection = form.querySelector("#select-contact_topic")
         const topic = selection[selection.selectedIndex].value
         const message = form.querySelector("textarea").value
         const from = form.querySelector("input[type=email").value
+
+        if (topic === "") {
+            button.classList.remove("pending")
+            messageDOM.innerHTML = "Select topic !"
+            messageDOM.classList.add("error")
+            messageDOM.classList.remove("inactive")
+            return false
+        }
+
+        if (message === undefined || message == "") {
+            button.classList.remove("pending")
+            messageDOM.innerHTML = "Write message !"
+            messageDOM.classList.add("error")
+            messageDOM.classList.remove("inactive")
+            return false
+        }
+
         const obj = {
             "from": from,
             "title": topic,
@@ -1369,7 +1378,7 @@ function contact_handler() {
         const method = "POST";
         const body = JSON.stringify(obj);
         const headers = {
-            'Accept': 'application/json',
+            'Accept': 'text/plain,application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
 
@@ -1377,9 +1386,19 @@ function contact_handler() {
 
         console.log({ method, headers, body })
 
+        try {
+            const response = await fetch("https://dgo96yhuni.execute-api.us-east-1.amazonaws.com/contactapi/contact", { method, headers, body, 'mode': 'no-cors' })
+            messageDOM.innerHTML = "Success. Thank you for contributing !"
+            messageDOM.classList.add("success")
+            messageDOM.classList.remove("inactive")
+        } catch (e) {
+            console.log(e)
+            messageDOM.innerHTML = "Network error !"
+            messageDOM.classList.add("error")
+            messageDOM.classList.remove("inactive")
+        }
+        button.classList.remove("pending")
 
-
-        const response = await fetch("https://dgo96yhuni.execute-api.us-east-1.amazonaws.com/contactapi/", { method, headers, body, 'mode': 'cors' })
         return false
     }
 }

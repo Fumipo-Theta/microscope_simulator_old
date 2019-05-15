@@ -1,11 +1,10 @@
-const VERSION = "1.3.12";
+const VERSION = "1.3.13";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
-console.log(location.protocol, location.hostname)
 
 const STATIC_CACHE_KEY = 'static-' + VERSION;
 const STATIC_FILES = [
-    //ORIGIN + '/',
+    ORIGIN + '/',
     ORIGIN + '/index_offline.html',
     ORIGIN + '/css/main_offline.css',
     ORIGIN + '/js/app_offline.js',

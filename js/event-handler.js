@@ -145,7 +145,12 @@
 
     document.querySelector("#form-contact div.button").addEventListener(
         "click",
-        contact_handler(),
+        e => (Array.from(e.target.classList).includes("pending"))
+            ? null
+            : contact_handler()(
+                e,
+                document.querySelector("#form-contact .form-message")
+            ),
         false
     )
 

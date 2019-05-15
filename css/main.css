@@ -10,12 +10,15 @@
     0% {
         box-shadow: 0 0 0 0 rgba(75, 133, 240, 0.7), 0 0 0 0 rgba(75, 133, 240, .7)
     }
+
     40% {
         box-shadow: 0 0 0 50px rgba(75, 133, 240, 0), 0 0 0 0 rgba(75, 133, 240, .7)
     }
+
     80% {
         box-shadow: 0 0 0 50px rgba(75, 133, 240, 0), 0 0 0 30px rgba(75, 133, 240, 0)
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(75, 133, 240, 0), 0 0 0 30px rgba(75, 133, 240, 0)
     }
@@ -25,12 +28,15 @@
     0% {
         box-shadow: 0 0 0 0 rgba(75, 133, 240, 0.7), 0 0 0 0 rgba(75, 133, 240, .7)
     }
+
     40% {
         box-shadow: 0 0 0 50px rgba(75, 133, 240, 0), 0 0 0 0 rgba(75, 133, 240, .7)
     }
+
     80% {
         box-shadow: 0 0 0 50px rgba(75, 133, 240, 0), 0 0 0 30px rgba(75, 133, 240, 0)
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(75, 133, 240, 0), 0 0 0 30px rgba(75, 133, 240, 0)
     }
@@ -42,6 +48,7 @@
         color: #eeeeff;
         border: 1px solid #2196f3;
     }
+
     100% {
         color: #2196f3;
         background-color: rgba(255, 255, 255, 0.5);
@@ -59,6 +66,11 @@
     font-size: 1.2rem;
     font-family: Arial, Helvetica, sans-serif;
     box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.10), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
+}
+
+.button.pending {
+    background-color: #0f3f66;
+    box-shadow: none;
 }
 
 .button:active {
@@ -139,10 +151,22 @@ input[type="text"] {
     font-size: 1.2rem;
 }
 
+.form-message {
+    font-size: 1.2em;
+}
+
+.form-message.error {
+    color: #fa755a;
+}
+
+.form-message.success {
+    color: #12dd88;
+}
+
 /* change_nicol */
 
 #change_nicol+label {
-    animation: fadeIn 1s, pulsation 1s linear 4s 2;
+    animation: fadeIn 1s, pulsation 1s linear 1s 2;
 }
 
 .title {
@@ -194,6 +218,7 @@ select option.downloaded {
     0% {
         top: -64px;
     }
+
     100% {
         top: 0;
     }
@@ -230,7 +255,7 @@ select option.downloaded {
 
 #app-wrapper {
     padding: 70px 10px 20px 10px;
-    min-height: 100vh;
+    min-height: 96vh;
     background-color: #dfdfdf;
 }
 
@@ -244,12 +269,14 @@ select option.downloaded {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
 }
 
 @keyframes load {
+
     /*アニメーション*/
     0% {
         stroke-dashoffset: 0;
@@ -417,20 +444,25 @@ select option.downloaded {
     #top-navigation {
         height: 60px;
     }
+
     #app-wrapper {
         padding: 70px 10px 20px 10px;
     }
+
     #welcome-card {
         margin: -70px 0;
     }
+
     #footer {
         flex-direction: column;
         margin: 0;
     }
+
     @keyframes slideBelow {
         0% {
             top: -70px;
         }
+
         100% {
             top: 0;
         }

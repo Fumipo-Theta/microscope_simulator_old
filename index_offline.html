@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" user-zoom="no">
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#2196f3">
-    <link rel="stylesheet" href="./css/main.css" charset="utf-8">
+    <link rel="stylesheet" href="./css/main_offline.css" charset="utf-8">
 
     <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
     <title>SCOPin rock: polarizing microscope simulator</title>
@@ -121,21 +121,48 @@
 
         .lds-css {
             /*display: flex;*/
+            z-index: 300;
             position: fixed;
-            top: 40px;
+            top: 60px;
+            width: 100vw;
+            height: 2em;
+            background-color: #013159;
+            box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.5);
+            animation: loadingSlideBelow 0.5s ease 0s forwards;
         }
 
         .lds-css.inactive {
             display: none;
-            animation: fadeOut 0.5s linear forwards;
+            animation: fadeOut 0.5s linear forwards, loacingSlideUp 0.5s ease 0s forwards;
         }
 
         #loading_message {
             position: relative;
             /*top: 40px;*/
-            color: #2196f3;
+            color: #8ec4ef;
             font-size: 1.2rem;
             animation: blink 2s ease-in-out infinite
+        }
+
+
+        @keyframes loadingSlideBelow {
+            0% {
+                top: -84px;
+            }
+
+            100% {
+                top: 60;
+            }
+        }
+
+        @keyframes loadingSlideUp {
+            0% {
+                top: 60px;
+            }
+
+            100% {
+                top: -84px;
+            }
         }
 
         @keyframes blink {
@@ -263,6 +290,8 @@
             font-weight: bold;
             color: #c000ff;
         }
+
+
 
         @media screen and (max-width: 400px) {
             .SCOPin_rock_logo {
@@ -399,7 +428,6 @@
                         <div><span>rock</span></div>
                     </div>
                 </div>
-                <!--img src="./images/SCOPin_rock_logo.svg" alt="SCOPin rock" width="100%"-->
 
                 <p>Polarizing microscope simulator</p>
                 <div id="please_use_modern_browser" class="inactive">
@@ -418,7 +446,7 @@
             style="color: #c000ff;font-size:2em">
         </div>
 
-        <div class="lds-css ng-scope inactive">
+        <div class="lds-css ng-scope align-center inactive">
             <!--div class="align-center progress">
                 <svg viewBox="0 0 165 165">
                     <use xlink:href="#shadow-righttop"></use>
@@ -447,7 +475,7 @@
             </div-->
 
 
-            <p id="loading_message"></p>
+            <div id="loading_message"></div>
         </div>
 
         <div id='viewer_wrapper' class="inactive align-center column-direction">
@@ -543,6 +571,7 @@
                         <input type="email" placeholder="your.email@example.com">
                     </div>
 
+                    <p class="form-message inactive">Form message</p>
                     <div class="button rect-button space-around">Submit</div>
                 </form>
             </div>
@@ -626,8 +655,8 @@
         });
     </script>
 
-    <script src="./js/app.js"></script>
-    <script src="./js/event-handler.js"></script>
+    <script src="./js/app_offline.js"></script>
+    <script src="./js/event-handler_offline.js"></script>
 
 </body>
 
