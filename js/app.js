@@ -376,7 +376,7 @@ const resetState = () => ({
     "language": selectLanguageCode(),
     "storedKeys": [],
     "drawHairLine": true,
-
+    "canRotate": true,
 })
 
 
@@ -566,7 +566,7 @@ function selectImageInContainor(containor, prefix) {
     if (prefix in containor) {
         return containor[prefix]
     }
-    return null
+    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12NgYAAAAAMAASDVlMcAAAAASUVORK5CYII="
 }
 
 function handleImgSrc(src) {
@@ -989,6 +989,7 @@ const rockNameSelectHandler = state => {
         const rock_selector = document.querySelector("#rock_selector")
         const packageName = rock_selector.options[rock_selector.selectedIndex].value
 
+        state.canRotate = false;
         showLoadingAnimation(state)
         hideWelcomeBoard(state)
         showViewer(state)
@@ -1018,6 +1019,8 @@ const rockNameSelectHandler = state => {
                 .then(updateImageSrc(response.thumbnail, "jpg"))
                 .then(updateView)
                 .then(fetchImagePackage(zipLoader, response, isNewData))
+
+            state.canRotate = true
 
             updateImageSrc(new_response.zip, state.supportedImageType)(state)
                 .then(state => register(state, isNewData)(new_response)
@@ -1254,6 +1257,7 @@ function updateCoordinate(state, e) {
  * @param {*} e
  */
 function updateRotate(state, e) {
+    if (!state.canRotate) return;
     if (state.drag_start === undefined) return
     // delta rotate radius
     const rotate_end = radiunBetween(
