@@ -1,77 +1,77 @@
 {
     "list_of_sample": [
         {
-            "package-name": "Q27_quartz",
+            "package-name": "Q27_quartz_webp",
             "list-name": {
                 "ja": "流紋岩中の石英",
                 "en": "Quartz in rhyolite"
             }
         },
         {
-            "package-name": "Grc-1_quartz",
+            "package-name": "Grc-1_quartz_webp",
             "list-name": {
                 "ja": "花崗岩中の波動消光を示す石英",
                 "en": "Quartz showing wavy extinction in granite"
             }
         },
         {
-            "package-name": "HNP1_plagioclase",
+            "package-name": "HNP1_plagioclase_webp",
             "list-name": {
                 "ja": "斑れい岩中の斜長石",
                 "en": "Plagioclase in gabbro"
             }
         },
         {
-            "package-name": "Fuji-1_plagioclase",
+            "package-name": "Fuji-1_plagioclase_webp",
             "list-name": {
                 "ja": "玄武岩中の斜長石",
                 "en": "Plagioclase in basalt"
             }
         },
         {
-            "package-name": "E156_plagioclase",
+            "package-name": "E156_plagioclase_webp",
             "list-name": {
                 "ja": "安山岩中の斜長石",
                 "en": "Plagioclase in andesite"
             }
         },
         {
-            "package-name": "Grc-1_microcline",
+            "package-name": "Grc-1_microcline_webp",
             "list-name": {
                 "ja": "花崗岩中のカリ長石",
                 "en": "K-feldspar in granite"
             }
         },
         {
-            "package-name": "KL02_olivine",
+            "package-name": "KL02_olivine_webp",
             "list-name": {
                 "ja": "玄武岩中のかんらん石",
                 "en": "Olivine in basalt"
             }
         },
         {
-            "package-name": "KL02_olivine_2",
+            "package-name": "KL02_olivine_2_webp",
             "list-name": {
                 "ja": "玄武岩中のかんらん石",
                 "en": "Olivine in basalt"
             }
         },
         {
-            "package-name": "HWI-1_olivine",
+            "package-name": "HWI-1_olivine_webp",
             "list-name": {
                 "ja": "玄武岩中のかんらん石",
                 "en": "Olivine in basalt"
             }
         },
         {
-            "package-name": "Z32_staurolite",
+            "package-name": "Z32_staurolite_webp",
             "list-name": {
                 "ja": "結晶片岩中のざくろ石と十字石",
                 "en": "Garnet and staurolite in schist"
             }
         },
         {
-            "package-name": "E156_hypersthene",
+            "package-name": "E156_hypersthene_webp",
             "list-name": {
                 "ja": "安山岩中の直方輝石(ハイパーシン)",
                 "en": "Orthopyroxene (hypersthene) in andesite"
@@ -85,154 +85,154 @@
             }
         },
         {
-            "package-name": "R74_augite",
+            "package-name": "R74_augite_webp",
             "list-name": {
                 "ja": "斑れい岩中の単斜輝石(普通輝石)",
                 "en": "Clinopyroxene (augite) in gabbro"
             }
         },
         {
-            "package-name": "F17_clinopyroxene",
+            "package-name": "F17_clinopyroxene_webp",
             "list-name": {
                 "ja": "かんらん岩中の単斜輝石(普通輝石)",
                 "en": "Clinopyroxene (diopside) in peridotite"
             }
         },
         {
-            "package-name": "X50_titan_augite",
+            "package-name": "X50_titan_augite_webp",
             "list-name": {
                 "ja": "霞岩中の単斜輝石(チタンオージャイト)",
                 "en": "Clinopyroxene (Ti-augite) in nephelinite"
             }
         },
         {
-            "package-name": "D43_brown_hornblende",
+            "package-name": "D43_brown_hornblende_webp",
             "list-name": {
                 "ja": "斑れい岩中の普通角閃石(褐色)",
                 "en": "Amphibole (hornblende) in gabbro"
             }
         },
         {
-            "package-name": "AB-1_hornblende",
+            "package-name": "AB-1_hornblende_webp",
             "list-name": {
                 "ja": "安山岩中の普通角閃石(褐色)",
                 "en": "Amphibole (hornblende) in andesite"
             }
         },
         {
-            "package-name": "S48_green_hornblende",
+            "package-name": "S48_green_hornblende_webp",
             "list-name": {
                 "ja": "閃緑岩中の普通角閃石(緑色)",
                 "en": "Amphibole (hornblende) in diorite"
             }
         },
         {
-            "package-name": "G1_granite",
+            "package-name": "G1_granite_webp",
             "list-name": {
                 "ja": "花崗岩中の普通角閃石(緑色)",
                 "en": "Amphibole (hornblende) in granite"
             }
         },
         {
-            "package-name": "D110_actinolite",
+            "package-name": "D110_actinolite_webp",
             "list-name": {
                 "ja": "緑色片岩中のアクチノ閃石",
                 "en": "Amphibole (actinolite) in green schist"
             }
         },
         {
-            "package-name": "Glc-2_glaucophane",
+            "package-name": "Glc-2_glaucophane_webp",
             "list-name": {
                 "ja": "結晶片岩中の藍閃石",
                 "en": "Amphibole (glaucophane) in schist"
             }
         },
         {
-            "package-name": "IH85_biotite",
+            "package-name": "IH85_biotite_webp",
             "list-name": {
                 "ja": "花崗岩中の黒雲母",
                 "en": "Mica (biotite) in granite"
             }
         },
         {
-            "package-name": "Z58_biotite",
+            "package-name": "Z58_biotite_webp",
             "list-name": {
                 "ja": "結晶片岩中の黒雲母",
                 "en": "Mica (biotite) in schist"
             }
         },
         {
-            "package-name": "HK48_muscovite",
+            "package-name": "HK48_muscovite_webp",
             "list-name": {
                 "ja": "結晶片岩中の白雲母",
                 "en": "Mica (muscovite) in schist"
             }
         },
         {
-            "package-name": "PS4_epidote",
+            "package-name": "PS4_epidote_webp",
             "list-name": {
-                "ja": "結晶片岩中の緑簾石",
-                "en": "Epidote in schist"
+                "ja": "緑色片岩中の緑簾石",
+                "en": "Epidote in green schist"
             }
         },
         {
-            "package-name": "L39_piemontite",
+            "package-name": "L39_piemontite_webp",
             "list-name": {
                 "ja": "結晶片岩中の紅簾石",
                 "en": "Piemontite in schist"
             }
         },
         {
-            "package-name": "TT70_calcite",
+            "package-name": "TT70_calcite_webp",
             "list-name": {
                 "ja": "カーボナタイト中の方解石",
                 "en": "Calcite in carbonatite"
             }
         },
         {
-            "package-name": "B59_graphic_texture",
+            "package-name": "B59_graphic_texture_webp",
             "list-name": {
                 "ja": "花崗岩の文象構造",
                 "en": "Graphic texture in granite"
             }
         },
         {
-            "package-name": "B59_graphic_texture_2",
+            "package-name": "B59_graphic_texture_2_webp",
             "list-name": {
                 "ja": "花崗岩の文象構造",
                 "en": "Graphic texture in granite"
             }
         },
         {
-            "package-name": "KM-2_komatiite",
+            "package-name": "KM-2_komatiite_webp",
             "list-name": {
                 "ja": "コマチアイト中のかんらん石のスピニフェックス組織",
                 "en": "Spinifex texture of olivine in komatiite"
             }
         },
         {
-            "package-name": "GS913_green_schist",
+            "package-name": "GS913_green_schist_webp",
             "list-name": {
                 "ja": "緑色片岩",
                 "en": "Green schist"
             }
         },
         {
-            "package-name": "DM_serpentine",
+            "package-name": "DM_serpentine_webp",
             "list-name": {
                 "ja": "結晶周辺が蛇紋石に変化したかんらん岩",
                 "en": "Olivine partly altered to serpentine"
             }
         },
         {
-            "package-name": "SR_serpentine",
+            "package-name": "SR_serpentine_webp",
             "list-name": {
                 "ja": "蛇紋岩",
                 "en": "Serpentinite"
             }
         },
         {
-            "package-name": "G-10_shell",
+            "package-name": "G-10_shell_webp",
             "list-name": {
                 "ja": "炭酸塩質の生物起源砕屑物",
                 "en": "Calcareous bioclast"

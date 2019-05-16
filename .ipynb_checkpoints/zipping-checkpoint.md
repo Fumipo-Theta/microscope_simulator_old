@@ -58,7 +58,16 @@ class Webp:
     def toJp2(self,directory=None,quality=0,**kwargs):
         
         output_path = self.get_output_path(directory=directory,ext="jp2")
-
+        """
+        for j in range(18):
+            quality = j*5
+            img_file = BytesIO()
+            self.webp.convert("RGB").save(img_file,'JPEG2000',quality_mode='db', quality_layers=[quality])
+            #print (img_file.tell())
+            print(img_file.tell())
+            if img_file.tell() < 150000:
+                break
+        """
         try:
             self.webp.convert("RGB").save(output_path,'JPEG2000',quality_mode='rate', quality_layers=[100-quality])
             logger.info("output: "+output_path)
@@ -105,14 +114,6 @@ map(str,all_webp("./data"))
 ```
 
 ```python
-def archive(path:str,ext_selector:str):
-    with zipfile.ZipFile(f"{path}{ext_selector}.zip","w",compression=zipfile.ZIP_STORED) as new_zip::
-        for file in d.glob(f"{path}*.{ext_selector}"):
-            new_zip.write(file)
-    
-```
-
-```python
 doOperation = pip(
     str,
     webpToJpegs
@@ -122,54 +123,3 @@ list(
     map(doOperation,all_webp("./data"))
 )
 ```
-
-最終的に
-
-# ```
-zipped/
-    sample_1/
-        jpeg.zip/
-            o1.jpg
-            o2.jpg
-            ...
-            c1.jpg
-            c2.jpg
-            ...
-        webp.zip/
-            o1.webp
-            o2.webp
-            ...
-            c1.webp
-            c2.webp
-            ...
-        j2k.zip/
-            o1.j2k
-            o2.j2k
-            ...
-            c1.j2k
-            c2.j2k
-            ...
-        manifest.json
-        sambnail.jpg
-# ```
-
-* image uploaderでsample_1.zipをつくる
-
-# ```
-sample_1.zip/
-    o1.webp
-    o2.webp
-    ...
-    c1.webp
-    c2.webp
-    ...
-    manifest.json
-    sambnail.jpg
-# ```
-
-* sample_1.zipを展開する
-* 各webpをjpgとj2kに変換する
-* 画像フォーマットごとにzipファイルに固める
-
-* /data/ 内の画像ファイルを対象とする.
-

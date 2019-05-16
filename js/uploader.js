@@ -71,22 +71,42 @@ function readImagesNumber(state) {
     return state
 }
 
-function showImages(state) {
+async function showImages(state) {
     readImageSize(state)
     readImagesNumber(state)
-    return updateStateByMeta(state, "upload")(package.toJSON())
-        //.then(createImageContainor)
-        .then(updateView_validate)
+    const new_state = await updateStateByMeta(state, "upload")(package.packageID, package.toJSON())
+
+    new_state.open_images = await Promise.all(state.open_image_srcs.map(loadImageFromSrc))
+
+    new_state.cross_images = await Promise.all(state.cross_image_srcs.map(loadImageFromSrc))
+
+    return updateView_validate(new_state)
         .then(showViewer)
         .then(showNicolButton)
         .then(state => autoRotate(state)())
+}
+
+function loadImageFromSrc(src) {
+    return new Promise((res, rej) => {
+
+        const img = new Image()
+
+        img.onload = _ => {
+            res(img)
+        }
+
+        img.src = src
+
+    })
 }
 
 function openImagesSelectHandler(state) {
     return e => new Promise(async (res, rej) => {
         state.open_image_srcs = await fileSelectHander(e)
         state.loadImages[0] = true
-        createImageContainor(state).then(showImages)
+        state.open_images = await Promise.all(state.open_image_srcs.map(loadImageFromSrc))
+        await showImages(state)
+
         res(state)
     })
 }
@@ -95,7 +115,9 @@ function crossImagesSelectHandler(state) {
     return e => new Promise(async (res, rej) => {
         state.cross_image_srcs = await fileSelectHander(e)
         state.loadImages[1] = true
-        createImageContainor(state).then(showImages)
+        state.cross_images = await Promise.all(state.cross_image_srcs.map(loadImageFromSrc))
+        await showImages(state)
+
         res(state)
     })
 }
@@ -177,7 +199,7 @@ const rotateImage_validate = (state, e) => () => {
     drawHairLine(state)
 }
 
-function updateView_validate(state) {
+async function updateView_validate(state) {
     clearView(state)
     blobToCanvas_validate(state)
     drawHairLine(state)
