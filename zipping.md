@@ -31,7 +31,7 @@ import sys
 import logging
 from io import BytesIO
 from func_helper import pip
-
+import shutil
 ```
 
 ```python
@@ -85,8 +85,8 @@ class Webp:
 ```python
 webp = Webp("./data/G-11_olivine_sand_webp/o1.webp")
 
-webp.toJp2(quality=70)
-webp.toJpeg(maxsize=150000)
+#webp.toJp2(quality=70)
+#webp.toJpeg(maxsize=150000)
 ```
 
 ```python
@@ -105,11 +105,43 @@ map(str,all_webp("./data"))
 ```
 
 ```python
-def archive(path:str,ext_selector:str):
-    with zipfile.ZipFile(f"{path}{ext_selector}.zip","w",compression=zipfile.ZIP_STORED) as new_zip::
-        for file in d.glob(f"{path}*.{ext_selector}"):
-            new_zip.write(file)
+src_root = pathlib.Path("./data/")
+list(src_root.glob("*/"))
+```
+
+```python
+def archive(root_path:str,ext_selector:str,output_path):
+    output_p = pathlib.Path(output_path)
+    input_p = pathlib.Path(root_path)
+    if not output_p.exists():
+        output_p.mkdir()
+        
+    with zipfile.ZipFile(f"{output_path}{ext_selector}.zip","w",compression=zipfile.ZIP_STORED) as new_zip:
+        for file in input_p.glob(f"*.{ext_selector}"):
+
+            f = pathlib.Path(file)
+            new_zip.write(file,arcname=f.name)
+
+def make_package(input_root_path, output_root):
+    p = pathlib.Path(input_root_path)
+    package_name = p.name
+    output_root_path = output_root + package_name + "/"
+    archive(input_root_path,"webp",output_root_path)
+    archive(input_root_path,"jpg",output_root_path)
+    archive(input_root_path,"jp2",output_root_path)
+    webp_o1 = Webp(f"{input_root_path}/o1.webp")
+    webp_c1 = Webp(f"{input_root_path}/c1.webp")
+    webp_o1.toJpeg(maxsize=10,directory=pathlib.Path(output_root_path))
+    webp_c1.toJpeg(maxsize=10,directory=pathlib.Path(output_root_path))
+    shutil.copy2(input_root_path/"manifest.json",output_root_path+"manifest.json")
+
     
+src_root = pathlib.Path("./data/")
+
+list(map(
+    lambda package_path: make_package(package_path,"./data-packages/"),
+    src_root.glob("*/")
+))
 ```
 
 ```python
@@ -119,7 +151,7 @@ doOperation = pip(
 )
 
 list(
-    map(doOperation,all_webp("./data"))
+    map(doOperation,all_webp("./data/G-10_shell_webp/"))
 )
 ```
 
@@ -164,7 +196,8 @@ sample_1.zip/
     c2.webp
     ...
     manifest.json
-    sambnail.jpg
+    o1.jpg  * maxsize = 10KB
+    c1.jpg  * maxsize = 10KB
 # ```
 
 * sample_1.zipを展開する

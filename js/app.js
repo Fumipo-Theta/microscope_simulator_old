@@ -39,7 +39,8 @@ staticSettings = new StaticManager(
     "files"
 )
 
-
+var deleteReq = indexedDB.deleteDatabase("db_v2");
+var deleteReq = indexedDB.deleteDatabase("zipfiles");
 
 class DatabaseHandler {
     constructor(db_name, version, storeName, primaryKeyName) {
@@ -599,43 +600,14 @@ function loadImageSrc(src) {
     })
 }
 
-function ImageToBlob(img, mime_type) {
-    return new Promise(async (res, rej) => {
-        // New Canvas
-        await relax()
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        // Draw Image
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        // To Base64
-        canvas.toBlob(res, mime_type);
-    })
-}
 
-function ImageToBase64(img, mime_type) {
-    return new Promise(async (res, rej) => {
-        // New Canvas
-        await relax()
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        // Draw Image
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        // To Base64
-        res(canvas.toDataURL(mime_type));
-    })
-}
-
-const updateImages = state => imgSets => new Promise((res, rej) => {
+const setOpenAndCrossImages = state => imgSets => new Promise((res, rej) => {
     state.open_images = imgSets.open
     state.cross_images = imgSets.cross
     res(state)
 })
 
-function updateImageSrc(imagesMap,type) {
+function updateImageSrc(imagesMap, type) {
     return (state) => new Promise(async (res, rej) => {
 
         Promise.all([
@@ -654,7 +626,7 @@ function updateImageSrc(imagesMap,type) {
 
             return { open: open_imgs, cross: cross_imgs }
         })
-            .then(updateImages(state))
+            .then(setOpenAndCrossImages(state))
             .then(res)
     })
 }
@@ -775,39 +747,6 @@ function progressCircle(selector) {
 }
 
 
-function buffer_to_string(buf) {
-    const decoder = new TextDecoder("UTF-8");
-    return decoder.decode(new Uint8Array(buf))
-}
-
-function base64ToBlob(base64, mime) {
-    var binary = atob(base64);
-    var buffer = new Uint8Array(binary.length)
-    for (var i = 0; i < binary.length; i++) {
-        buffer[i] = binary.charCodeAt(i);
-    }
-    return new Blob([buffer.buffer], {
-        type: mime
-    });
-}
-
-function base64ToArrayBuffer(base64) {
-    var binary_string = window.atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes.buffer;
-}
-
-function objectFrom(keys_values) {
-    const o = {}
-    keys_values.forEach(kv => {
-        o[kv[0]] = kv[1]
-    })
-    return o
-}
 
 
 
@@ -856,13 +795,13 @@ function register(state, isNewData) {
  * @param {*} packageName
  * @return {Object[meta,zip]}
  */
-const markDownloadedOption = packageName => manifest => new Promise((res, rej) => {
+const markDownloadedOption = packageName => manifest => _ => new Promise((res, rej) => {
     Array.from(document.querySelectorAll(`#rock_selector>option[value=${packageName}]`)).forEach(option => {
         label = option.innerHTML.replace("✓ ", "")
         option.innerHTML = "✓ " + label
         option.classList.add("downloaded")
     })
-    res(manifest)
+    res(_)
 })
 
 
@@ -956,17 +895,19 @@ async function queryImagePackage(state, packageName, lastModified_remote, networ
         }
     } else {
         const manifestUrl = staticSettings.getImageDataPath(packageName) + "manifest.json";
-        const thumbnailUrl = staticSettings.getImageDataPath(packageName) + "thumbnail.jpg";
+        const open_thumbnailUrl = staticSettings.getImageDataPath(packageName) + "o1.jpg";
+        const cross_thumbnailUrl = staticSettings.getImageDataPath(packageName) + "c1.jpg";
         const zipUrl = staticSettings.getImageDataPath(packageName) + state.supportedImageType + ".zip"
         const response = {
             manifest: await fetch(manifestUrl)
-                .then(response => response.text())
-                .then(markDownloadedOption(packageName)),
+                .then(response => response.text()),
             thumbnail: {
-                "o1.jpg": await fetch(thumbnailUrl)
+                "o1.jpg": await fetch(open_thumbnailUrl)
+                    .then(response => response.blob())
+                    .then(convertBlobToBase64),
+                "c1.jpg": await fetch(cross_thumbnailUrl)
                     .then(response => response.blob())
                     .then(convertBlobToBase64)
-
             },
             id: key,
             lastModified: lastModified_remote,
@@ -1074,12 +1015,14 @@ const rockNameSelectHandler = state => {
 
             const [new_state, new_response] = await updateStateByMeta(state)(packageName, manifest)
                 .then(updateViewDiscription)
-                .then(updateImageSrc(response.thumbnail,"jpg"))
+                .then(updateImageSrc(response.thumbnail, "jpg"))
                 .then(updateView)
                 .then(fetchImagePackage(zipLoader, response, isNewData))
 
-            updateImageSrc(new_response.zip,state.supportedImageType)(state)
-                .then(state => register(state, isNewData)(new_response))
+            updateImageSrc(new_response.zip, state.supportedImageType)(state)
+                .then(state => register(state, isNewData)(new_response)
+                )
+                .then(markDownloadedOption(packageName)(manifest))
                 .then(updateView)
                 .then(res)
         } catch (e) {
@@ -1114,7 +1057,7 @@ const createImageContainor = state => new Promise((res, rej) => {
 
             return { open: open_imgs, cross: cross_imgs }
         })
-        .then(updateImages(state))
+        .then(setOpenAndCrossImages(state))
         .then(res)
 
 })
