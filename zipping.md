@@ -150,7 +150,7 @@ zipped/
             c2.j2k
             ...
         manifest.json
-        sambnail.jpg
+        sumbnail.jpg
 # ```
 
 * image uploaderでsample_1.zipをつくる
