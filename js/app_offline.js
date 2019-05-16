@@ -10,7 +10,7 @@ class StaticManager {
         storageName
     ) {
         this.sampleListURL = sampleListURL
-        this.imageDataPathPrefix = imageDataPathPrefix
+        this.imageDataRoot = imageDataPathPrefix
         this.indexedDBName = dbName
         this.storageName = storageName
     }
@@ -20,7 +20,7 @@ class StaticManager {
     }
 
     getImageDataPath(packageName) {
-        return this.imageDataPathPrefix + packageName + "/"
+        return this.imageDataRoot + packageName + "/"
     }
 
     getDBName() {
@@ -34,12 +34,13 @@ class StaticManager {
 
 staticSettings = new StaticManager(
     "./dynamic/rock_list.json",
-    "./data/",
-    "db_v2", // "zipfiles"
-    "files" //"zip"
+    "./data-packages/",
+    "db_v3",
+    "files"
 )
 
-
+var deleteReq = indexedDB.deleteDatabase("db_v2");
+var deleteReq = indexedDB.deleteDatabase("zipfiles");
 
 class DatabaseHandler {
     constructor(db_name, version, storeName, primaryKeyName) {
@@ -259,6 +260,17 @@ async function detectJ2kSupport() {
     return results.every(result => !!result)
 }
 
+async function getSupportedImageType() {
+    if (await detectWebpSupport()) {
+        return "webp"
+    }
+    if (await detectJ2kSupport()) {
+        return "jp2"
+    }
+    return "jpg"
+}
+
+
 
 function ISmallStorageFactory() {
     return (window.localStorage)
@@ -364,6 +376,7 @@ const resetState = () => ({
     "language": selectLanguageCode(),
     "storedKeys": [],
     "drawHairLine": true,
+    "canRotate": true,
 })
 
 
@@ -384,6 +397,7 @@ async function connectDatabase(state) {
 async function checkSupportImageFormat(state) {
     state.supportWebp = await detectWebpSupport();
     state.supportJ2k = await detectJ2kSupport();
+    state.supportedImageType = await getSupportedImageType();
     return state
 }
 
@@ -547,32 +561,12 @@ const updateStateByMeta = (state) => (containorID, meta) => new Promise((res, re
     res(state)
 })
 
-function selectImageSrc(state, response, packageName, prefix) {
-    if (prefix in response.zip) {
-        return [response.zip[prefix]]
+
+function selectImageInContainor(containor, prefix) {
+    if (prefix in containor) {
+        return containor[prefix]
     }
-
-    const srcDir = staticSettings.getImageDataPath(packageName);
-
-    if (state.supportWebp) {
-        return [
-            [srcDir + prefix + ".JPG", "image/jpeg"],
-            [srcDir + prefix + ".jpg", "image/jpeg"],
-            [srcDir + prefix + ".webp", "image/webp"]
-        ]
-    } else if (state.supportJ2k) {
-        return [
-            [srcDir + prefix + ".JPG", "image/jpeg"],
-            [srcDir + prefix + ".jpg", "image/jpeg"],
-            [srcDir + prefix + ".jp2", "image/jp2"]
-        ]
-    } else {
-        return [
-            [srcDir + prefix + ".JPG", "image/jpeg"],
-            [srcDir + prefix + ".jpg", "image/jpeg"]
-        ]
-    }
-
+    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12NgYAAAAAMAASDVlMcAAAAASUVORK5CYII="
 }
 
 function handleImgSrc(src) {
@@ -589,85 +583,51 @@ function handleImgSrc(src) {
 /**
  * @parameter src {dataURL}
  */
-function loadImageSrc(state) {
-    return src_set => new Promise((res, rej) => {
+function loadImageSrc(src) {
+    return new Promise((res, rej) => {
 
         const img = new Image()
-        const [src, mime] = src_set.pop()
 
         img.onload = _ => {
-            updateView(state)
             this.onnerror = null;
-            res([img, mime])
+            res(img)
         }
         img.onerror = e => {
-            loadImageSrc(state)(src_set)
-                .then(res)
-                .catch(rej)
+            res(img)
         }
 
         img.src = handleImgSrc(src)
     })
 }
 
-function ImageToBlob(img, mime_type) {
-    return new Promise(async (res, rej) => {
-        // New Canvas
-        await relax()
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        // Draw Image
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        // To Base64
-        canvas.toBlob(res, mime_type);
-    })
-}
 
-function ImageToBase64(img, mime_type) {
-    return new Promise(async (res, rej) => {
-        // New Canvas
-        await relax()
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        // Draw Image
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        // To Base64
-        res(canvas.toDataURL(mime_type));
-    })
-}
+const setOpenAndCrossImages = state => imgSets => new Promise((res, rej) => {
+    state.open_images = imgSets.open
+    state.cross_images = imgSets.cross
+    res(state)
+})
 
-function updateImageSrc(packageName, response) {
+function updateImageSrc(imagesMap, type) {
     return (state) => new Promise(async (res, rej) => {
 
-        /* 表示までの時間を短くしたい...*/
         Promise.all([
-            ...(Array(state.image_number - 1)
-                .fill(0)
-                .map((_, i) =>
-                    [
-                        selectImageSrc(state, response, packageName, `o${i + 1}`),
-                        selectImageSrc(state, response, packageName, `c${i + 1}`),
-                    ])
-                .reduce((acc, e) => [...acc, ...e], [])
-                .map((src, i) => loadImageSrc(state)(src)
-                    .then(result => {
-                        const img = result[0]
-                        const mime = result[1]
-                        if (i % 2 === 0) {
-                            state.open_images[i / 2] = img;
-                            return [`o${i / 2 + 1}`, mime, img]
-                        } else {
-                            state.cross_images[(i - 1) / 2] = img;
-                            return [`c${(i - 1) / 2 + 1}`, mime, img]
-                        }
-                    }).catch(e => false)
-                )
+            Promise.all(Array(state.image_number - 1).fill(0)
+                .map((_, i) => selectImageInContainor(imagesMap, `o${i + 1}.${type}`))
+                .map(loadImageSrc)
+            ),
+            Promise.all(Array(state.image_number - 1).fill(0)
+                .map((_, i) => selectImageInContainor(imagesMap, `c${i + 1}.${type}`))
+                .map(loadImageSrc)
             )
-        ]).then(results => res([results, response]))
+        ]).then(imgDOMs => {
+            const open_imgs = imgDOMs[0]
+
+            const cross_imgs = imgDOMs[1]
+
+            return { open: open_imgs, cross: cross_imgs }
+        })
+            .then(setOpenAndCrossImages(state))
+            .then(res)
     })
 }
 
@@ -688,34 +648,6 @@ if (!HTMLCanvasElement.prototype.toBlob) {
     });
 }
 
-function serializeImages(isNewData) {
-    if (!isNewData) return;
-    return _ => new Promise((res, rej) => {
-        const [results, response] = _
-        if (!results.every(_ => _)) {
-            rej()
-        }
-
-        Promise.all(
-            results.map((v) => {
-                return new Promise(async (resolve) => {
-                    const [name, mime, img] = v
-                    resolve([name, [
-                        await ImageToBase64(img, mime),
-                        mime
-                    ]])
-                })
-            })
-        ).then(data => {
-            response.zip = Object.assign(
-                response.zip,
-                objectFrom(data)
-            )
-            return response
-        }).then(res)
-
-    })
-}
 
 function handleErrors(response) {
     if (response.ok) {
@@ -815,39 +747,6 @@ function progressCircle(selector) {
 }
 
 
-function buffer_to_string(buf) {
-    const decoder = new TextDecoder("UTF-8");
-    return decoder.decode(new Uint8Array(buf))
-}
-
-function base64ToBlob(base64, mime) {
-    var binary = atob(base64);
-    var buffer = new Uint8Array(binary.length)
-    for (var i = 0; i < binary.length; i++) {
-        buffer[i] = binary.charCodeAt(i);
-    }
-    return new Blob([buffer.buffer], {
-        type: mime
-    });
-}
-
-function base64ToArrayBuffer(base64) {
-    var binary_string = window.atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes.buffer;
-}
-
-function objectFrom(keys_values) {
-    const o = {}
-    keys_values.forEach(kv => {
-        o[kv[0]] = kv[1]
-    })
-    return o
-}
 
 
 
@@ -880,8 +779,8 @@ function registerZip(state) {
 
 function register(state, isNewData) {
     if (isNewData) {
-        return _ => new Promise((res, rej) => {
-            registerZip(state)(_)
+        return entry => new Promise((res, rej) => {
+            registerZip(state)(entry)
                 .then(res)
         })
     } else {
@@ -896,85 +795,238 @@ function register(state, isNewData) {
  * @param {*} packageName
  * @return {Object[meta,zip]}
  */
-const markDownloadedOption = packageName => manifest => new Promise((res, rej) => {
+const markDownloadedOption = packageName => manifest => _ => new Promise((res, rej) => {
     Array.from(document.querySelectorAll(`#rock_selector>option[value=${packageName}]`)).forEach(option => {
         label = option.innerHTML.replace("✓ ", "")
         option.innerHTML = "✓ " + label
         option.classList.add("downloaded")
     })
-    res(manifest)
+    res(_)
 })
 
+
 /**
- * package をどこかから取得する
- * @param {*} state
- * @param {*} packageName
+ *
+ * @param {String} url
+ * @return {Array[String, Boolean]} [lastModified, networkDisconnected]
  */
-const zipUrlHandler = (state, packageName) => new Promise(async (res, rej) => {
-    loadingMessage.message("Loading images")
-
-    const key = sanitizeID(packageName)
-    const manifestURL = staticSettings.getImageDataPath(packageName) + "manifest.json"
-
+async function queryLastModified(url) {
     try {
-        const header = await fetch(manifestURL, { method: 'HEAD' }).catch(e => {
+        const header = await fetch(url, { method: 'HEAD' }).catch(e => {
             console.log("Package metadata cannot be fetched.")
             throw Error(e)
         })
         var lastModified = header.headers.get("last-modified")
+        var networkDisconnected = false
+        return [lastModified, networkDisconnected]
     } catch (e) {
         var lastModified = "none"
         var networkDisconnected = true
+        return [lastModified, networkDisconnected]
     }
+}
 
+
+function unzipper(url) {
+    return new Promise((res, rej) => {
+        const progressHandler = _ => null;
+        const completeHandler = _ => null
+        Zip.inflate_file(url, res, rej, progressHandler, completeHandler)
+    })
+}
+
+function imagePackageFetcher(packageUrl) {
+    return async () => await unzipper(packageUrl)
+        .then(extractFile)
+}
+
+function fetchImagePackage(fetcher, response, toBeFetch) {
+    return async state => {
+        if (!toBeFetch) return [state, response];
+
+        const new_response = Object.assign(
+            response,
+            { zip: await fetcher() }
+        )
+        return [state, new_response]
+    }
+}
+
+function convertBlobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader;
+        reader.onerror = reject;
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+        reader.readAsDataURL(blob);
+    });
+}
+
+/**
+ * 指定したkeyのデータがDBの中にある場合, DBからデータを取得する.
+ * サーバとDBでデータの最終更新時刻が一致すれば,
+ *  DBのデータを返す.
+ * ネットワークエラーの場合, DBのデータか無を返す
+ *
+ * そうでなければサーバからmanifestとsumbnailを取得して返す.
+ * また, 画像本体のzipファイルをfetchするアクションを起こす関数を返す.
+ *
+ * @param {Object} state
+ * @param {String} packageName
+ * @param {String} lastModified_remote
+ * @param {Boolean} networkDisconnected
+ * @return {Array[Object,Boolean, function]} [response, toBeStored, zipLoader]
+ */
+async function queryImagePackage(state, packageName, lastModified_remote, networkDisconnected) {
+    const key = sanitizeID(packageName)
     const storedData = await state.zipDBHandler.get(state.zipDB, key)
 
-
-    if (storedData !== undefined && storedData.lastModified === lastModified) {
-        res([storedData, false])
-    } else if (networkDisconnected) {
+    if (storedData !== undefined && storedData.lastModified === lastModified_remote) {
+        var toBeStored = false
+        return [storedData, toBeStored, null]
+    }
+    if (networkDisconnected) {
         if (storedData !== undefined) {
-            res([storedData, false])
+            var toBeStored = false
+            return [storedData, toBeStored, null]
         } else {
-            res()
+            return [null, false, null]
         }
     } else {
+        const manifestUrl = staticSettings.getImageDataPath(packageName) + "manifest.json";
+        const open_thumbnailUrl = staticSettings.getImageDataPath(packageName) + "o1.jpg";
+        const cross_thumbnailUrl = staticSettings.getImageDataPath(packageName) + "c1.jpg";
+        const zipUrl = staticSettings.getImageDataPath(packageName) + state.supportedImageType + ".zip"
         const response = {
-            zip: {
-                "manifest.json": await fetch(manifestURL)
-                    .then(response => response.text())
-                    .then(markDownloadedOption(packageName))
+            manifest: await fetch(manifestUrl)
+                .then(response => response.text()),
+            thumbnail: {
+                "o1.jpg": await fetch(open_thumbnailUrl)
+                    .then(response => response.blob())
+                    .then(convertBlobToBase64),
+                "c1.jpg": await fetch(cross_thumbnailUrl)
+                    .then(response => response.blob())
+                    .then(convertBlobToBase64)
             },
             id: key,
-            lastModified: lastModified
+            lastModified: lastModified_remote,
+            zip: null,
         }
-        res([response, true])
+        var toBeStored = true
+        const zipLoader = imagePackageFetcher(zipUrl)
+        return [response, toBeStored, zipLoader]
     }
+}
+
+
+
+
+/**
+ * パッケージのメタデータを取得する.
+ * @param {*} state
+ * @param {String} packageName
+ */
+const getPackageMetaData = (state, packageName) => new Promise(async (res, rej) => {
+    loadingMessage.message("Loading images")
+
+    const imageType = state.supportedImageType
+
+    const packageUrl = staticSettings.getImageDataPath(packageName) + imageType + ".zip"
+    const [lastModified, networkDisconnected] = await queryLastModified(packageUrl)
+
+    const packageMetaData = await queryImagePackage(state, packageName, lastModified, networkDisconnected)
+
+    res(packageMetaData)
 })
 
-function extractManifestFromZip(zip) {
-    return JSON.parse((zip["manifest.json"]))
+function bufferToBase64(buffer, ext) {
+    return new Promise((res, rej) => {
+
+        var bytes = new Uint8Array(buffer);
+        var binary = '';
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        res(`data:image/${ext};base64,` + window.btoa(binary));
+    })
 }
+
+/**
+ *
+ * @param {*} zip
+ * @return {Object[meta,zip]}
+ */
+async function extractFile(zipByte) {
+    const zip = Zip.inflate(zipByte)
+    const inflated_zip = {}
+    await Promise.all(Object.entries(zip.files).map(async kv => {
+        if (kv[0].includes(".json")) {
+            inflated_zip[kv[0]] = kv[1].inflate()
+        } else {
+            const type = kv[0].match(/.*\.(\w+)$/)[1]
+            const base64 = await bufferToBase64(kv[1].inflate(), type)
+            const mime = base64.match(/^data:(image\/\w+);/)[1]
+            const mime_type = mime.split("/")[1]
+
+            const new_file_name = kv[0].split(".")[0] + "." + mime_type
+
+            inflated_zip[new_file_name] = base64
+            //new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))
+        }
+
+        return true
+    }))
+
+    return inflated_zip
+}
+
+
 
 const rockNameSelectHandler = state => {
     return new Promise(async (res, rej) => {
         const rock_selector = document.querySelector("#rock_selector")
         const packageName = rock_selector.options[rock_selector.selectedIndex].value
 
+        state.canRotate = false;
         showLoadingAnimation(state)
         hideWelcomeBoard(state)
         showViewer(state)
         showNicolButton(state)
 
+        /**
+         * fetch lastmodified
+         * fetch manifest
+         * fetch sumbnail
+         *
+         * show sumbnail
+         * show discription
+         *
+         * load images
+         *  from db
+         *  fetch
+         *
+         * store data
+         */
 
         try {
-            const [response, isNewData] = await zipUrlHandler(state, packageName)
-            const manifest = extractManifestFromZip(response.zip)
-            updateStateByMeta(state)(packageName, manifest)
+            const [response, isNewData, zipLoader] = await getPackageMetaData(state, packageName);
+            const manifest = JSON.parse(response.manifest);
+
+            const [new_state, new_response] = await updateStateByMeta(state)(packageName, manifest)
                 .then(updateViewDiscription)
-                .then(updateImageSrc(packageName, response))
-                .then(serializeImages(isNewData))
-                .then(register(state, isNewData))
+                .then(updateImageSrc(response.thumbnail, "jpg"))
+                .then(updateView)
+                .then(fetchImagePackage(zipLoader, response, isNewData))
+
+            state.canRotate = true
+
+            updateImageSrc(new_response.zip, state.supportedImageType)(state)
+                .then(state => register(state, isNewData)(new_response)
+                )
+                .then(markDownloadedOption(packageName)(manifest))
+                .then(updateView)
                 .then(res)
         } catch (e) {
             rej(e)
@@ -987,11 +1039,7 @@ function sanitizeID(id) {
 }
 
 
-const updateImages = state => imgSets => new Promise((res, rej) => {
-    state.open_images = imgSets.open
-    state.cross_images = imgSets.cross
-    res(state)
-})
+
 
 
 /**
@@ -1012,7 +1060,7 @@ const createImageContainor = state => new Promise((res, rej) => {
 
             return { open: open_imgs, cross: cross_imgs }
         })
-        .then(updateImages(state))
+        .then(setOpenAndCrossImages(state))
         .then(res)
 
 })
@@ -1209,6 +1257,7 @@ function updateCoordinate(state, e) {
  * @param {*} e
  */
 function updateRotate(state, e) {
+    if (!state.canRotate) return;
     if (state.drag_start === undefined) return
     // delta rotate radius
     const rotate_end = radiunBetween(
