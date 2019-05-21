@@ -124,17 +124,101 @@ class DatabaseHandler {
     }
 }
 
-class TextNode {
-    constructor(selector) {
-        this.dom = document.querySelector(selector)
+class MessageBarActivitySwitcher {
+    constructor(messageBarSelector) {
+        this.root = document.querySelector(messageBarSelector)
+        this.hook = {}
+        return this
     }
 
-    message(str) {
-        this.dom.innerHTML = str;
+    activate() {
+        this.hook["activate"](this.root)
+        this.root.classList.remove("inactive")
+    }
+
+    inactivate() {
+        this.hook["inactivate"](this.root)
+        this.root.classList.add("inactive")
+    }
+
+    setHookOnActivate(hook = rootNode => { }) {
+        this.hook["activate"] = hook
+        return this
+    }
+
+    setHookOnInactivate(hook = rootNode => { }) {
+        this.hook["inactivate"] = hook
+        return this
     }
 }
 
-const loadingMessage = new TextNode("#loading_message")
+const switchLoadingMessage = new MessageBarActivitySwitcher(
+    "#loading_message_bar"
+).setHookOnActivate(
+    rootNode => {
+        rootNode.querySelector(".message_space").innerHTML = "Loading images..."
+        rootNode.classList.add("message-loading")
+    }
+).setHookOnInactivate(
+    rootNode => {
+        rootNode.classList.remove("message-loading")
+    }
+)
+
+const switchErrorMessage = new MessageBarActivitySwitcher(
+    "#error_message_bar"
+).setHookOnInactivate(
+    rootNode => {
+        rootNode.classList.remove("message-error")
+    }
+)
+
+
+const showLoadingMessage = state => {
+    switchLoadingMessage.activate()
+    return state
+}
+
+const hideLoadingMessage = state => {
+    switchLoadingMessage.inactivate()
+    return state
+}
+
+const hideWelcomeBoard = state => {
+    const board = document.querySelector("#welcome-card")
+    board.classList.add("inactive");
+    return state
+}
+
+const showViewer = state => {
+    const card = document.querySelector("#viewer_wrapper")
+    card.classList.remove("inactive")
+    return state
+}
+
+const showNicolButton = state => {
+    const button = document.querySelector("#low-navigation")
+    button.classList.remove("inactive");
+    return state
+}
+
+function hideErrorMessage(state) {
+    switchErrorMessage.inactivate()
+    return state
+}
+
+function showErrorMessage(message) {
+    return (_) => {
+        switchErrorMessage.setHookOnActivate(
+            rootDOM => {
+                rootDOM.querySelector(".message_space").innerHTML = message
+                rootDOM.classList.add("message-error")
+            }
+        )
+        switchErrorMessage.activate()
+        return _
+    }
+}
 
 class DummyDatabaseHandler extends DatabaseHandler {
     constructor(db_name, version, storeName, primaryKeyName) {
@@ -447,7 +531,7 @@ const sampleListLoader = state => new Promise(async (res, rej) => {
         var stored_list = state.localStorage.get("list_of_sample")
         var response = { "list_of_sample": JSON.parse(stored_list) }
         console.warn(e)
-        showErrorCard("<p>Internet disconnected.</p>")()
+        showErrorMessage("<p>Internet disconnected.</p>")()
     }
 
     sampleListPresenter(state)(response)
@@ -684,67 +768,7 @@ const updateViewDiscription = state => {
     return state
 }
 
-const showLoadingAnimation = state => {
-    const anime = document.querySelectorAll(".lds-css.ng-scope")
-    Array.from(anime).forEach(d => {
-        d.classList.remove("inactive")
-    })
-    return state
-}
 
-const hideLoadingAnimation = state => {
-    const anime = document.querySelectorAll(".lds-css.ng-scope")
-    Array.from(anime).forEach(d => {
-        d.classList.add("inactive")
-    })
-    return state
-}
-
-const hideWelcomeBoard = state => {
-    const board = document.querySelector("#welcome-card")
-    board.classList.add("inactive");
-    return state
-}
-
-const showViewer = state => {
-    const card = document.querySelector("#viewer_wrapper")
-    card.classList.remove("inactive")
-    return state
-}
-
-const showNicolButton = state => {
-    const button = document.querySelector("#low-navigation")
-    button.classList.remove("inactive");
-    return state
-}
-
-function hideErrorCard() {
-    return _ => {
-        const errorCard = document.querySelector("#error_notification")
-        errorCard.classList.add("inactive")
-        return _
-    }
-}
-
-function showErrorCard(messageHTML) {
-    return (e) => {
-        const errorCard = document.querySelector("#error_notification")
-        errorCard.innerHTML = messageHTML;
-        errorCard.classList.remove("inactive")
-        return e
-    }
-}
-
-function progressCircle(selector) {
-    const progress_circle = document.querySelector(selector)
-    const total = progress_circle.attributes["r"].value * 2 * Math.PI
-    progress_circle.attributes["stroke-dasharray"].value = total
-    progress_circle.attributes["stroke-dashoffset"].value = total
-
-    return (load) => {
-        progress_circle.attributes["stroke-dashoffset"].value = total * (1 - 0.5 * load)
-    }
-}
 
 
 
@@ -827,11 +851,39 @@ async function queryLastModified(url) {
 }
 
 
+function progressCircle(selector) {
+    const progress_circle = document.querySelector(selector)
+    const total = progress_circle.attributes["r"].value * 2 * Math.PI
+    progress_circle.attributes["stroke-dasharray"].value = total
+    progress_circle.attributes["stroke-dashoffset"].value = total
+
+    return (load) => {
+        progress_circle.attributes["stroke-dashoffset"].value = total * (1 - 0.5 * load)
+    }
+}
+
+function progressBar(selector) {
+    const progress = document.querySelector(selector)
+    const bar = progress.querySelector(".bar")
+    bar.style.width = "0%"
+    const total = progress.clientWidth
+    return e => {
+        bar.style.width = `${(e.loaded / e.total) * 100}%`
+    }
+}
+
+function completeLoading(selector) {
+    const progress = document.querySelector(selector)
+    const bar = progress.querySelector(".bar")
+    return e => {
+        bar.style.width = "0%"
+    }
+}
+
 function unzipper(url) {
     return new Promise((res, rej) => {
-        const progressHandler = _ => null;
-        const completeHandler = _ => null
-        Zip.inflate_file(url, res, rej, progressHandler, completeHandler)
+
+        Zip.inflate_file(url, res, rej, progressBar("#progress_bar"), completeLoading("#progress_bar"))
     })
 }
 
@@ -928,7 +980,7 @@ async function queryImagePackage(state, packageName, lastModified_remote, networ
  * @param {String} packageName
  */
 const getPackageMetaData = (state, packageName) => new Promise(async (res, rej) => {
-    loadingMessage.message("Loading images")
+
 
     const imageType = state.supportedImageType
 
@@ -973,7 +1025,7 @@ async function extractFile(zipByte) {
             const new_file_name = kv[0].split(".")[0] + "." + mime_type
 
             inflated_zip[new_file_name] = base64
-            //new Uint8Array(base64ToArrayBuffer(base64.split(",")[1]))
+
         }
 
         return true
@@ -990,10 +1042,11 @@ const rockNameSelectHandler = state => {
         const packageName = rock_selector.options[rock_selector.selectedIndex].value
 
         state.canRotate = false;
-        showLoadingAnimation(state)
-        hideWelcomeBoard(state)
-        showViewer(state)
-        showNicolButton(state)
+        hideErrorMessage()
+        showLoadingMessage()
+        hideWelcomeBoard()
+        showViewer()
+        showNicolButton()
 
         /**
          * fetch lastmodified
@@ -1020,9 +1073,9 @@ const rockNameSelectHandler = state => {
                 .then(updateView)
                 .then(fetchImagePackage(zipLoader, response, isNewData))
 
-            state.canRotate = true
+            new_state.canRotate = true
 
-            updateImageSrc(new_response.zip, state.supportedImageType)(state)
+            updateImageSrc(new_response.zip, new_state.supportedImageType)(new_state)
                 .then(state => register(state, isNewData)(new_response)
                 )
                 .then(markDownloadedOption(packageName)(manifest))

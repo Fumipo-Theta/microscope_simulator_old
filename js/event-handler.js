@@ -60,12 +60,11 @@
         e => {
             rockNameSelectHandler(state)
                 .then(updateView)
-                .then(hideErrorCard())
-                .then(hideLoadingAnimation)
+                .then(hideErrorMessage)
+                .then(hideLoadingMessage)
                 .catch(e => {
                     console.log("Sample cannot be loaded because of network error.")
-                    showErrorCard("<p>Internet disconnected.</p>")(e)
-                    hideLoadingAnimation()
+                    showErrorMessage("Internet disconnected.")(e)
                 })
         },
         false
@@ -187,10 +186,10 @@
                 .then(overwrideLanguageByLocalStorage)
                 .then(connectDatabase)
                 .then(sampleListLoader)
-                .then(hideLoadingAnimation)
+                .then(hideLoadingMessage)
                 .catch(e => {
                     console.error(e)
-                    hideLoadingAnimation(e);
+                    hideLoadingMessage(e);
                 })
         }
     }
