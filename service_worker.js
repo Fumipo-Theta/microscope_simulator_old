@@ -1,4 +1,4 @@
-const VERSION = "1.4.24";
+const VERSION = "1.4.26.1";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 
@@ -69,39 +69,22 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
 
-    if ([location.origin + "/", location.origin + "/index.html"].includes(event.request.url)) {
-        event.respondWith(
-            caches.match(event.request).then(async response => {
-                if (response) {
-                    return response
-                } else {
-                    try {
-                        var r = await fetch(event.request)
-                    } catch (e) {
-                        r = await caches.match(location.origin + "/index_offline.html", {
-                            method: "GET"
-                        })
 
-                    }
-                    return r
+    event.respondWith(
+        caches.match(event.request).then(async response => {
+            if (response) {
+                return response
+            } else {
+                try {
+                    var r = await fetch(event.request)
+                } catch (e) {
+                    console.warn(`${event.request} cannot be fetched.`)
+
                 }
-            })
-        );
-    } else {
-
-        event.respondWith(
-            caches.match(event.request).then(response => {
-                return response || new Promise(async (res, rej) => {
-                    try {
-                        var r = await fetch(event.request)
-                    } catch (e) {
-                        console.warn(`${event.request.url} cannot be fetched`)
-                    }
-                    res(r)
-                })
-            })
-        );
-    }
+                return r
+            }
+        })
+    );
 });
 
 
