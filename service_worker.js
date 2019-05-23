@@ -1,17 +1,14 @@
-const VERSION = "1.4.13";
+const VERSION = "1.4.15";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 
 const STATIC_CACHE_KEY = 'static-' + VERSION;
 const STATIC_FILES = [
     ORIGIN + '/',
+    ORIGIN + '/index.html',
     ORIGIN + '/js/app.js',
     ORIGIN + '/js/event-handler.js',
     ORIGIN + '/css/main.css',
-    ORIGIN + '/index_offline.html',
-    ORIGIN + '/css/main_offline.css',
-    ORIGIN + '/js/app_offline.js',
-    ORIGIN + '/js/event-handler_offline.js',
     ORIGIN + '/js/zip.js',
     ORIGIN + '/js/jsinflate.js',
     ORIGIN + '/images/SCOPin_image.svg',

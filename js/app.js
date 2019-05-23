@@ -835,7 +835,7 @@ const markDownloadedOption = packageName => manifest => _ => new Promise((res, r
  * @return {Array[String, Boolean]} [lastModified, networkDisconnected]
  */
 async function queryLastModified(url) {
-    if (navigator.onLine) {
+    if (!navigator.onLine) {
         return ["none", true]
     }
 
