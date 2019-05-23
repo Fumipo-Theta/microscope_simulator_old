@@ -1,22 +1,19 @@
-const VERSION = "1.4.1";
+const VERSION = "1.4.13";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 
 const STATIC_CACHE_KEY = 'static-' + VERSION;
 const STATIC_FILES = [
-    //ORIGIN + '/',
+    ORIGIN + '/',
+    ORIGIN + '/js/app.js',
+    ORIGIN + '/js/event-handler.js',
+    ORIGIN + '/css/main.css',
     ORIGIN + '/index_offline.html',
     ORIGIN + '/css/main_offline.css',
     ORIGIN + '/js/app_offline.js',
     ORIGIN + '/js/event-handler_offline.js',
     ORIGIN + '/js/zip.js',
     ORIGIN + '/js/jsinflate.js',
-    //ORIGIN + '/js/webp.js',
-    //ORIGIN + '/js/libwebp-0.2.0.min',
-    ORIGIN + "/js/encoding-indexes.js",
-    ORIGIN + "/js/encoding.js",
-
-    //ORIGIN + '/images/SCOPin_rock_logo.svg',
     ORIGIN + '/images/SCOPin_image.svg',
     ORIGIN + '/images/ProfilePhoto.jpg',
     ORIGIN + '/images/facebook-brands.svg',
@@ -24,8 +21,8 @@ const STATIC_FILES = [
     ORIGIN + '/images/line-brands.svg',
     ORIGIN + '/images/SCOPin_favicon.png',
 
-    'https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.2',
-    "https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png",
+    //'https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.2',
+    //"https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png",
 
     ORIGIN + "/js/lib/axios/dist/axios.standalone.js",
     ORIGIN + "/js/lib/CryptoJS/rollups/hmac-sha256.js",
@@ -39,16 +36,27 @@ const STATIC_FILES = [
     ORIGIN + "/js/lib/apiGatewayCore/utils.js",
     ORIGIN + "/js/apigClient.js",
     ORIGIN + "/js/payment.js",
-    "https://js.stripe.com/v3/",
+    //"https://js.stripe.com/v3/",
     ORIGIN + "/js/app_social_connection.js",
-    "https://www.googletagmanager.com/gtag/js?id=UA-134075472-1",
+    //"https://www.googletagmanager.com/gtag/js?id=UA-134075472-1",
 ];
 
 const CACHE_KEYS = [
     STATIC_CACHE_KEY
 ];
 
+self.addEventListener("message", (event) => {
+    if (event.data.action === "skipWaiting") {
+        console.log("Skip waiting")
+        self.skipWaiting()
+    }
+})
+
+
 self.addEventListener('install', event => {
+    //console.log("Skip waiting !")
+    //event.waitUntil()
+    console.log("Store static files")
     event.waitUntil(
         caches.open(STATIC_CACHE_KEY).then(cache => {
             return Promise.all(
@@ -99,7 +107,9 @@ self.addEventListener('fetch', event => {
     }
 });
 
+
 self.addEventListener('activate', event => {
+    console.log("Delete previous caches !")
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(

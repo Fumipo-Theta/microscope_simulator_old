@@ -835,6 +835,10 @@ const markDownloadedOption = packageName => manifest => _ => new Promise((res, r
  * @return {Array[String, Boolean]} [lastModified, networkDisconnected]
  */
 async function queryLastModified(url) {
+    if (navigator.onLine) {
+        return ["none", true]
+    }
+
     try {
         const header = await fetch(url, { method: 'HEAD' }).catch(e => {
             console.log("Package metadata cannot be fetched.")

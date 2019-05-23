@@ -595,22 +595,82 @@
             });
         });
     </script-->
+    <div id="update_notification" class="align-center inactive">
+        <div class="align-center">
+            <a id="reload" class="align-center">
+                <div>
+                    <img src="./images/SCOPin_image_home_logo.png" width="50px" height="50px">
+                </div>
+                <div>
+                    New version is found. <br>
+                    <u>Click</u> to complete update !
+                </div>
+            </a>
+        </div>
+    </div>
     <script>
+        let newWorker
+        let refeshing
+        document.querySelector("#reload").addEventListener(
+            "click",
+            () => {
+                if (newWorker) {
+                    newWorker.postMessage({ "action": "skipWaiting" })
+                }
+            }
+        )
         window.addEventListener('load', function () {
+
             if (navigator.serviceWorker) {
-                navigator.serviceWorker.register('./service_worker.js', { scope: '.' }).then(function (registraion) {
-                    registraion.update();
-                }).then(function (registration) {
-                    console.log("serviceWorker registed.");
-                }).catch(function (error) {
-                    console.warn("serviceWorker error.", error);
-                });
+                navigator.serviceWorker.addEventListener(
+                    "controllerchange",
+                    () => {
+                        //if (refreshing) return;
+                        window.location.reload()
+                        refreshing = true
+                    }
+                )
+
+                navigator.serviceWorker.register(
+                    './service_worker.js',
+                    { scope: '.', updateViaCache: "none" }
+                )
+                    .then(function (registraion) {
+                        registraion.addEventListener(
+                            "updatefound", () => {
+                                console.log("update found")
+                                newWorker = registraion.installing
+                                newWorker.addEventListener(
+                                    "statechange", () => {
+                                        switch (newWorker.state) {
+                                            case "installed":
+                                                console.log("new worker installed ")
+                                                if (navigator.serviceWorker.controller) {
+                                                    let notification = document.querySelector("#update_notification")
+                                                    notification.classList.remove("inactive")
+                                                }
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                )
+                            }
+                        )
+                        registraion.update();
+                    })
+                    .then(function (registration) {
+                        console.log("serviceWorker registed.");
+                    })
+                    .catch(function (error) {
+                        console.warn("serviceWorker error.", error);
+                    });
             }
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding.js"></script>
+    <!--script src="https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding.js"></script-->
     <script src="./js/zip.js"></script>
     <script src="./js/jsinflate.js"></script>
     <script src="./js/app.js"></script>

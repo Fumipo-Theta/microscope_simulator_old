@@ -265,6 +265,37 @@ select option.downloaded {
     max-width: 100%;
 }
 
+#update_notification {
+    z-index: 760;
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+}
+
+#update_notification>div {
+
+    background-color: #2196f3;
+    color: #efefef;
+    max-width: 100%;
+    box-shadow: 0 0px 20px 5px rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
+}
+
+#update_notification>div:active {
+    z-index: 760;
+    position: fixed;
+    bottom: 8px;
+    box-shadow: 0 0px 10px 2px rgba(0, 0, 0, 0.65);
+}
+
+#update_notification>div>a {
+    width: 100%;
+    height: 100%;
+    padding: 10px 20px;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
 @keyframes opacity0_1 {
     0% {
         opacity: 0;
