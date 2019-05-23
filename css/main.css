@@ -253,11 +253,6 @@ select option.downloaded {
     width: 7rem;
 }
 
-#app-wrapper {
-    padding: 70px 10px 20px 10px;
-    min-height: 96vh;
-    background-color: #dfdfdf;
-}
 
 #low-navigation {
     margin: 10px 0;
@@ -379,7 +374,8 @@ select option.downloaded {
     padding: 0 20px;
     width: 780px;
     max-width: 100%;
-    background-color: #dfdfdf;
+    background-color: #ebebeb;
+    border-radius: 5px;
 }
 
 #view_discription ul {
@@ -426,11 +422,11 @@ select option.downloaded {
 }
 
 .form-wrapper {
-    margin-top: 10px;
+    margin-bottom: 10px;
     max-width: 100%;
     padding: 30px;
-    border-radius: 3px;
-    background-color: #f7f8f9;
+    border-radius: 5px;
+    background-color: #ffffff;
     box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.10), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
     color: #444444;
 }

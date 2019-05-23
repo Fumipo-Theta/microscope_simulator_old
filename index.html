@@ -5,7 +5,11 @@
     <meta http-equiv="Content-Type" charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1" user-zoom="no">
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#2196f3">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#0c395e">
+    <link rel="apple-touch-icon" href="/images/SCOPin_image_home_logo.png" sizes="144x144">
+    <link rel="apple-touch-icon" href="/images/SCOPin_image_home_logo_192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/images/SCOPin_image_home_logo_512.png" sizes="512x512">
+    <meta name="theme-color" content="#0c395e">
     <link rel="stylesheet" href="./css/main.css" charset="utf-8">
 
     <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
@@ -55,7 +59,7 @@
         }
 
         body {
-            background-color: #efefef;
+            background-color: #dfdfdf;
             min-height: 100vh;
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
@@ -130,26 +134,11 @@
             height: 100%;
         }
 
-
-        /* Loading */
-
-        #app-loader {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            position: fixed;
-            z-index: 300;
-            background-color: rgb(0, 0, 0);
-            flex-direction: column;
+        #app-wrapper {
+            padding: 70px 10px 20px 10px;
+            min-height: 96vh;
+            background-color: #dfdfdf;
         }
-
-        #app-loader.inactive>div>svg,
-        #app-loader.inactive>div>.progress-circle {
-            animation: none;
-        }
-
-
 
         @keyframes loadingSlideBelow {
             0% {
@@ -513,7 +502,7 @@
         <div class='footer_column '>
 
             <div class="form-wrapper space-around column-direction">
-                <p><span class="important"></span>Please give your feedback !</span></p>
+                <p><span class="important">Please give your feedback !</span></span></p>
                 <form id="form-contact" class="spread">
                     <div class="spread space-around">
 
@@ -583,23 +572,7 @@
 
     </div>
     <div class="image_containor"></div>
-    <!--script>
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            // 登録されているworkerを全て削除する
-            for (let registration of registrations) {
-                registration.unregister();
-            }
-        });
-        caches.keys().then(function (keys) {
-            var promises = [];
-            // キャッシュストレージを全て削除する
-            keys.forEach(function (cacheName) {
-                if (cacheName) {
-                    promises.push(caches.delete(cacheName));
-                }
-            });
-        });
-    </script-->
+
     <div id="update_notification" class="align-center inactive">
         <div class="align-center">
             <a id="reload" class="align-center">
@@ -673,9 +646,6 @@
             }
         });
     </script>
-
-    <!--script src="https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding-indexes.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/text-encoding@0.6.4/lib/encoding.js"></script-->
     <script src="./js/zip.js"></script>
     <script src="./js/jsinflate.js"></script>
     <script src="./js/app.js"></script>

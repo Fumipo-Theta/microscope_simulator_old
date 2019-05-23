@@ -1,4 +1,4 @@
-const VERSION = "1.4.19";
+const VERSION = "1.4.24";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 
