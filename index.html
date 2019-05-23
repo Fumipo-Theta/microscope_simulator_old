@@ -587,70 +587,11 @@
             </a>
         </div>
     </div>
-    <script>
-        let newWorker
-        let refeshing
-        document.querySelector("#reload").addEventListener(
-            "click",
-            () => {
-                if (newWorker) {
-                    newWorker.postMessage({ "action": "skipWaiting" })
-                }
-            }
-        )
-        window.addEventListener('load', function () {
 
-            if (navigator.serviceWorker) {
-                navigator.serviceWorker.addEventListener(
-                    "controllerchange",
-                    () => {
-                        //if (refreshing) return;
-                        window.location.reload()
-                        refreshing = true
-                    }
-                )
-
-                navigator.serviceWorker.register(
-                    './service_worker.js',
-                    { scope: '.', updateViaCache: "none" }
-                )
-                    .then(function (registraion) {
-                        registraion.addEventListener(
-                            "updatefound", () => {
-                                console.log("update found")
-                                newWorker = registraion.installing
-                                newWorker.addEventListener(
-                                    "statechange", () => {
-                                        switch (newWorker.state) {
-                                            case "installed":
-                                                console.log("new worker installed ")
-                                                if (navigator.serviceWorker.controller) {
-                                                    let notification = document.querySelector("#update_notification")
-                                                    notification.classList.remove("inactive")
-                                                }
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }
-                                )
-                            }
-                        )
-                        registraion.update();
-                    })
-                    .then(function (registration) {
-                        console.log("serviceWorker registed.");
-                    })
-                    .catch(function (error) {
-                        console.warn("serviceWorker error.", error);
-                    });
-            }
-        });
-    </script>
-    <script src="./js/zip.js"></script>
-    <script src="./js/jsinflate.js"></script>
+    <script src="./src/zip.js"></script>
+    <script src="./src/jsinflate.js"></script>
     <script src="./js/app.js"></script>
-    <script src="./js/event-handler.js"></script>
+    <script src="./src/event-handler.js"></script>
 
 </body>
 
