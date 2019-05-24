@@ -1,7 +1,9 @@
 module.exports = {
-    entry: "./src/index.js",
-    output: `${__dirname}/js`,
-    filename: "app.js",
+    entry: `${__dirname}/src/index.js`,
+    output: {
+        path: `${__dirname}/js`,
+        filename: "app.js",
+    },
     //mode : "production",
     mode: "development",
 }
