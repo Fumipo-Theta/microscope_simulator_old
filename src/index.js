@@ -79,12 +79,6 @@ function init(state) {
             })
     }
 
-    document.querySelector("#reload").addEventListener(
-        "click",
-        postSkipWaiting
-    )
-
-    window.addEventListener("load", register_sw)
     setToggleNicolEvents(state)
     setRockSelectEventHandlers(state)
     setCanvasEventHandlers(state)
