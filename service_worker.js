@@ -1,4 +1,4 @@
-const VERSION = "1.4.26.1";
+const VERSION = "1.5.1";
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 
@@ -7,7 +7,6 @@ const STATIC_FILES = [
     ORIGIN + '/',
     ORIGIN + '/index.html',
     ORIGIN + '/js/app.js',
-    ORIGIN + '/js/event-handler.js',
     ORIGIN + '/css/main.css',
     ORIGIN + '/js/zip.js',
     ORIGIN + '/js/jsinflate.js',
@@ -17,9 +16,6 @@ const STATIC_FILES = [
     ORIGIN + '/images/twitter-square-brands.svg',
     ORIGIN + '/images/line-brands.svg',
     ORIGIN + '/images/SCOPin_favicon.png',
-
-    //'https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.2',
-    //"https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png",
 
     ORIGIN + "/js/lib/axios/dist/axios.standalone.js",
     ORIGIN + "/js/lib/CryptoJS/rollups/hmac-sha256.js",
@@ -35,7 +31,7 @@ const STATIC_FILES = [
     ORIGIN + "/js/payment.js",
     //"https://js.stripe.com/v3/",
     ORIGIN + "/js/app_social_connection.js",
-    //"https://www.googletagmanager.com/gtag/js?id=UA-134075472-1",
+
 ];
 
 const CACHE_KEYS = [
