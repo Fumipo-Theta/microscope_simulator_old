@@ -4,10 +4,6 @@
  * @return {Array[String, Boolean]} [lastModified, networkDisconnected]
  */
 export default async function queryLastModified(url) {
-    if (!navigator.onLine) {
-        return ["none", true]
-    }
-
     try {
         const header = await fetch(url, { method: 'HEAD' }).catch(e => {
             console.log("Package metadata cannot be fetched.")

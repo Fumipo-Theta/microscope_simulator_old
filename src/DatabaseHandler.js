@@ -50,11 +50,26 @@ export default class DatabaseHandler {
         })
     }
 
-    async loadAll(db) {
+    async loadAllKey(db) {
         return new Promise(async (resolve, reject) => {
             const saves = [];
-            const req = db.transaction([this.storeName]).objectStore(this.storeName).openCursor();
-            resolve(req)
+            var range = IDBKeyRange.lowerBound(0);
+            const req = db.transaction([this.storeName]).objectStore(this.storeName).openCursor(range);
+            req.onsuccess = function (e) {
+                var result = e.target.result;
+                // 注）走査すべきObjectがこれ以上無い場合
+                //     result == null となります！
+                if (!!result == false) {
+                    resolve(saves)
+                } else {
+                    // ここにvalueがくる！
+                    saves.push(result.key);
+                    // カーソルを一個ずらす
+                    result.continue();
+                }
+
+
+            }
         });
     }
 
@@ -72,8 +87,8 @@ export default class DatabaseHandler {
                     resolve(rows);
                 }
             } else {
-                const entries = await this.loadAll(db)
-                resolve(Object.keys(entries))
+                const entries = await this.loadAllKey(db)
+                resolve(entries)
             }
             req.onerror = reject
         })
