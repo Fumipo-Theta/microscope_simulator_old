@@ -2,8 +2,8 @@
  * サンプルリストをselectタグ内に追加する
  * @param {*} state
  */
-export default function sampleListPresenter(state) {
-    return response => new Promise(async (res, rej) => {
+export default function showSampleList(state, response) {
+    return new Promise(async (res, rej) => {
 
         const savedSampleNames = state.storedKeys;
 
@@ -25,6 +25,6 @@ export default function sampleListPresenter(state) {
 
         document.querySelector("#top-navigation").classList.add("isready");
         sampleSelectDOM.classList.add("isready")
-        res(response);
+        res(state);
     })
 }

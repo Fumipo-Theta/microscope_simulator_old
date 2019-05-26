@@ -1,8 +1,8 @@
-import sampleListPresenter from "./sampleListPresenter.js"
 import { staticSettings } from "./global_objects.js"
 import { showErrorMessage } from "./error_indicator_handler.js"
+import showSampleList from "./showSampleList.js"
 
-export default function sampleListLoader(state) {
+export default function loadSampleListFromRemote(state) {
     return new Promise(async (res, rej) => {
         const listURL = staticSettings.getSampleListURL();
         try {
@@ -16,9 +16,6 @@ export default function sampleListLoader(state) {
             console.warn(e)
             showErrorMessage("<p>Internet disconnected.</p>")()
         }
-
-        sampleListPresenter(state)(response)
-            .then(_ => res(state))
-            .catch(rej)
+        showSampleList(state, response).then(res)
     })
 }

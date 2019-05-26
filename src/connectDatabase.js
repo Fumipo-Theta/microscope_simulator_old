@@ -9,6 +9,5 @@ export default async function connectDatabase(state) {
             : new DatabaseHandler(staticSettings.getDBName(), 1, staticSettings.getStorageName(), "id")
         : new DummyDatabaseHandler(staticSettings.getDBName(), 2, staticSettings.getStorageName(), "id")
     state.zipDB = await state.zipDBHandler.connect()
-    state.storedKeys = await state.zipDBHandler.getAllKeys(state.zipDB)
     return state
 };

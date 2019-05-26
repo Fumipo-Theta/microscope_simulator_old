@@ -1,5 +1,5 @@
 import languageChangeHandler from "./languageChangeHandler.js"
-import sampleListLoader from "./sampleListLoader.js"
+import sampleListLoader from "./loadSampleListFromRemote.js"
 import updateViewDiscription from "./updateViewDiscription.js"
 
 export default function setLanguageSelectEventHandlers(state) {

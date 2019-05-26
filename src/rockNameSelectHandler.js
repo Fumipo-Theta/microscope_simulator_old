@@ -10,6 +10,20 @@ import register from "./register.js"
 import markDownloadedOption from "./markDownloadedOption.js"
 import updateView from "./updateView.js"
 
+/**
+ * fetch lastmodified
+ * fetch manifest
+ * fetch sumbnail
+ *
+ * show sumbnail
+ * show discription
+ *
+ * load images
+ *  from db
+ *  fetch
+ *
+ * store data
+ */
 export default function rockNameSelectHandler(state) {
     return new Promise(async (res, rej) => {
         const rock_selector = document.querySelector("#rock_selector")
@@ -21,21 +35,6 @@ export default function rockNameSelectHandler(state) {
         hideWelcomeBoard()
         showViewer()
         showNicolButton()
-
-        /**
-         * fetch lastmodified
-         * fetch manifest
-         * fetch sumbnail
-         *
-         * show sumbnail
-         * show discription
-         *
-         * load images
-         *  from db
-         *  fetch
-         *
-         * store data
-         */
 
         try {
             const [response, isNewData, zipLoader] = await getPackageMetaData(state, packageName);
@@ -50,8 +49,7 @@ export default function rockNameSelectHandler(state) {
             new_state.canRotate = true
 
             updateImageSrc(new_response.zip, new_state.supportedImageType)(new_state)
-                .then(state => register(state, isNewData)(new_response)
-                )
+                .then(state => register(state, isNewData)(new_response))
                 .then(markDownloadedOption(packageName)(manifest))
                 .then(updateView)
                 .then(res)

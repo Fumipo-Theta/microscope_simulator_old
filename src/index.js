@@ -2,7 +2,6 @@
  *  Language code of sample list is such as "ja" or "en".
  */
 import deleteOldVersionDatabase from "./deleteOldVersionDatabase.js"
-import { postSkipWaiting, register_sw } from "./init_sw.js";
 import setToggleNicolEvents from "./setToggleNicolEvents.js"
 import setRockSelectEventHandlers from "./setRockSelectEventHandlers.js"
 import setCanvasEventHandlers from "./setCanvasEventHandlers.js"
@@ -16,7 +15,8 @@ import connectLocalStorage from "./connectLocalStorage.js"
 import checkSupportedImageFormat from "./checkSupportedImageFormat.js"
 import overrideLanguageByLocalStorage from "./overrideLanguageByLocalStorage.js"
 import connectDatabase from "./connectDatabase.js"
-import sampleListLoader from "./sampleListLoader.js"
+import getStoredDBEntryKeys from "./getStoredDBEntryKeys.js"
+import loadSampleListFromRemote from "./loadSampleListFromRemote.js"
 import { hideLoadingMessage } from "./loading_indicator_handler.js"
 
 
@@ -71,7 +71,8 @@ function init(state) {
             .then(checkSupportedImageFormat)
             .then(overrideLanguageByLocalStorage)
             .then(connectDatabase)
-            .then(sampleListLoader)
+            .then(getStoredDBEntryKeys)
+            .then(loadSampleListFromRemote)
             .then(hideLoadingMessage)
             .catch(e => {
                 console.error(e)
