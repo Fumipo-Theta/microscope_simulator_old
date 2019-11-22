@@ -126,14 +126,14 @@ def make_package(input_root_path, output_root):
     p = pathlib.Path(input_root_path)
     package_name = p.name
     output_root_path = output_root + package_name + "/"
-    #archive(input_root_path,"webp",output_root_path)
-    #archive(input_root_path,"jpg",output_root_path)
-    #archive(input_root_path,"jp2",output_root_path)
+    archive(input_root_path,"webp",output_root_path)
+    archive(input_root_path,"jpg",output_root_path)
+    archive(input_root_path,"jp2",output_root_path)
     webp_o1 = Webp(f"{input_root_path}/o1.webp")
     webp_c1 = Webp(f"{input_root_path}/c1.webp")
     webp_o1.toJpeg(maxsize=50000,directory=pathlib.Path(output_root_path))
     webp_c1.toJpeg(maxsize=50000,directory=pathlib.Path(output_root_path))
-    #shutil.copy2(input_root_path/"manifest.json",output_root_path+"manifest.json")
+    shutil.copy2(input_root_path/"manifest.json",output_root_path+"manifest.json")
 
     
 src_root = pathlib.Path("./data/")
