@@ -24,6 +24,7 @@
     },
     "homepage": "https://github.com/Fumipo-Theta/microscope_simulator#readme",
     "devDependencies": {
+        "npm-check-updates": "^4.1.2",
         "webpack": "^4.32.2",
         "webpack-cli": "^3.3.2"
     }
