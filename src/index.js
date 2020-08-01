@@ -8,7 +8,7 @@ import setCanvasEventHandlers from "./setCanvasEventHandlers.js"
 import setLanguageSelectEventHandlers from "./setLanguageSelectEventHandlers.js"
 import setContactFormEventHandlers from "./setContactFormEventHandlers.js"
 import initState from "./initState.js"
-import windowResizeHandler from "./windowResizeHandler.js"
+import updateViewerGeometry from "./updateViewerGeometry.js"
 import updateView from "./updateView.js"
 import es6Available from "./es6Available.js"
 import connectLocalStorage from "./connectLocalStorage.js"
@@ -40,45 +40,57 @@ function handleErrors(response) {
     }
 }
 
+function isMobileEnv(userAgent) {
+    return (userAgent.indexOf("iPhone") >= 0 || userAgent.indexOf("iPad") >= 0 || userAgent.indexOf("Android") >= 0)
+}
+
+function notifyIncompatibleEnv() {
+    var warnningCard = document.getElementById("please_use_modern_browser")
+    warnningCard.classList.remove("inactive")
+}
+
 /**
-     *
-     * Entry point function !
-     */
+    *
+    * Entry point function !
+    */
 function init(state) {
-    const userAgent = navigator.userAgent;
+    // Check ES6 availability
+    // Set window event listener
+    // 
+    if (!es6Available) {
+        notifyIncompatibleEnv()
+        return
+    }
 
     // スマートフォンの場合はorientationchangeイベントを監視する
-    if (userAgent.indexOf("iPhone") >= 0 || userAgent.indexOf("iPad") >= 0 || userAgent.indexOf("Android") >= 0)
+    if (isMobileEnv(navigator.userAgent))
         window.addEventListener(
             "orientationchange",
-            e => windowResizeHandler(state).then(updateView),
-            false
-        );
-    else
-        window.addEventListener(
-            "resize",
-            e => windowResizeHandler(state).then(updateView),
+            e => updateViewerGeometry(state).then(updateView),
             false
         );
 
-    if (!es6Available()) {
-        var warnningCard = document.getElementById("please_use_modern_browser")
-        warnningCard.classList.remove("inactive")
 
-    } else {
-        windowResizeHandler(state)
-            .then(connectLocalStorage)
-            .then(checkSupportedImageFormat)
-            .then(overrideLanguageByLocalStorage)
-            .then(connectDatabase)
-            .then(getStoredDBEntryKeys)
-            .then(loadSampleListFromRemote)
-            .then(hideLoadingMessage)
-            .catch(e => {
-                console.error(e)
-                hideLoadingMessage(e);
-            })
-    }
+    window.addEventListener(
+        "resize",
+        e => updateViewerGeometry(state).then(updateView),
+        false
+    );
+
+
+    updateViewerGeometry(state)
+        .then(connectLocalStorage)
+        .then(checkSupportedImageFormat)
+        .then(overrideLanguageByLocalStorage)
+        .then(connectDatabase)
+        .then(getStoredDBEntryKeys)
+        .then(loadSampleListFromRemote)
+        .then(hideLoadingMessage)
+        .catch(e => {
+            console.error(e)
+            hideLoadingMessage(e);
+        })
+
 
     setToggleNicolEvents(state)
     setRockSelectEventHandlers(state)
