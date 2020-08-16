@@ -27,3 +27,25 @@ The web browser corresponding to ES6 is required. Please view by the latest vers
 ### Change mode of the microscope
 
 Switch open Nicol and crossed Nicols by a toggle button.
+
+## For development
+
+### Install packages
+
+```
+npm install
+```
+
+### Build
+
+Watch and live reloading
+
+```
+npm run watch
+```
+
+### Deployment flow
+
+1. Edit source code
+2. Update service worker version
+3. Build

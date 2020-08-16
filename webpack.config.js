@@ -9,10 +9,10 @@ module.exports = [{
         path: `${__dirname}/js`,
         filename: "app.js",
     },
-    mode: "production",
-    //mode: "development",
+    //mode: "production",
+    mode: "development",
 
-
+    devtool: 'cheap-module-eval-source-map',
 
     plugins: [
         new HtmlWebpackPlugin({

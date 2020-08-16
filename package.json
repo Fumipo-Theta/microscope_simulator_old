@@ -1,6 +1,6 @@
 {
     "name": "scopin",
-    "version": "1.5.13",
+    "version": "1.5.14",
     "description": "![SCOPin rock logo](./images/SCOPin_rock_logo.png)",
     "main": "/js/app.js",
     "directories": {
@@ -10,7 +10,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack",
-        "watch": "webpack --watch"
+        "watch": "webpack --watch",
+        "start": "webpack-dev-server"
     },
     "repository": {
         "type": "git",
@@ -30,7 +31,8 @@
         "preload-webpack-plugin": "^3.0.0-beta.3",
         "string-replace-loader": "^2.3.0",
         "webpack": "^4.32.2",
-        "webpack-cli": "^3.3.2"
+        "webpack-cli": "^3.3.2",
+        "webpack-dev-server": "^3.11.0"
     },
     "dependencies": {
         "kind-of": "^6.0.3",
