@@ -3,7 +3,7 @@ import getMaxViewerSize from "./getMaxViewerSize.js"
 
 export default function updateViewerGeometry(state) {
     return new Promise((res, rej) => {
-        const padding = 20 / px
+        const padding = 20 // px
         state.canvasWidth = getMaxViewerSize() - padding
         state.canvasHeight = getMaxViewerSize() - padding
 
