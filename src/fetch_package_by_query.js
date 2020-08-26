@@ -10,25 +10,8 @@ import register from "./register.js"
 import markDownloadedOption from "./markDownloadedOption.js"
 import updateView from "./updateView.js"
 
-/**
- * fetch lastmodified
- * fetch manifest
- * fetch sumbnail
- *
- * show sumbnail
- * show discription
- *
- * load images
- *  from db
- *  fetch
- *
- * store data
- */
-export default function rockNameSelectHandler(state) {
+export default function fetchPackageById(state, packageID) {
     return new Promise(async (res, rej) => {
-        const rock_selector = document.querySelector("#rock_selector")
-        const packageName = rock_selector.options[rock_selector.selectedIndex].value
-        location.hash = packageName
 
         state.canRotate = false;
         hideErrorMessage()
@@ -38,10 +21,10 @@ export default function rockNameSelectHandler(state) {
         showNicolButton()
 
         try {
-            const [response, isNewData, zipLoader] = await getPackageMetaData(state, packageName);
+            const [response, isNewData, zipLoader] = await getPackageMetaData(state, packageID);
             const manifest = JSON.parse(response.manifest);
 
-            const [new_state, new_response] = await updateStateByMeta(state)(packageName, manifest)
+            const [new_state, new_response] = await updateStateByMeta(state)(packageID, manifest)
                 .then(updateViewDiscription)
                 .then(updateImageSrc(response.thumbnail, "jpg"))
                 .then(updateView)
@@ -51,7 +34,7 @@ export default function rockNameSelectHandler(state) {
 
             updateImageSrc(new_response.zip, new_state.supportedImageType)(new_state)
                 .then(state => register(state, isNewData)(new_response))
-                .then(markDownloadedOption(packageName)(manifest))
+                .then(markDownloadedOption(packageID)(manifest))
                 .then(updateView)
                 .then(res)
         } catch (e) {

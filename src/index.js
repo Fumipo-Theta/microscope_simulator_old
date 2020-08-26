@@ -18,7 +18,7 @@ import connectDatabase from "./connectDatabase.js"
 import getStoredDBEntryKeys from "./getStoredDBEntryKeys.js"
 import loadSampleListFromRemote from "./loadSampleListFromRemote.js"
 import { hideLoadingMessage } from "./loading_indicator_handler.js"
-
+import fetchPackageById from "./fetch_package_by_query.js"
 
 deleteOldVersionDatabase()
 
@@ -49,6 +49,11 @@ function notifyIncompatibleEnv() {
     warnningCard.classList.remove("inactive")
 }
 
+const get_package_id = () => {
+    const hash = location.hash.slice(1)
+    return hash === "" ? undefined : hash
+}
+
 /**
     *
     * Entry point function !
@@ -56,7 +61,7 @@ function notifyIncompatibleEnv() {
 function init(state) {
     // Check ES6 availability
     // Set window event listener
-    // 
+    //
     if (!es6Available) {
         notifyIncompatibleEnv()
         return
@@ -85,6 +90,15 @@ function init(state) {
         .then(connectDatabase)
         .then(getStoredDBEntryKeys)
         .then(loadSampleListFromRemote)
+        .then(state => {
+            const packageID = get_package_id()
+            if (packageID) {
+                console.log(packageID)
+                return fetchPackageById(state, packageID)
+            } else {
+                return state
+            }
+        })
         .then(hideLoadingMessage)
         .catch(e => {
             console.error(e)
@@ -97,6 +111,7 @@ function init(state) {
     setCanvasEventHandlers(state)
     setLanguageSelectEventHandlers(state)
     setContactFormEventHandlers(state)
+
 }
 
 window.addEventListener(

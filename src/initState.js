@@ -1,7 +1,9 @@
 import getMaxViewerSize from "./getMaxViewerSize.js"
 import selectLanguageCode from "./selectLanguageCode.js"
 
+
 export default function initState() {
+
     return {
         "containorID": "",
         "imageNumber": 1,
