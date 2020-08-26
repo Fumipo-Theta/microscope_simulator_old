@@ -1,10 +1,11 @@
 import { viewer, viewer_ctx } from "./viewer_canvas.js"
-import getMinimumWindowSize from "./getMinimumWindowSize.js"
+import getMaxViewerSize from "./getMaxViewerSize.js"
 
-export default function windowResizeHandler(state) {
+export default function updateViewerGeometry(state) {
     return new Promise((res, rej) => {
-        state.canvasWidth = getMinimumWindowSize() - 20
-        state.canvasHeight = getMinimumWindowSize() - 20
+        const padding = 20 // px
+        state.canvasWidth = getMaxViewerSize() - padding
+        state.canvasHeight = getMaxViewerSize() - padding
 
         viewer.width = state.canvasWidth
         viewer.height = state.canvasHeight

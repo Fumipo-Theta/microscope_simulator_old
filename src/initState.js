@@ -1,15 +1,17 @@
-import getMinimumWindowSize from "./getMinimumWindowSize.js"
+import getMaxViewerSize from "./getMaxViewerSize.js"
 import selectLanguageCode from "./selectLanguageCode.js"
 
+
 export default function initState() {
+
     return {
         "containorID": "",
         "imageNumber": 1,
-        "canvasWidth": getMinimumWindowSize() <= 500
-            ? getMinimumWindowSize()
+        "canvasWidth": getMaxViewerSize() <= 500
+            ? getMaxViewerSize()
             : 500,
-        "canvasHeight": getMinimumWindowSize() <= 500
-            ? getMinimumWindowSize()
+        "canvasHeight": getMaxViewerSize() <= 500
+            ? getMaxViewerSize()
             : 500,
         "imageRadius": 0,
         "open_image_srcs": [],
