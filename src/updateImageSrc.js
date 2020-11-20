@@ -8,16 +8,16 @@ function selectImageInContainor(containor, prefix) {
     return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12NgYAAAAAMAASDVlMcAAAAASUVORK5CYII="
 }
 
-export default function updateImageSrc(imagesMap, type) {
+export default function updateImageSrc(imagesMap, ext) {
     return (state) => new Promise(async (res, rej) => {
 
         Promise.all([
             Promise.all(Array(state.image_number - 1).fill(0)
-                .map((_, i) => selectImageInContainor(imagesMap, `o${i + 1}.${type}`))
+                .map((_, i) => selectImageInContainor(imagesMap, `o${i + 1}.${ext}`))
                 .map(loadImageSrc)
             ),
             Promise.all(Array(state.image_number - 1).fill(0)
-                .map((_, i) => selectImageInContainor(imagesMap, `c${i + 1}.${type}`))
+                .map((_, i) => selectImageInContainor(imagesMap, `c${i + 1}.${ext}`))
                 .map(loadImageSrc)
             )
         ]).then(imgDOMs => {
