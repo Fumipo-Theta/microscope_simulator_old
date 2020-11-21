@@ -1,10 +1,10 @@
-class PackageManifest {
+export default class PackageManifest {
     constructor() {
         this.packageID = null
         this.listName = {}
         this.location = {}
         this.rockType = {}
-        this.discription = {}
+        this.description = {}
         this.geoSystem = ""
         this.geoPosition = [null, null]
         this.rotateCenter = [undefined, undefined]
@@ -29,7 +29,7 @@ class PackageManifest {
             "rotate_by_degree": this.getEachRotateDegree(),
             "rock_type": this.getRockType(),
             "owner": this.getOwner(),
-            "discription": this.getDiscription()
+            "description": this.getDescription()
         }
     }
 
@@ -191,12 +191,12 @@ class PackageManifest {
         return this.owner
     }
 
-    setDiscription(lang, disc) {
-        this.discription[lang] = disc
+    setDescription(lang, disc) {
+        this.description[lang] = disc
         return this
     }
 
-    getDiscription() {
-        return this.discription
+    getDescription() {
+        return this.description
     }
 }

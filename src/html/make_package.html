@@ -354,7 +354,7 @@
                     <div class="language ja">
                         <input class="input_sample_title" type="text" data-lang="ja" placeholder="サンプルタイトル">
                         <input class="input_sample_type" type="text" data-lang="ja" placeholder="岩石名・鉱物名">
-                        <textarea name="" class="input input_discription" cols="" rows="10" data-lang="ja"
+                        <textarea name="" class="input input_description" cols="" rows="10" data-lang="ja"
                             placeholder="サンプルの説明"></textarea>
                     </div>
 
@@ -362,8 +362,8 @@
                         <input class="input_sample_title" type="text" data-lang="en" placeholder="Sample title">
                         <input class="input_sample_type" type="text" data-lang="en"
                             placeholder="Rock name or mineral name">
-                        <textarea name="" class="input input_discription" cols="" rows="10" data-lang="en"
-                            placeholder="Discription for the sample"></textarea>
+                        <textarea name="" class="input input_description" cols="" rows="10" data-lang="en"
+                            placeholder="Description for the sample"></textarea>
                     </div>
                 </div>
             </form>
@@ -371,8 +371,8 @@
 
         <div id="viewer">
             <div>
-                <input type="number" id="rotate_center_from_left" placeholder="Rotation center from left (px)">
-                <input type="number" id="rotate_center_from_top" placeholder="Rotation center from top (px)">
+                <input type="number" step="1" id="rotate_center_from_left" placeholder="Rotation center from left (px)">
+                <input type="number" step="1" id="rotate_center_from_top" placeholder="Rotation center from top (px)">
             </div>
             <div id='viewer_wrapper' class="inactive align-center column-direction">
                 <div id='viewer-containor' class='align-center'>
@@ -385,16 +385,9 @@
                 </div>
             </div>
 
-
-
             <div id="low-navigation" class="space-around margin-between inactive">
-
                 <input id="change_nicol" type="checkbox" checked />
                 <label for="change_nicol" data-on-label="Open" data-off-label="Cross"></label>
-
-                <input id="change_validation" type="checkbox" checked />
-                <label for="change_validation" data-on-label="Validate" data-off-label="Preview"></label>
-
             </div>
 
             <div id="view_discription" class="align-center column-direction">
@@ -415,12 +408,9 @@
 
     <div class="image_containor"></div>
     <canvas class="inactive" id="working_canvas"></canvas>
-    <script src="./js/webp.js"></script>
-    <script src="./js/openjpeg.js"></script>
-    <script src="./js/app.js"></script>
-    <script src="./js/package_manifest.js"></script>
+    <script src="./js/zip.js"></script>
     <script src="./js/jszip.min.js"></script>
-    <script src="./js/uploader.js"></script>
+    <script src="./js/app_make_package.js"></script>
 </body>
 
 </html>

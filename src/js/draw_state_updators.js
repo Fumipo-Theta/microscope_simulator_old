@@ -25,7 +25,7 @@ export function blobToCanvas(state) {
     const alpha = state.getAlpha(state.rotate)
 
     viewer_ctx.rotate(
-        rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate) * 15) / 180 * Math.PI
+        rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate) * state.rotate_degree_step) / 180 * Math.PI
     )
 
     viewer_ctx.globalAlpha = 1
@@ -53,11 +53,11 @@ export function blobToCanvas(state) {
     viewer_ctx.clip()
 
     viewer_ctx.rotate(
-        rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate + 15) * 15) / 180 * Math.PI
+        rotateSign(state.isClockwise) * (state.rotate + state.getImageNumber(state.rotate + state.rotate_degree_step) * state.rotate_degree_step) / 180 * Math.PI
     )
 
     viewer_ctx.globalAlpha = 1 - alpha
-    const image2 = image_srcs[state.getImageNumber(state.rotate + 15)]
+    const image2 = image_srcs[state.getImageNumber(state.rotate + state.rotate_degree_step)]
     try {
         viewer_ctx.drawImage(
             image2,

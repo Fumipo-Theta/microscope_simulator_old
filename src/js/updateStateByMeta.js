@@ -25,49 +25,48 @@ function getImageRadius(meta) {
     )
 }
 
+function mapMetadata(meta) {
+    const rotate_degree_step = parseInt(meta.rotate_by_degree)
+
+    return {
+        isClockwise: meta.rotate_clockwise,
+        location: meta.location,
+        rockType: meta.rock_type,
+        owner: meta.owner,
+        description: meta.hasOwnProperty("discription")
+            ? meta.discription
+            : meta.hasOwnProperty("description")
+                ? meta.description
+                : {},
+        rotate_center: getRotationCenter(meta),
+        imageWidth: meta.image_width,
+        imageHeight: meta.image_height,
+        imageRadius: getImageRadius(meta),
+        imageRadiusOriginal: getImageRadius(meta),
+        scaleWidth: meta.hasOwnProperty("scale-pixel")
+            ? parseInt(meta["scale-pixel"])
+            : false,
+        scaleText: meta.hasOwnProperty("scale-unit")
+            ? meta["scale-unit"]
+            : false,
+        rotate_degree_step: rotate_degree_step,
+    }
+}
+
 export default function updateStateByMeta(state) {
     return (containorID, meta) => new Promise((res, rej) => {
 
         state.containorID = sanitizeID(containorID);
-        state.isClockwise = meta.rotate_clockwise
-        state.location = (meta.hasOwnProperty("location"))
-            ? meta.location
-            : "Unknown"
-        state.rockType = (meta.hasOwnProperty("rock_type"))
-            ? meta.rock_type
-            : "Unknown"
-        state.owner = (meta.hasOwnProperty("owner"))
-            ? meta.owner
-            : "Unknown"
-        state.discription = (meta.hasOwnProperty("discription"))
-            ? meta.discription
-            : "No discription. "
-        state.rotate_center = getRotationCenter(meta)
 
-        state.imageWidth = meta.image_width;
-        state.imageHeight = meta.image_height;
-
-
-
-        state.imageRadius = getImageRadius(meta)
-        state.imageRadiusOriginal = getImageRadius(meta)
-        state.scaleWidth = (meta.hasOwnProperty("scale-pixel"))
-            ? parseInt(meta["scale-pixel"])
-            : false
-        state.scaleText = (meta.hasOwnProperty("scale-unit"))
-            ? meta["scale-unit"]
-            : false
-
-
-        const rotate_degree_step = meta.rotate_by_degree
+        const rotate_degree_step = parseInt(meta.rotate_by_degree)
         const cycle_degree = meta.hasOwnProperty("cycle_rotate_degree")
             ? parseInt(meta.cycle_rotate_degree)
             : 90;
         const image_number = cycle_degree / rotate_degree_step + 1
-        state.image_number = image_number
         const mirror_at = (image_number - 1)
         const total_step = (image_number - 1) * 2
 
+        state.image_number = image_number
         state.getImageNumber = cycle_degree > 0
             ? degree => cycleBy(image_number - 1)(
                 stepBy(rotate_degree_step)(state.isClockwise ? 360 - degree : degree)
@@ -89,6 +88,8 @@ export default function updateStateByMeta(state) {
         state.cross_images = []
 
         state.rotate = 0;
+
+        state = Object.assign(state, mapMetadata(meta))
 
         res(state)
     })

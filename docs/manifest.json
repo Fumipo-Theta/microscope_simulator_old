@@ -1,5 +1,8 @@
 {
-    "location": "String of sample locality",
+    "location": {
+        "ja": "String",
+        "en": "String"
+    },
     "geographic-coordinate": {
         "system": "String of coordinate system (latitude-longitude)",
         "position": {
@@ -20,13 +23,16 @@
     "rotate_clockwise": "true if rotation direction of pictures is clockwise, else false",
     "rotate_by_degree": "Number of difference of rotation degrees between asjusent pictures",
     "rock_type": {
-        "ja": "String of rock name in Japanese",
-        "en": "String of rock name in English"
+        "ja": "String of rock/mineral name in Japanese",
+        "en": "String of rock/mineral name in English"
     },
-    "owner": "String of owner of the sample",
-    "discription": {
+    "owner": {
+        "ja": "String",
+        "en": "String"
+    },
+    "description": {
         "ja": "String of discriotion in Japanese",
         "en": "String of discription in English"
     },
-    "image_format_only": "(String, optional {jpg | webp | jp2 | png}) image format to be shown."
+    "image_format_only": "(String, optional {jpg | webp | jp2}) image format to be shown."
 }
