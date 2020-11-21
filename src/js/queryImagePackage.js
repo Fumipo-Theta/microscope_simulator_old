@@ -1,4 +1,4 @@
-import { staticSettings } from "./global_objects.js"
+import { staticSettings } from "./config.js"
 import sanitizeID from "./sanitizeID.js"
 import { blobToBase64 } from "./data_translaters.js"
 import unzipper from "./unzipper.js"
@@ -11,7 +11,7 @@ import extractFile from "./extractFile.js"
  */
 async function queryLastModified(url) {
     try {
-        const header = await fetch(url, { method: 'HEAD' }).catch(e => {
+        const header = await fetch(url, { method: 'HEAD', mode: 'cors' }).catch(e => {
             console.log("Package metadata cannot be fetched.")
             throw Error(e)
         })
@@ -48,7 +48,7 @@ class AdhocPackageRepo {
         const manifestUrl = staticSettings.getImageDataPath(packageId) + "manifest.json";
         const open_thumbnailUrl = staticSettings.getImageDataPath(packageId) + "o1.jpg";
         const cross_thumbnailUrl = staticSettings.getImageDataPath(packageId) + "c1.jpg";
-        const manifestText = await fetch(manifestUrl).then(response => response.text())
+        const manifestText = await fetch(manifestUrl, { mode: 'cors' }).then(response => response.text())
         const manifest = JSON.parse(manifestText);
 
         const [zipUrl, format] = this.resolveImagePackage(packageId, manifest)
@@ -58,10 +58,10 @@ class AdhocPackageRepo {
         const response = {
             manifest: manifestText,
             thumbnail: {
-                "o1.jpg": await fetch(open_thumbnailUrl)
+                "o1.jpg": await fetch(open_thumbnailUrl, { mode: 'cors' })
                     .then(response => response.blob())
                     .then(blobToBase64),
-                "c1.jpg": await fetch(cross_thumbnailUrl)
+                "c1.jpg": await fetch(cross_thumbnailUrl, { mode: 'cors' })
                     .then(response => response.blob())
                     .then(blobToBase64)
             },

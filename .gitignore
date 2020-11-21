@@ -3,5 +3,6 @@ node_modules/
 data/
 data-min/
 data-packages/
+image_package_s3_root/
 zipped/
 zipped-min/
