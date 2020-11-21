@@ -1,4 +1,4 @@
-import { staticSettings } from "./config.js"
+import { staticSettings } from "./config/config.js"
 import sanitizeID from "./sanitizeID.js"
 import { blobToBase64 } from "./data_translaters.js"
 import unzipper from "./unzipper.js"

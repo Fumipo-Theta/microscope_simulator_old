@@ -1,6 +1,6 @@
 import clipGeometoryFromImageCenter from "./clipGeometryFromImageCenter.js"
 import { viewer_ctx } from "./viewer_canvas.js"
-import { VIEW_PADDING } from "./config.js"
+import { VIEW_PADDING } from "./config/config.js"
 import { rotateSign } from "./rotation_degree_handlers.js"
 
 export function clearView(state) {

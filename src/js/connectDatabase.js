@@ -1,4 +1,4 @@
-import { staticSettings } from "./config.js"
+import { staticSettings } from "./config/config.js"
 import DatabaseHandler from "./DatabaseHandler.js"
 import DummyDatabaseHandler from "./DummyDatabaseHandler.js"
 

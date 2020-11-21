@@ -1,4 +1,4 @@
-import { staticSettings } from "./config.js"
+import { staticSettings } from "./config/config.js"
 import { showErrorMessage } from "./error_indicator_handler.js"
 import showSampleList from "./showSampleList.js"
 
