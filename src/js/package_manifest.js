@@ -31,6 +31,7 @@ export default class PackageManifest {
             "rock_type": this.getRockType(),
             "owner": this.getOwner(),
             "description": this.getDescription(),
+            "sample_label": this.getSampleLabel(),
             "image_formats": this.getImageFormats()
         }
     }
@@ -48,7 +49,7 @@ export default class PackageManifest {
     }
 
     getPackageID() {
-        return this.packageID.replace(/\//g, "_").replace(/\./g, "")
+        return this.packageID || ""
     }
 
     setListName(lang, s) {
@@ -112,6 +113,14 @@ export default class PackageManifest {
         return this.scalePixel
     }
 
+    setSampleLabel(s) {
+        this.sampleLabel = s
+    }
+
+    getSampleLabel() {
+        return this.setSampleLabel
+    }
+
     setImageSize(img) {
         this.imageSize = {
             "width": img.width,
@@ -128,8 +137,8 @@ export default class PackageManifest {
         return this.imageSize.height
     }
 
-    setRotateCenter(fromleft, fromtop) {
-        this.rotateCenter = [fromleft, fromtop]
+    setRotateCenter(fromLeft, fromTop) {
+        this.rotateCenter = [fromLeft, fromTop]
         return this
     }
 

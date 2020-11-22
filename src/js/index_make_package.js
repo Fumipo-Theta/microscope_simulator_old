@@ -17,20 +17,10 @@ const upload_state = Object.assign(
         "autoRotate": false,
         "viewMode": "validation",
         "language": "ja",
+        "desiredImageSize": 150,
+        "desiredThumbnailImageSize": 100,
     }
 )
-
-const mock_meta = {
-    "scale-unit": "1mm",
-    "scale-pixel": 305,
-    "image_width": 1280,
-    "image_height": 1280,
-    "rotate_center": [
-    ],
-    "cycle_rotate_degree": 180,
-    "rotate_clockwise": true,
-    "rotate_by_degree": 15,
-}
 
 function bothImagesLoaded(flags) {
     return flags.reduce((acc, e) => acc && e, true)
@@ -143,7 +133,7 @@ function base64ToBlob(base64, mime) {
     });
 }
 
-function compressImageSrc(src, format, desiredByte = 125000) {
+function compressImageSrc(src, format, desiredKByte = 150) {
     console.assert(["jpeg", "webp"].includes(format))
 
     const image = new Image()
@@ -161,8 +151,8 @@ function compressImageSrc(src, format, desiredByte = 125000) {
 
     const originalBlob = base64ToBlob(originalBinary.split(",")[1], mime);
 
-    if (desiredByte < originalBlob["size"]) {
-        const capacityRatio = desiredByte / originalBlob["size"];
+    if (desiredKByte * 1e3 < originalBlob["size"]) {
+        const capacityRatio = desiredKByte * 1e3 / originalBlob["size"];
         const processingBinary = cvs.toDataURL(`image/${format}`, capacityRatio); //画質落としてバイナリ化
         return base64ToBlob(processingBinary.split(",")[1], mime);
     } else {
@@ -170,10 +160,39 @@ function compressImageSrc(src, format, desiredByte = 125000) {
     }
 }
 
+function showErrorMessage(domId, message) {
+    const messageDom = document.querySelector(domId)
+    messageDom.innerHTML = message
+    messageDom.classList.remove("inactive")
+}
 
-function send_sample_list_entry(json_obj) {
+function hideErrorMessage(domId) {
+    const messageDom = document.querySelector(domId)
+    messageDom.classList.add("inactive")
+}
+
+
+function sendSampleListEntry(json_obj) {
+    if (json_obj["package-name"].match(new RegExp("^[0-9a-zA-Z_-]+$")) === null) {
+        throw new Error("Package ID should contain only number, alphabet, _, and -.")
+    }
+    if (Object.keys(json_obj["list-name"]).length === 0) {
+        throw new Error("Sample title is not set.")
+    }
     document.querySelector("#dev_sample_list_entry").innerHTML = JSON.stringify(json_obj, null, 2)
 };
+
+function initializeOrUpdateInput(inputDom, value) {
+    if (!inputDom.value) {
+        inputDom.value = value
+    }
+}
+
+function showPackageSize(state) {
+    // Sum open and cross images (contains thumbnail)
+    const imagesSize = (state.open_image_srcs.length * state.desiredImageSize + state.desiredThumbnailImageSize) * 2
+    document.querySelector("#message_package_size").innerHTML = imagesSize
+}
 
 (function (state) {
     document.querySelector("#input_package_id").addEventListener(
@@ -184,15 +203,64 @@ function send_sample_list_entry(json_obj) {
         false
     )
 
+    document.querySelector("#input_desired_image_size").addEventListener(
+        "change",
+        e => {
+            state.desiredImageSize = parseFloat(e.target.value)
+            showPackageSize(state)
+        },
+        false
+    )
+
+    document.querySelector("#input_desired_thumbnail_image_size").addEventListener(
+        "change",
+        e => {
+            state.desiredThumbnailImageSize = parseFloat(e.target.value)
+            showPackageSize(state)
+        },
+        false
+    )
+
+    const centerToRight = document.querySelector("#rotate_center_from_left")
+    centerToRight.addEventListener(
+        "change",
+        e => {
+            state.rotate_center.to_right = parseFloat(centerToRight.value)
+            updateView(state)
+        },
+        false
+    )
+    const centerToBottom = document.querySelector("#rotate_center_from_top")
+    centerToBottom.addEventListener(
+        "change",
+        e => {
+            state.rotate_center.to_bottom = parseFloat(centerToBottom.value)
+            updateView(state)
+        },
+        false
+    )
+
     document.querySelector("#open_nicol_images").addEventListener(
         "change",
-        openImagesSelectHandler(state),
+        e => {
+            openImagesSelectHandler(state)(e).then(state => {
+                initializeOrUpdateInput(centerToRight, state.open_images[0].width / 2)
+                initializeOrUpdateInput(centerToBottom, state.open_images[0].height / 2)
+                showPackageSize(state)
+            })
+        },
         false
     )
 
     document.querySelector("#cross_nicol_images").addEventListener(
         "change",
-        crossImagesSelectHandler(state),
+        e => {
+            crossImagesSelectHandler(state)(e).then(state => {
+                initializeOrUpdateInput(centerToRight, state.cross_images[0].width / 2)
+                initializeOrUpdateInput(centerToBottom, state.cross_images[0].height / 2)
+                showPackageSize(state)
+            })
+        },
         false
     )
 
@@ -243,16 +311,17 @@ function send_sample_list_entry(json_obj) {
         false
     )
 
-    const inputSampleLocation = document.querySelector("#input_sample_location")
-    inputSampleLocation.addEventListener(
-        "change",
-        e => {
-            packageMap.setSampleLocation(e.target.dataset.lang, e.target.value)
-        }
-    )
+    Array.from(document.querySelectorAll(".input_sample_location")).forEach(dom => {
+        dom.addEventListener(
+            "change",
+            e => {
+                packageMap.setSampleLocation(e.target.dataset.lang, e.target.value)
+            },
+            false
+        )
+    })
 
-    const inputSampleType = document.querySelectorAll(".input_sample_type")
-    Array.from(inputSampleType).forEach(dom => {
+    Array.from(document.querySelectorAll(".input_sample_type")).forEach(dom => {
         dom.addEventListener(
             "change",
             e => {
@@ -262,8 +331,7 @@ function send_sample_list_entry(json_obj) {
         )
     })
 
-    const inputDescription = document.querySelectorAll(".input_description")
-    Array.from(inputDescription).forEach(dom => {
+    Array.from(document.querySelectorAll(".input_description")).forEach(dom => {
         dom.addEventListener(
             "change",
             e => {
@@ -278,11 +346,21 @@ function send_sample_list_entry(json_obj) {
             dom.addEventListener(
                 "change",
                 e => {
-                    packageMap.setListName(e.target.value, e.target.dataset.lang)
+                    packageMap.setListName(e.target.dataset.lang, e.target.value)
 
                 }
             )
         })
+
+    Array.from(document.querySelectorAll(".input_owner")).forEach(dom => {
+        dom.addEventListener(
+            "change",
+            e => {
+                packageMap.setOwner(e.target.dataset.lang, e.target.value)
+            },
+            false
+        )
+    })
 
     const toggleNicolButton = document.querySelector("#change_nicol")
     const toggleNicolLabel = document.querySelector("#change_nicol + label")
@@ -294,15 +372,6 @@ function send_sample_list_entry(json_obj) {
 
         res(state)
     })
-
-    document.querySelector("#input_owner").addEventListener(
-        "change",
-        e => {
-            packageMap.setOwner(e.target.value)
-        },
-        false
-    )
-
 
     toggleNicolButton.addEventListener(
         "click",
@@ -340,26 +409,6 @@ function send_sample_list_entry(json_obj) {
                     e.preventDefault();
                 }
             }),
-        false
-    )
-
-
-    const centerToRight = document.querySelector("#rotate_center_from_left")
-    centerToRight.addEventListener(
-        "change",
-        e => {
-            state.rotate_center.to_right = parseFloat(centerToRight.value)
-            updateView(state)
-        },
-        false
-    )
-    const centerToBottom = document.querySelector("#rotate_center_from_top")
-    centerToBottom.addEventListener(
-        "change",
-        e => {
-            state.rotate_center.to_bottom = parseFloat(centerToBottom.value)
-            updateView(state)
-        },
         false
     )
 
@@ -449,45 +498,57 @@ function send_sample_list_entry(json_obj) {
 
     document.querySelector("#create_package_button").addEventListener(
         "click",
-        async e => {
+        e => {
+            e.preventDefault()
+            async function makeZip() {
+                const listEntry = packageMap.getSampleListEntry()
+                sendSampleListEntry(listEntry)
 
-            const meta = new Blob([JSON.stringify(packageMap.toJSON(), null, 2)], { "type": "text/json" });
-            const zip = new JSZip();
-            const jpgZip = new JSZip()
-            const webpZip = new JSZip()
+                const zip = new JSZip();
+                const jpgZip = new JSZip()
+                const webpZip = new JSZip()
 
-            zip.file("manifest.json", meta)
-            zip.file("o1.jpg", compressImageSrc(state.open_image_srcs[0], "jpeg", 50000))
-            zip.file("c1.jpg", compressImageSrc(state.cross_image_srcs[0], "jpeg", 50000))
+                if (state.open_image_srcs.length === 0) {
+                    throw new Error("No open Nicol images are selected.")
+                }
+                if (state.cross_image_srcs.length === 0) {
+                    throw new Error("No crossed Nicol images are selected.")
+                }
 
-            state.open_image_srcs.forEach((src, i) => {
-                webpZip.file(`o${i + 1}.webp`, compressImageSrc(src, "webp"))
-                jpgZip.file(`o${i + 1}.jpg`, compressImageSrc(src, "jpeg"))
-            })
+                // Thumbnails
+                zip.file("o1.jpg", compressImageSrc(state.open_image_srcs[0], "jpeg", state.desiredThumbnailImageSize))
+                zip.file("c1.jpg", compressImageSrc(state.cross_image_srcs[0], "jpeg", state.desiredThumbnailImageSize))
 
-            state.cross_image_srcs.forEach((src, i) => {
-                webpZip.file(`c${i + 1}.webp`, compressImageSrc(src, "webp"))
-                jpgZip.file(`c${i + 1}.jpg`, compressImageSrc(src, "jpeg"))
-            })
-
-
-            send_sample_list_entry(packageMap.getSampleListEntry())
-
-            Promise.all([
-                webpZip.generateAsync({ type: "blob" }),
-                jpgZip.generateAsync({ type: "blob" })
-            ])
-                .then(([webp, jpg]) => {
-                    zip.file("webp.zip", webp)
-                    zip.file("jpg.zip", jpg)
-                    return zip.generateAsync({ type: "blob" })
+                // Image sets
+                packageMap.setImageFormats(["webp", "jpg"])
+                state.open_image_srcs.forEach((src, i) => {
+                    webpZip.file(`o${i + 1}.webp`, compressImageSrc(src, "webp", state.desiredImageSize))
+                    jpgZip.file(`o${i + 1}.jpg`, compressImageSrc(src, "jpeg", state.desiredImageSize))
                 })
-                .then(function (content) {
-                    const a = document.querySelector("#working_anchor")
-                    a.download = `${packageMap.getPackageID()}.zip`
-                    a.href = window.URL.createObjectURL(content)
-                    a.click()
-                });
+                state.cross_image_srcs.forEach((src, i) => {
+                    webpZip.file(`c${i + 1}.webp`, compressImageSrc(src, "webp", state.desiredImageSize))
+                    jpgZip.file(`c${i + 1}.jpg`, compressImageSrc(src, "jpeg", state.desiredImageSize))
+                })
+
+                const meta = new Blob([JSON.stringify(packageMap.toJSON(), null, 2)], { "type": "text/json" });
+                zip.file("manifest.json", meta)
+                zip.file("webp.zip", await webpZip.generateAsync({ type: "blob" }))
+                zip.file("jpg.zip", await jpgZip.generateAsync({ type: "blob" }))
+                const zipContent = await zip.generateAsync({ type: "blob" })
+
+                const a = document.querySelector("#working_anchor")
+                a.download = `${packageMap.getPackageID()}.zip`
+                a.href = window.URL.createObjectURL(zipContent)
+                a.click()
+
+            }
+            makeZip()
+                .then(() => {
+                    hideErrorMessage("#error_make_package")
+                })
+                .catch(e => {
+                    showErrorMessage("#error_make_package", e)
+                })
         },
         false
     )

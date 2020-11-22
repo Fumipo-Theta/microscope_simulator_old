@@ -39,7 +39,6 @@ input[type=file]+.file-parts {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 700px;
 }
 
 #wrapper form>div {
@@ -48,7 +47,6 @@ input[type=file]+.file-parts {
 
 #wrapper div {
     width: 100%;
-    padding: 5px;
 }
 
 .button-wrapper {
@@ -57,4 +55,13 @@ input[type=file]+.file-parts {
 
 .select-wrapper {
     padding: 0;
+}
+
+.inactive {
+    display: none;
+}
+
+.error_message {
+    color: red;
+    background-color: #ffb4b8;
 }

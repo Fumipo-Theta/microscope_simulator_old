@@ -294,11 +294,9 @@
             <form>
                 <div class="space-between">
                     <div>
-                        <div class="column-direction">
-                            <span>
-                                Input package name
-                            </span>
-                            <input id="input_package_id" type="text" placeholder="Package ID" required>
+                        <div>
+                            <input id="input_package_id" type="text" placeholder="Package ID" pattern="^[0-9a-zA-Z_-]+$"
+                                required>
                         </div>
 
                         <div>
@@ -311,10 +309,30 @@
                                 <option value="unti-clockwise">Rotate unti-clockwise</option>
                             </select>
                         </div>
+
+                        <div>
+                            <p>Desired image size (KB/image)</p>
+                        </div>
+                        <div class="space-between">
+                            <input id="input_desired_image_size" type="number" value="150"
+                                placeholder="Desired image size (KB/image)" required>
+                        </div>
+                        <div>
+                            <p>Desired thumbnail image size (KB/image)</p>
+                        </div>
+                        <div class="space-between">
+                            <input id="input_desired_thumbnail_image_size" type="number" value="100"
+                                placeholder="Desired thumbnail image size (KB/image)" required>
+                        </div>
+                        <div>
+                            <p class="info">Total transfer data size would be <span id="message_package_size"></span>
+                                KB.</p>
+                        </div>
                     </div>
 
                     <div>
-                        <div id="select_image_wrapper" class="inactive space-around column-direction">Select image files
+                        <div id="select_image_wrapper" class="inactive space-around column-direction">
+                            Select image files
                             <div>
                                 <label>
                                     <input id="open_nicol_images" type="file" accept="image/*" multiple>
@@ -332,22 +350,12 @@
                     </div>
                 </div>
 
-
-
-                <div class="space-around">
-                    <input id="input_scale_unit" type="text" placeholder="Label of scale (ex. 1mm)">
-                    <input id="input_scale_length" type="number" placeholder="Scale length (px)">
-                    <input id="input_magnification" type="number" placeholder="Magnification of the view">
+                <div>
+                    <p>Sample Description</p>
                 </div>
-
-                <div class="space-around">
-                    <input class="input_sample_label" type="text" data-lang="en"
-                        placeholder="Sample label (for your management)">
-                </div>
-
                 <div class="space-between">
                     <div class="language ja">
-                        <input class="input_sample_title" type="text" data-lang="ja" placeholder="サンプルタイトル" required>
+                        <input class="input_sample_title" type="text" data-lang="ja" placeholder="サンプルのリスト表示名" required>
                         <input class="input_sample_location" type="text" data-lang="ja" placeholder="採取地">
                         <input class="input_owner" type="text" data-lang="ja" placeholder="所有者">
                         <input class="input_sample_type" type="text" data-lang="ja" placeholder="岩石名・鉱物名">
@@ -356,8 +364,8 @@
                     </div>
 
                     <div class="language en">
-                        <input class="input_sample_title" type="text" data-lang="en" placeholder="Sample title"
-                            required>
+                        <input class="input_sample_title" type="text" data-lang="en"
+                            placeholder="Sample title (shown in list)" required>
                         <input class="input_sample_location" type="text" data-lang="en" placeholder="Sample location">
                         <input class="input_owner" type="text" data-lang="en" placeholder="Owner of the sample">
                         <input class="input_sample_type" type="text" data-lang="en"
@@ -366,11 +374,30 @@
                             placeholder="Description for the sample"></textarea>
                     </div>
                 </div>
+
+                <div>
+                    <p>Scale information</p>
+                </div>
+                <div class="space-around">
+                    <input id="input_scale_unit" type="text" placeholder="Label of scale (ex. 1mm)">
+                    <input id="input_scale_length" type="number" placeholder="Scale length (px)">
+                </div>
+
+                <div>
+                    <p>For your management</p>
+                </div>
+                <div class="space-around">
+                    <input id="input_magnification" type="number" placeholder="Magnification of the view">
+                    <input class="input_sample_label" type="text" data-lang="en" placeholder="Sample label">
+                </div>
             </form>
         </div>
 
         <div id="viewer">
             <div>
+                <p>Adjust rotation center</p>
+            </div>
+            <div class="space-between">
                 <input type="number" step="1" id="rotate_center_from_left" placeholder="Rotation center from left (px)">
                 <input type="number" step="1" id="rotate_center_from_top" placeholder="Rotation center from top (px)">
             </div>
@@ -396,6 +423,8 @@
             <div class="button-wrapper">
                 <button id="create_package_button" class="button">Create package</button>
             </div>
+            <div id="error_make_package" class="error_message inactive">
+            </div>
             <a id="working_anchor" class="inactive"></a>
 
             <div>
@@ -404,8 +433,6 @@
             </div>
             <textarea class="input" name="" id="dev_sample_list_entry" cols="" rows="10"
                 placeholder="Sample list entry"></textarea>
-
-
         </div>
     </div>
 
