@@ -1,0 +1,24 @@
+version: 2.1 # CircleCI 2.1 を使用します
+jobs: # 一連のステップ
+  build: # ワークフローを使用しない実行では、エントリポイントとして `build` ジョブが必要です
+    working_directory: ~/mern-starter # ステップが実行されるディレクトリ
+    docker: # Docker でステップを実行します
+      - image: circleci/node:12.22.0 # このイメージをすべての `steps` が実行されるプライマリ コンテナとして使用します
+    steps: # 実行可能コマンドの集合
+      - checkout # ソース コードを作業ディレクトリにチェックアウトする特別なステップ
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache: # 依存関係キャッシュを復元する特別なステップ
+          # 依存関係キャッシュについては https://circleci.com/ja/docs/2.0/caching/ をお読みください
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - save_cache: # 依存関係キャッシュを保存する特別なステップ
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: build
+          command: NODE_ENV=production npm run build
