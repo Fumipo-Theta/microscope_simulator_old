@@ -21,6 +21,7 @@ jobs:
   deploy-to-dev:
     executor: aws-cli/default
     steps:
+      - aws-cli/setup
       - attach_workspace:
           at: .
       - run: ls ./release
