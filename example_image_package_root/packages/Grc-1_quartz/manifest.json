@@ -1,0 +1,44 @@
+{
+  "package-id": "Grc-1_quartz",
+  "list-name": {
+    "ja": "花崗岩中の波動消光を示す石英",
+    "en": "Quartz showing wavy extinction in granite"
+  },
+  "location": {
+    "en": ""
+  },
+  "geographic-coordinate": {
+    "system": "",
+    "position": {
+      "latitude": null,
+      "longitude": null
+    }
+  },
+  "magnify": "20",
+  "scale-unit": "1mm",
+  "sample_label": "Grc-1",
+  "scale-pixel": "305",
+  "image_width": 1280,
+  "image_height": 1280,
+  "rotate_center": [
+    630.1870811557079,
+    637.8169820377027
+  ],
+  "cycle_rotate_degree": 90,
+  "rotate_clockwise": true,
+  "rotate_by_degree": "15",
+  "rock_type": {
+    "ja": "花崗岩",
+    "en": "Granite"
+  },
+  "owner": "Dep. Science, U-Tokyo",
+  "description": {
+    "ja": "花崗岩中の波動消光を示す石英(視野中央). 石英の結晶構造がゆがんでいる場合, クロスニコルで粒子全体が同時に消光するのではなく, 視野の回転に合わせて消光部位が移動していくように見える波動消光を示す場合がある. ",
+    "en": "Quartz showing wavy extinction in granite (center of the field of view). When the crystal structure of quartz is distorted, it sometimes shows wavy extinction, in which the extinct area shifts with the rotation of the field of view, instead of quenching the whole particle at the same time in the crossed-nicols. "
+  },
+  "image_formats": [
+    "webp",
+    "jp2",
+    "jpg"
+  ]
+}

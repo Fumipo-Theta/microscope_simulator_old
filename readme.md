@@ -75,6 +75,7 @@ If you use Google Chrome, and testing with fetching image packages from remote s
 Procedure to preparation is documented [here](./docs/operation/procedure_to_prepare_sample_images.md) (now only in Japanese).
 After preparation, you should locate them somewhere and configure the application setting.
 The location of the image packages can be configure in [src/js/config/config.js](./src/js/config/config.js).
+The example is available in [example_image_package_root](./example_image_package_root) directory.
 
 ### Deployment flow
 

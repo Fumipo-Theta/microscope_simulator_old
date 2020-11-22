@@ -1,0 +1,44 @@
+{
+  "package-id": "Q27_quartz",
+  "list-name": {
+    "ja": "流紋岩中の石英",
+    "en": "Quartz in rhyolite"
+  },
+  "location": {
+    "en": "Mukoyama, Niijima volcano"
+  },
+  "geographic-coordinate": {
+    "system": "",
+    "position": {
+      "latitude": null,
+      "longitude": null
+    }
+  },
+  "magnify": "20",
+  "sample_label": "Q27",
+  "scale-unit": "1mm",
+  "scale-pixel": "305",
+  "image_width": 1280,
+  "image_height": 1280,
+  "rotate_center": [
+    629.4459891873263,
+    638.4014112245658
+  ],
+  "cycle_rotate_degree": 90,
+  "rotate_clockwise": true,
+  "rotate_by_degree": "15",
+  "rock_type": {
+    "ja": "流紋岩",
+    "en": "Rhyolite"
+  },
+  "owner": "Dep. Science, U-Tokyo",
+  "description": {
+    "ja": "石英斑晶を含む流紋岩. 斑晶石英は一部が融けて丸みを帯びていたり, 虫食い状の凹みがある. 石英斑晶はオープンニコルでは無色で包有物を多数含む様子が見られる. クロスニコルでは, 灰～白の干渉色を示す. また, 石基は気泡を含むガラスで, クロスニコルで常に消光して見える. ",
+    "en": "Rhyolite containing quartz as phenocryst. The quartz are partially ablated and show rounded shape. We can see many inclusion in the quartz under open Nicol. On the other hand, interference color of them is gray or white under crossed Nicols. The most part of the groundmass consists of glass with bubbles, and they are always extincted under crossed Nicols."
+  },
+  "image_formats": [
+    "webp",
+    "jp2",
+    "jpg"
+  ]
+}
