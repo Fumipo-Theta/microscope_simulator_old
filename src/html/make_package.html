@@ -298,11 +298,12 @@
                             <span>
                                 Input package name
                             </span>
-                            <input id="input_package_id" type="text" placeholder="Package ID">
+                            <input id="input_package_id" type="text" placeholder="Package ID" required>
                         </div>
 
                         <div>
-                            <input id="input_rotation_interval" type="number" placeholder="Rotation steps (degrees)">
+                            <input id="input_rotation_interval" type="number" placeholder="Rotation steps (degrees)"
+                                required>
                         </div>
                         <div class="select-wrapper">
                             <select id="select_rotate_direction">
@@ -340,12 +341,13 @@
                 </div>
 
                 <div class="space-around">
-                    <input class="input_sample_label" type="text" data-lang="en" placeholder="Sample label">
+                    <input class="input_sample_label" type="text" data-lang="en"
+                        placeholder="Sample label (for your management)">
                 </div>
 
                 <div class="space-between">
                     <div class="language ja">
-                        <input class="input_sample_title" type="text" data-lang="ja" placeholder="サンプルタイトル">
+                        <input class="input_sample_title" type="text" data-lang="ja" placeholder="サンプルタイトル" required>
                         <input class="input_sample_location" type="text" data-lang="ja" placeholder="採取地">
                         <input class="input_owner" type="text" data-lang="ja" placeholder="所有者">
                         <input class="input_sample_type" type="text" data-lang="ja" placeholder="岩石名・鉱物名">
@@ -354,7 +356,8 @@
                     </div>
 
                     <div class="language en">
-                        <input class="input_sample_title" type="text" data-lang="en" placeholder="Sample title">
+                        <input class="input_sample_title" type="text" data-lang="en" placeholder="Sample title"
+                            required>
                         <input class="input_sample_location" type="text" data-lang="en" placeholder="Sample location">
                         <input class="input_owner" type="text" data-lang="en" placeholder="Owner of the sample">
                         <input class="input_sample_type" type="text" data-lang="en"
@@ -387,7 +390,7 @@
                 <label for="change_nicol" data-on-label="Open" data-off-label="Cross"></label>
             </div>
 
-            <div id="view_discription" class="align-center column-direction">
+            <div id="view_description" class="align-center column-direction">
             </div>
 
             <div class="button-wrapper">
@@ -395,7 +398,10 @@
             </div>
             <a id="working_anchor" class="inactive"></a>
 
-
+            <div>
+                <p>If you use static serving,</p>
+                <p>Append list entry below to the "rock_list.json".</p>
+            </div>
             <textarea class="input" name="" id="dev_sample_list_entry" cols="" rows="10"
                 placeholder="Sample list entry"></textarea>
 

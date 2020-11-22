@@ -1,3 +1,13 @@
+input[type=text]:required,
+input[type=number]:required {
+    border-color: #2196f3;
+}
+
+input[type=text]:invalid,
+input[type=number]:invalid {
+    border-color: #ff2ba6;
+}
+
 input[type=text],
 input[type=number],
 textarea.input {
