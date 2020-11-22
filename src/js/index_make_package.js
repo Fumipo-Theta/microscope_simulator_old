@@ -311,6 +311,15 @@ function showPackageSize(state) {
         false
     )
 
+    const inputSampleLabel = document.querySelector("#input_sample_label")
+    inputSampleLabel.addEventListener(
+        "change",
+        e => {
+            packageMap.setSampleLabel(e.target.value)
+        },
+        false
+    )
+
     Array.from(document.querySelectorAll(".input_sample_location")).forEach(dom => {
         dom.addEventListener(
             "change",

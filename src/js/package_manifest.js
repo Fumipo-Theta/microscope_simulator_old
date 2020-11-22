@@ -118,7 +118,7 @@ export default class PackageManifest {
     }
 
     getSampleLabel() {
-        return this.setSampleLabel
+        return this.sampleLabel || ""
     }
 
     setImageSize(img) {
