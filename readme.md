@@ -1,6 +1,6 @@
 # SCOPin rock: Polarizing microscope simulator
 
-![SCOPin rock logo](./images/SCOPin_rock_logo.png)
+![SCOPin rock logo](./release/images/SCOPin_rock_logo.png)
 
 This Web application simulates polarizing microscope view of the thin section of rock samples.
 
@@ -38,14 +38,52 @@ npm install
 
 ### Build
 
-Watch and live reloading
+```
+$ npm run build
+```
+
+The build products are output under the `release` directory.
+The entry point of the application is `release/index.html`.
+
+You can switch build mode as below.
+
+Windows (powershell):
 
 ```
-npm run watch
+$env:NODE_ENV="development"; npm run build
+$env:NODE_ENV="production"; npm run build
 ```
+
+Mac & Linux
+
+```
+NODE_ENV=development npm run build
+NODE_ENV=production npm run build
+```
+
+### Launch dev server
+
+```
+npm run start
+```
+
+Then access to http://localhost:8080/release/.
+If you use Google Chrome, and testing with fetching image packages from remote server, please access via http://lvh.me:8080/release/ to avoid CORS problem.
+
+### Prepare thin-section image package
+
+Procedure to preparation is documented [here](./docs/operation/procedure_to_prepare_sample_images.md) (now only in Japanese).
+After preparation, you should locate them somewhere and configure the application setting.
+The location of the image packages can be configure in [src/js/config/config.js](./src/js/config.config.js).
 
 ### Deployment flow
 
+This application use Service Worker for caching files to reduce data transfer size.
+Therefore, update the version of the Service Worker is necessary to update the code of the client devices.
+
+The deployment procedure is below.
+
 1. Edit source code
 2. Update service worker version
-3. Build
+3. Build and deploy changes
+4. Clear cache of CDN if it is necessary
