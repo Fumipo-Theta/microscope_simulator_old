@@ -30,7 +30,7 @@ class AdhocPackageRepo {
         this.state = state
     }
 
-    resolveImagePackage(packageId, manifest) {
+    resolveImagePackage(packageId, desiredFormat, manifest) {
         function selectFormatWithFallbackToJpg(list, format) {
             if (list.includes(format)) {
                 return format
@@ -38,7 +38,6 @@ class AdhocPackageRepo {
                 return "jpg"
             }
         }
-        const desiredFormat = this.state.supportedImageType
         const format = manifest.hasOwnProperty('image_formats') && manifest["image_formats"] != null
             ? selectFormatWithFallbackToJpg(manifest.image_formats, desiredFormat)
             : desiredFormat
@@ -52,16 +51,16 @@ class AdhocPackageRepo {
      * @returns {Promise}
      *     zip: Object<String, Image Blob>
      */
-    async retrieve(packageId) {
+    async retrieve(packageId, desiredFormat) {
         const manifestUrl = staticSettings.getImageDataPath(packageId) + "manifest.json";
         const open_thumbnailUrl = staticSettings.getImageDataPath(packageId) + "o1.jpg";
         const cross_thumbnailUrl = staticSettings.getImageDataPath(packageId) + "c1.jpg";
         const manifestText = await fetch(manifestUrl, { mode: 'cors' }).then(response => response.text())
         const manifest = JSON.parse(manifestText);
 
-        const [zipUrl, format] = this.resolveImagePackage(packageId, manifest)
+        const [zipUrl, format] = this.resolveImagePackage(packageId, desiredFormat, manifest)
         const [lastModified, _] = await queryLastModified(zipUrl)
-        const unzipped = await unzipper(zipUrl).then(extractFile)
+        const unzipped = async () => unzipper(zipUrl).then(extractFile)
 
         const response = {
             manifest: manifestText,
@@ -81,10 +80,10 @@ class AdhocPackageRepo {
         return response
     }
 
-    async getImagesLastModified(packageId) {
+    async getImagesLastModified(packageId, desiredFormat) {
         const manifestUrl = staticSettings.getImageDataPath(packageId) + "manifest.json";
-        const manifest = await fetch(manifestUrl).then(response => response.json())
-        const [zipUrl, _] = this.resolveImagePackage(packageId, manifest)
+        const manifest = await fetch(manifestUrl, { mode: 'cors' }).then(response => response.json())
+        const [zipUrl, _] = this.resolveImagePackage(packageId, desiredFormat, manifest)
         const [lastModified, networkDisconnected] = await queryLastModified(zipUrl)
         return [lastModified, networkDisconnected]
     }
@@ -110,7 +109,7 @@ export default async function queryImagePackage(
     const id = sanitizeID(packageName)
     const storedData = await state.zipDBHandler.get(state.zipDB, id)
     const repo = new AdhocPackageRepo(state)
-    const [lastModified, networkDisconnected] = await repo.getImagesLastModified(id)
+    const [lastModified, networkDisconnected] = await repo.getImagesLastModified(id, state.supportedImageType)
 
     if (storedData !== undefined && storedData.lastModified === lastModified) {
         var toBeStored = false
@@ -124,7 +123,7 @@ export default async function queryImagePackage(
             return [null, false]
         }
     } else {
-        const response = await repo.retrieve(id)
+        const response = await repo.retrieve(id, state.supportedImageType)
         var toBeStored = true
         return [response, toBeStored]
     }

@@ -30,6 +30,10 @@ export default function fetchPackageById(state, packageID) {
 
             new_state.canRotate = true
 
+            if (isNewData) {
+                response.zip = await response.zip()
+            }
+
             updateImageSrc(response.zip, response.image_format)(new_state)
                 .then(state => register(state, isNewData)(response))
                 .then(markDownloadedOption(packageID)(manifest))
