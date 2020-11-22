@@ -13,16 +13,17 @@ jobs:
       - run:
           name: build for production
           command: NODE_ENV=production npm run build
+      
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: .
           paths:
-            - /release
+            - release
   deploy-to-dev:
     executor: aws-cli/default
     steps:
       - attach_workspace:
-          at: /tmp/workspace
-      - run: ls /tmp/workspace
+          at: .
+      - run: ls .
 
 orbs:
   node: circleci/node@4.1.0
