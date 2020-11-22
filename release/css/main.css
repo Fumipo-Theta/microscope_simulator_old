@@ -368,7 +368,7 @@ select option.downloaded {
     background-color: white;
 }
 
-#view_discription {
+#view_description {
     /*position: sticky;*/
     top: 64px;
     padding: 0 20px;
@@ -378,11 +378,11 @@ select option.downloaded {
     border-radius: 5px;
 }
 
-#view_discription ul {
+#view_description ul {
     padding: 0;
 }
 
-#view_discription li {
+#view_description li {
     margin: 5px 0;
 }
 

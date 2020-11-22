@@ -3,7 +3,7 @@ import { showLoadingMessage } from "./loading_indicator_handler.js"
 import { hideWelcomeBoard, showViewer, showNicolButton } from "./viewer_handlers.js"
 import queryImagePackage from "./queryImagePackage.js"
 import updateStateByMeta from "./updateStateByMeta.js"
-import updateViewDiscription from "./updateViewDiscription.js"
+import updateViewDescription from "./updateViewDescription.js"
 import updateImageSrc from "./updateImageSrc.js"
 import register from "./register.js"
 import markDownloadedOption from "./markDownloadedOption.js"
@@ -24,7 +24,7 @@ export default function fetchPackageById(state, packageID) {
             const manifest = JSON.parse(response.manifest);
 
             const new_state = await updateStateByMeta(state)(packageID, manifest)
-                .then(updateViewDiscription)
+                .then(updateViewDescription)
                 .then(updateImageSrc(response.thumbnail, "jpg"))
                 .then(updateView)
 
