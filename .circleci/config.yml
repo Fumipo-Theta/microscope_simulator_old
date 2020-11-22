@@ -8,6 +8,9 @@ jobs:
           install-yarn: true
       - run: node --version
       - run:
+          name: install node modules
+          command: npm install
+      - run:
           name: build for production
           command: NODE_ENV=production npm run build
 orbs:
