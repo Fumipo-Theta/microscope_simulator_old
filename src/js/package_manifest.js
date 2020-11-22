@@ -17,21 +17,21 @@ export default class PackageManifest {
         return {
             "package-id": this.getPackageID(),
             "list-name": this.getListName(),
-            "location": this.getSampleLocation(),
-            "geographic-coordinate": this.getGeoLocation(),
-            "magnify": this.getMagnify(),
-            "scale-unit": this.getScaleUnit(),
-            "scale-pixel": this.getScalePixel(),
             "image_width": this.getImageWidth(),
             "image_height": this.getImageHeight(),
             "rotate_center": this.getRotateCenter(),
             "cycle_rotate_degree": this.getRotateSectionDegree(),
             "rotate_clockwise": this.isRotateClockwise(),
             "rotate_by_degree": this.getEachRotateDegree(),
-            "rock_type": this.getRockType(),
+            "location": this.getSampleLocation(),
             "owner": this.getOwner(),
+            "rock_type": this.getRockType(),
             "description": this.getDescription(),
+            "scale-unit": this.getScaleUnit(),
+            "scale-pixel": this.getScalePixel(),
+            "magnify": this.getMagnify(),
             "sample_label": this.getSampleLabel(),
+            "geographic-coordinate": this.getGeoLocation(),
             "image_formats": this.getImageFormats()
         }
     }

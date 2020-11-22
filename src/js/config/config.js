@@ -15,10 +15,10 @@ console.info("config.js: compileEnv: ", compileEnv)
 
 const packageListEndpoint = compileEnv == "production"
     ? "https://d3uqzv7l1ih05d.cloudfront.net/rock_list.json"
-    : "../../image_package_s3_root/rock_list.json"
+    : "../../image_package_root/rock_list.json"
 const packageCdnEndpoint = compileEnv == "production"
     ? "https://d3uqzv7l1ih05d.cloudfront.net/packages/"
-    : "../../image_package_s3_root/packages/"
+    : "../../image_package_root/packages/"
 
 export const staticSettings = new StaticManager(
     packageListEndpoint,
@@ -26,6 +26,5 @@ export const staticSettings = new StaticManager(
     "db_v3",
     "files"
 )
-
 
 export const VIEW_PADDING = 0 // px

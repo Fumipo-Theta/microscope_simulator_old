@@ -1,17 +1,9 @@
 {
-    "location": {
+    "package-id": "String (unique)",
+    "list-name": {
         "ja": "String",
         "en": "String"
     },
-    "geographic-coordinate": {
-        "system": "String of coordinate system (latitude-longitude)",
-        "position": {
-            "latitude": "Number of latitude. Positive in northern hemisphere",
-            "longitude": "Number of longitude. Positive in eastern hemisphere"
-        }
-    },
-    "scale-unit": "String of label of scale at the first view",
-    "scale-pixel": "Number of pixels of scale length on pictures",
     "image_width": "Number of pixels of width of pictures",
     "image_height": "Number of pixels of height of pictures",
     "rotate_center": [
@@ -19,9 +11,9 @@
         "Number of vertical distance of rotate center from left-top of pictures"
     ],
     "cycle_rotate_degree": "Number of rotation degrees of the most rotated picture",
-    "rotate_clockwise": "true if rotation direction of pictures is clockwise, else false",
+    "rotate_clockwise": "Boolean: true if rotation direction of pictures is clockwise, else false",
     "rotate_by_degree": "Number of difference of rotation degrees between adjacent pictures",
-    "rock_type": {
+    "location": {
         "ja": "String",
         "en": "String"
     },
@@ -29,11 +21,24 @@
         "ja": "String",
         "en": "String"
     },
+    "rock_type": {
+        "ja": "String",
+        "en": "String"
+    },
     "description": {
         "ja": "String",
         "en": "String"
     },
-    "sample_label": "(Optional) String of sample label. For purpose of management.",
+    "scale-unit": "(Optional) String of label of scale at the first view",
+    "scale-pixel": "(Optional)Number of pixels of scale length on pictures",
     "magnify": "(Optional) Number of magnification of view. For purpose of management.",
+    "sample_label": "(Optional) String of sample label. For purpose of management.",
+    "geographic-coordinate": {
+        "system": "String of coordinate system (latitude-longitude)",
+        "position": {
+            "latitude": "Number of latitude. Positive in northern hemisphere",
+            "longitude": "Number of longitude. Positive in eastern hemisphere"
+        }
+    },
     "image_formats": "(Optional) Array of String indicating what types of image format which the package contains (the type should be jpg, webp, or jp2)"
 }
