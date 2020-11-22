@@ -31,9 +31,17 @@ class AdhocPackageRepo {
     }
 
     resolveImagePackage(packageId, manifest) {
-        const format = manifest.hasOwnProperty('image_format_only')
-            ? manifest.image_format_only
-            : this.state.supportedImageType
+        function selectFormatWithFallbackToJpg(list, format) {
+            if (list.includes(format)) {
+                return format
+            } else {
+                return "jpg"
+            }
+        }
+        const desiredFormat = this.state.supportedImageType
+        const format = manifest.hasOwnProperty('image_formats') && manifest["image_formats"] != null
+            ? selectFormatWithFallbackToJpg(manifest.image_formats, desiredFormat)
+            : desiredFormat
         console.log(format)
         return [staticSettings.getImageDataPath(packageId) + format + ".zip", format]
     }

@@ -3,6 +3,7 @@ export default class PackageManifest {
         this.packageID = null
         this.listName = {}
         this.location = {}
+        this.owner = {}
         this.rockType = {}
         this.description = {}
         this.geoSystem = ""
@@ -29,7 +30,8 @@ export default class PackageManifest {
             "rotate_by_degree": this.getEachRotateDegree(),
             "rock_type": this.getRockType(),
             "owner": this.getOwner(),
-            "description": this.getDescription()
+            "description": this.getDescription(),
+            "image_formats": this.getImageFormats()
         }
     }
 
@@ -49,7 +51,7 @@ export default class PackageManifest {
         return this.packageID.replace(/\//g, "_").replace(/\./g, "")
     }
 
-    setListName(s, lang) {
+    setListName(lang, s) {
         this.listName[lang] = s;
         return this;
     }
@@ -58,8 +60,8 @@ export default class PackageManifest {
         return this.listName;
     }
 
-    setSampleLocation(lang, disc) {
-        this.location[lang] = disc;
+    setSampleLocation(lang, desc) {
+        this.location[lang] = desc;
         return this
     }
 
@@ -165,16 +167,16 @@ export default class PackageManifest {
     }
 
     setEachRotateDegree(degree) {
-        this.eachRotateDigree = degree
+        this.eachRotateDegree = degree
         return this
     }
 
     getEachRotateDegree() {
-        return this.eachRotateDigree
+        return this.eachRotateDegree
     }
 
-    setRockType(lang, disc) {
-        this.rockType[lang] = disc
+    setRockType(lang, desc) {
+        this.rockType[lang] = desc
         return this
     }
 
@@ -182,8 +184,8 @@ export default class PackageManifest {
         return this.rockType
     }
 
-    setOwner(disc) {
-        this.owner = disc
+    setOwner(lang, desc) {
+        this.owner[lang] = desc
         return this
     }
 
@@ -191,12 +193,23 @@ export default class PackageManifest {
         return this.owner
     }
 
-    setDescription(lang, disc) {
-        this.description[lang] = disc
+    setDescription(lang, desc) {
+        this.description[lang] = desc
         return this
     }
 
     getDescription() {
         return this.description
+    }
+
+    setImageFormats(formats) {
+        formats.forEach(format => {
+            console.assert(["webp", "jpg", "jp2"].includes(format))
+        })
+        this.imageFormats = formats
+    }
+
+    getImageFormats() {
+        return this.imageFormats || []
     }
 }

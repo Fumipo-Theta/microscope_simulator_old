@@ -49,7 +49,7 @@ function mapMetadata(meta) {
         scaleText: meta.hasOwnProperty("scale-unit")
             ? meta["scale-unit"]
             : false,
-        rotate_degree_step: rotate_degree_step,
+        rotate_degree_step: rotate_degree_step
     }
 }
 
