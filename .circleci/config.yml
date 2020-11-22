@@ -8,8 +8,8 @@ jobs:
           install-yarn: true
       - run: node --version
       - run:
-        name: build for production
-        command: NODE_ENV=production npm run build
+          name: build for production
+          command: NODE_ENV=production npm run build
 orbs:
   node: circleci/node@4.1.0
 version: 2.1
