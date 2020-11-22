@@ -13,7 +13,7 @@ jobs:
       - run:
           name: build for production
           command: NODE_ENV=production npm run build
-      
+
       - persist_to_workspace:
           root: .
           paths:
@@ -24,6 +24,9 @@ jobs:
       - attach_workspace:
           at: .
       - run: ls ./release
+      - run:
+          name: upload to S3
+          command: aws s3 cp ./release s3://scopinrock-dev/ --recursive
 
 orbs:
   node: circleci/node@4.1.0
