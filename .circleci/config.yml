@@ -1,0 +1,46 @@
+jobs:
+  build:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: true
+      - run: node --version
+      - run:
+          name: install node modules
+          command: npm install
+      - run:
+          name: build for production
+          command: NODE_ENV=production npm run build
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - release
+  deploy-to-dev:
+    executor: aws-cli/default
+    steps:
+      - aws-cli/setup
+      - attach_workspace:
+          at: .
+      - run: ls ./release
+      - run:
+          name: upload to S3
+          command: aws s3 cp ./release s3://scopinrock-dev/ --recursive
+
+orbs:
+  node: circleci/node@4.1.0
+  aws-cli: circleci/aws-cli@1.3.1
+version: 2.1
+workflows:
+  deploy-to-dev:
+    jobs:
+      - build
+      - deploy-to-dev:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
