@@ -1,8 +1,6 @@
 import { staticSettings } from "./config/config.js"
-import { showErrorMessage } from "./error_indicator_handler.js"
-import showSampleList from "./showSampleList.js"
 
-export default function loadSampleListFromRemote(state) {
+export default function loadSampleList(state) {
     return new Promise(async (res, rej) => {
         const listURL = staticSettings.getSampleListURL();
         try {
@@ -13,9 +11,8 @@ export default function loadSampleListFromRemote(state) {
         } catch (e) {
             var stored_list = state.localStorage.get("list_of_sample")
             var response = { "list_of_sample": JSON.parse(stored_list) }
-            console.warn(e)
-            showErrorMessage("<p>Internet disconnected.</p>")()
+            rej(e)
         }
-        showSampleList(state, response).then(res)
+        res([state, response]) // This is not good... this function should return state
     })
 }

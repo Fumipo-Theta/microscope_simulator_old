@@ -2,7 +2,7 @@
  * サンプルリストをselectタグ内に追加する
  * @param {*} state
  */
-export default function showSampleList(state, response) {
+export default function showSampleList(state, response) { // this function should take state as arg
     return new Promise(async (res, rej) => {
 
         const savedSampleNames = state.storedKeys;
