@@ -11,14 +11,15 @@ import initState from "./initState.js"
 import updateViewerGeometry from "./updateViewerGeometry.js"
 import updateView from "./updateView.js"
 import es6Available from "./es6Available.js"
-import connectLocalStorage from "./connectLocalStorage.js"
 import checkSupportedImageFormat from "./checkSupportedImageFormat.js"
 import overrideLanguageByLocalStorage from "./overrideLanguageByLocalStorage.js"
 import connectDatabase from "./connectDatabase.js"
 import getStoredDBEntryKeys from "./getStoredDBEntryKeys.js"
-import loadSampleListFromRemote from "./loadSampleListFromRemote.js"
+import loadSampleList from "./load_sample_list.js"
 import { hideLoadingMessage } from "./loading_indicator_handler.js"
 import fetchPackageById from "./fetch_package_by_query.js"
+import showSampleList from "./showSampleList.js"
+import { showErrorMessage } from "./error_indicator_handler.js"
 
 deleteOldVersionDatabase()
 
@@ -82,14 +83,23 @@ function init(state) {
         false
     );
 
+    function tee(value) {
+        return (f) => {
+            f(value)
+            return value
+        }
+    }
+
 
     updateViewerGeometry(state)
-        .then(connectLocalStorage)
         .then(checkSupportedImageFormat)
         .then(overrideLanguageByLocalStorage)
         .then(connectDatabase)
         .then(getStoredDBEntryKeys)
-        .then(loadSampleListFromRemote)
+        .then(state => tee(state)(async _ => {
+            const response = await loadSampleList()
+            showSampleList(response["list_of_sample"], state.language, state.storedKeys)
+        }))
         .then(state => {
             const packageID = get_package_id()
             if (packageID) {
@@ -102,6 +112,7 @@ function init(state) {
         .then(hideLoadingMessage)
         .catch(e => {
             console.error(e)
+            showErrorMessage("<p>Internet disconnected.</p>")()
             hideLoadingMessage(e);
         })
 

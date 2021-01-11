@@ -6,6 +6,8 @@
  * - Cache DB version name
  * - Cache DB table name
  */
+import NativeLocalStorage from "../local_storage/NativeLocalStorage.js";
+import DummyLocalStorage from "../local_storage/DummyLocalStorage.js";
 
 class Config {
     constructor() {
@@ -45,3 +47,7 @@ console.info("config.js: compileEnv: ", compileEnv)
 export const staticSettings = new Config()
 
 export const VIEW_PADDING = 0 // px
+
+export const cacheStorage = window.localStorage
+    ? new NativeLocalStorage()
+    : new DummyLocalStorage()

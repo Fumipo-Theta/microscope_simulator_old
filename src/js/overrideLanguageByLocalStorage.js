@@ -1,5 +1,7 @@
+import { cacheStorage } from "./config/config.js"
+
 export default function overwrideLanguageByLocalStorage(state) {
-    const langInLocalStorage = state.localStorage.get("language")
+    const langInLocalStorage = cacheStorage.get("language")
     const lang = (langInLocalStorage !== undefined)
         ? langInLocalStorage
         : state.language;
