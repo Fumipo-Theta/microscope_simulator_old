@@ -65,4 +65,18 @@ describe("filterSampleByCategories", () => {
         const query = { "rock": [] }
         expect(filterSampleByCategories(sampleList, query)).toStrictEqual(sampleList)
     })
+
+    test("should reject sample without category field", () => {
+        const sampleList = [
+            {
+                "package-name": "old_sample",
+                "list-name": {
+                    "ja": "流紋岩中の石英",
+                    "en": "Quartz in rhyolite"
+                }
+            }
+        ]
+        const query = { "rock": [] }
+        expect(filterSampleByCategories(sampleList, query)).toStrictEqual([])
+    })
 })

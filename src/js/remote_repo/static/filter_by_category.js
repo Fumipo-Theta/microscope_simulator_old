@@ -11,6 +11,8 @@
  */
 export default function filterSampleByCategories(sampleList, categoryFilterQuery) {
     return sampleList.filter((sample) => {
+        if (!sample.hasOwnProperty("category")) return false
+
         const cat = sample.category
         return filterByRockType(cat.rock, categoryFilterQuery.rock)
     })
