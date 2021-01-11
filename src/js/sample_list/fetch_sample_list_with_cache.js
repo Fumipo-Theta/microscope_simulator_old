@@ -1,6 +1,6 @@
-import { staticSettings, cacheStorage } from "./config/config.js"
+import { staticSettings, cacheStorage } from "../config/config.js"
 
-export default function loadSampleList() {
+export default function fetchSampleListWithCache() {
     return new Promise(async (res, rej) => {
         const listURL = staticSettings.getSampleListURL();
         try {

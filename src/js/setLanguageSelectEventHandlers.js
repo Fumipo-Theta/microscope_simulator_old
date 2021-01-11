@@ -1,14 +1,17 @@
-import languageChangeHandler from "./languageChangeHandler.js"
-import loadSampleList from "./load_sample_list.js"
-import showSampleList from "./showSampleList.js"
+import updateSampleList from "./usecase/update_sample_list.js"
 import updateViewDescription from "./updateViewDescription.js"
+import { cacheStorage } from "./config/config.js"
 
-function tee(value) {
-    return (f) => {
-        f(value)
-        return value
+function languageChangeHandler(state) {
+    return function (e) {
+        const languageSelector = document.querySelector("#language_selector")
+        const lang = languageSelector.options[languageSelector.selectedIndex].value;
+        state.uiState.language = lang
+        cacheStorage.put("language", lang)
+        return state
     }
 }
+
 
 export default function setLanguageSelectEventHandlers(state) {
     const languageSelector = document.querySelector("#language_selector")
@@ -16,10 +19,8 @@ export default function setLanguageSelectEventHandlers(state) {
     languageSelector.addEventListener("change",
         e => {
             const newState = languageChangeHandler(state)(e)
-            loadSampleList()
-                .then(response => {
-                    showSampleList(response["list_of_sample"], newState.language, newState.storedKeys)
-                })
+            const uiState = newState.uiState
+            updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
             updateViewDescription(newState)
         },
         false

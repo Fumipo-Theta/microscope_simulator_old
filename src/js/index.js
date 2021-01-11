@@ -7,19 +7,17 @@ import setRockSelectEventHandlers from "./setRockSelectEventHandlers.js"
 import setCanvasEventHandlers from "./setCanvasEventHandlers.js"
 import setLanguageSelectEventHandlers from "./setLanguageSelectEventHandlers.js"
 import setContactFormEventHandlers from "./setContactFormEventHandlers.js"
-import initState from "./initState.js"
+import initState from "./state/initState.js"
 import updateViewerGeometry from "./updateViewerGeometry.js"
 import updateView from "./updateView.js"
 import es6Available from "./es6Available.js"
 import checkSupportedImageFormat from "./checkSupportedImageFormat.js"
-import overrideLanguageByLocalStorage from "./overrideLanguageByLocalStorage.js"
 import connectDatabase from "./connectDatabase.js"
 import getStoredDBEntryKeys from "./getStoredDBEntryKeys.js"
-import loadSampleList from "./load_sample_list.js"
 import { hideLoadingMessage } from "./loading_indicator_handler.js"
 import fetchPackageById from "./fetch_package_by_query.js"
-import showSampleList from "./showSampleList.js"
 import { showErrorMessage } from "./error_indicator_handler.js"
+import updateSampleList from "./usecase/update_sample_list.js"
 
 deleteOldVersionDatabase()
 
@@ -83,8 +81,8 @@ function init(state) {
         false
     );
 
-    function tee(value) {
-        return (f) => {
+    function tee(f) {
+        return (value) => {
             f(value)
             return value
         }
@@ -93,12 +91,11 @@ function init(state) {
 
     updateViewerGeometry(state)
         .then(checkSupportedImageFormat)
-        .then(overrideLanguageByLocalStorage)
         .then(connectDatabase)
         .then(getStoredDBEntryKeys)
-        .then(state => tee(state)(async _ => {
-            const response = await loadSampleList()
-            showSampleList(response["list_of_sample"], state.language, state.storedKeys)
+        .then(tee(_ => {
+            const uiState = state.uiState
+            updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
         }))
         .then(state => {
             const packageID = get_package_id()

@@ -1,4 +1,4 @@
-import initState from "./initState.js"
+import initState from "./state/initState.js"
 import PackageManifest from "./package_manifest.js"
 import updateViewerGeometry from "./updateViewerGeometry.js"
 import updateStateByMeta from "./updateStateByMeta.js"

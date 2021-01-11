@@ -1,6 +1,5 @@
-import getMaxViewerSize from "./getMaxViewerSize.js"
-import selectLanguageCode from "./selectLanguageCode.js"
-
+import getMaxViewerSize from "../getMaxViewerSize.js"
+import { uiState } from "./ui_state.js"
 
 export default function initState() {
 
@@ -25,9 +24,8 @@ export default function initState() {
         "rotate_axis_translate": [],
         "isClockwise": true,
         "isCrossNicol": false,
-        "language": selectLanguageCode(),
-        "storedKeys": [],
         "drawHairLine": true,
         "canRotate": true,
+        "uiState": uiState
     }
 }

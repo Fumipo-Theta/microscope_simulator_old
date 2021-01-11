@@ -1,4 +1,4 @@
-import filterSampleByCategories from "../src/js/remote_repo/static/filter_by_category.js"
+import SampleFilter from "../src/js/remote_repo/static/filter_by_category.js"
 
 const rhyolite = {
     "package-name": "Q27_quartz",
@@ -6,10 +6,7 @@ const rhyolite = {
         "ja": "流紋岩中の石英",
         "en": "Quartz in rhyolite"
     },
-    "category": {
-        "rock": ["igneous_rock", "volcanic_rock", "rhyolite"],
-        "contains": ["quartz"]
-    }
+    "category": ["rock", "igneous_rock", "volcanic_rock", "rhyolite"]
 }
 const granite = {
     "package-name": "Grc-1_quartz",
@@ -17,10 +14,7 @@ const granite = {
         "ja": "花崗岩中の波動消光を示す石英",
         "en": "Quartz showing wavy extinction in granite"
     },
-    "category": {
-        "rock": ["igneous_rock", "plutonic_rock", "granite"],
-        "contains": ["quartz"]
-    }
+    "category": ["rock", "igneous_rock", "plutonic_rock", "granite"]
 }
 const greenSchist = {
     "package-name": "green_schist",
@@ -28,10 +22,7 @@ const greenSchist = {
         "ja": "緑色片岩",
         "en": "A green schist"
     },
-    "category": {
-        "rock": ["metamorphic_rock", "regional_metamorphic_rock", "schist", "green_schist"],
-        "contains": ["chrolite"]
-    }
+    "category": ["rock", "metamorphic_rock", "regional_metamorphic_rock", "schist", "green_schist"]
 }
 const sampleList = [
     rhyolite,
@@ -43,27 +34,29 @@ describe("filterSampleByCategories", () => {
     test("should return samples whose categories are superset of query", () => {
         [
             {
-                query: { "rock": ["rhyolite"] },
+                query: { "category": ["rock", "rhyolite"] },
                 expected: [rhyolite]
 
             },
             {
-                query: { "rock": ["volcanic_rock"] },
+                query: { "category": ["rock", "volcanic_rock"] },
                 expected: [rhyolite]
 
             },
             {
-                query: { "rock": ["igneous_rock"] },
+                query: { "category": ["igneous_rock"] },
                 expected: [rhyolite, granite]
             }
         ].forEach(testCase => {
-            expect(filterSampleByCategories(sampleList, testCase.query)).toStrictEqual(testCase.expected)
+            const sampleFilter = new SampleFilter(testCase.query.category)
+            expect(sampleFilter.filter(sampleList)).toStrictEqual(testCase.expected)
         })
     })
 
     test("should return all samples for empty filter", () => {
-        const query = { "rock": [] }
-        expect(filterSampleByCategories(sampleList, query)).toStrictEqual(sampleList)
+        const query = { "category": [] }
+        const sampleFilter = new SampleFilter(query.category)
+        expect(sampleFilter.filter(sampleList)).toStrictEqual(sampleList)
     })
 
     test("should reject sample without category field", () => {
@@ -76,7 +69,8 @@ describe("filterSampleByCategories", () => {
                 }
             }
         ]
-        const query = { "rock": [] }
-        expect(filterSampleByCategories(sampleList, query)).toStrictEqual([])
+        const query = { "category": [] }
+        const sampleFilter = new SampleFilter(query.category)
+        expect(sampleFilter.filter(sampleList)).toStrictEqual([])
     })
 })
