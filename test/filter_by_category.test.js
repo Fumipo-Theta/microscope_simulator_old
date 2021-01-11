@@ -8,7 +8,7 @@ const rhyolite = {
     },
     "category": {
         "rock": ["igneous_rock", "volcanic_rock", "rhyolite"],
-        "mineral": ["quartz"]
+        "contains": ["quartz"]
     }
 }
 const granite = {
@@ -19,7 +19,7 @@ const granite = {
     },
     "category": {
         "rock": ["igneous_rock", "plutonic_rock", "granite"],
-        "mineral": ["quartz"]
+        "contains": ["quartz"]
     }
 }
 const greenSchist = {
@@ -30,7 +30,7 @@ const greenSchist = {
     },
     "category": {
         "rock": ["metamorphic_rock", "regional_metamorphic_rock", "schist", "green_schist"],
-        "mineral": ["chrolite"]
+        "contains": ["chrolite"]
     }
 }
 const sampleList = [

@@ -1,23 +1,25 @@
 /**
  * selectedRockType = {
  *  rock: ["igneous_rock", "rhyolite"],
- *  includes: []
+ *  contains: []
  * }
- * 
- * @param {*} sampleListLoader 
- * @param {*} selectedCategories 
+ *
+ * Current version can filter sample by rock type category.
+ *
+ * @param {*} sampleList
+ * @param {*} categoryFilterQuery
  */
-export default function filterSampleByCategories(sampleList, selectedCategories) {
+export default function filterSampleByCategories(sampleList, categoryFilterQuery) {
     return sampleList.filter((sample) => {
         const cat = sample.category
-        return filterByRockType(cat.rock, selectedCategories.rock)
+        return filterByRockType(cat.rock, categoryFilterQuery.rock)
     })
 }
 
 /**
- * 
- * @param {*} rockCat 
- * @param {*} rockQuery 
+ *
+ * @param {Array} rockCat
+ * @param {Array} rockQuery
  * @return {Boolean}
  */
 function filterByRockType(rockCat, rockQuery) {
@@ -25,9 +27,9 @@ function filterByRockType(rockCat, rockQuery) {
 }
 
 /**
- * 
- * @param {Set} set 
- * @param {Set} superset 
+ *
+ * @param {Set} set
+ * @param {Set} superset
  */
 function isSubset(set, superset) {
     if (set.size == 0) {
