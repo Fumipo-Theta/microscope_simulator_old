@@ -36,6 +36,12 @@ Switch open Nicol and crossed Nicols by a toggle button.
 npm install
 ```
 
+### Testing
+
+```
+npm test
+```
+
 ### Build
 
 ```
