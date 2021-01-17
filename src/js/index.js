@@ -91,16 +91,16 @@ function init(state) {
     }
 
     /* Set event listener for category selector */
-    setCategorySelectorEventHandlers(
-        document.querySelector("#modal-category_selector"),
-        document.querySelector("#toggle_category"),
-        document.querySelector("#button-close-category_selector")
-    )
-
     generateCategorySelector(
         document.querySelector("#wrapper-category_selector"),
         state.uiState.language
-    )
+    ).then(_ => {
+        setCategorySelectorEventHandlers(
+            document.querySelector("#modal-category_selector"),
+            document.querySelector("#toggle_category"),
+            document.querySelector("#button-close-category_selector")
+        )
+    })
 
     updateViewerGeometry(state)
         .then(checkSupportedImageFormat)

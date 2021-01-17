@@ -37,11 +37,10 @@ function makeCategoryImpl(category, lang, level = 0) {
     const labelClass = category.subcategories.length > 0
         ? "super_category"
         : "category"
-    const checkbox = `<div>
-    <input checked type="checkbox" value="${category.group}"
+    const checkbox = `
+    <input checked type="checkbox" class="${labelClass}" value="${category.group}"
         id="${checkboxId}">
     <label for="${checkboxId}" class="${labelClass}">${category.label[lang]}</label>
-    </div>
     `
     outer.innerHTML = checkbox
 

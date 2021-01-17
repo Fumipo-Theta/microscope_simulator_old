@@ -3,15 +3,27 @@
  *   modal window are registered.
  *
  * @param {HTMLElement} modal
+ * @param {HTMLElement} categorySelector
  * @param {HTMLElement} toggle_modal_button
  * @param {HTMLElement} close_modal_button
  */
 export default function setEventHandlers(
     modal,
-    toggle_modal_button,
-    close_modal_button
+    toggleModalButton,
+    closeModalButton
 ) {
-    toggle_modal_button.addEventListener(
+    [...modal.querySelectorAll("input.super_category")].forEach(scat => {
+        scat.addEventListener(
+            "change",
+            e => {
+                const self = e.target
+                toggleAll(self.parentNode.querySelectorAll("input.super_category"), self.checked)
+                toggleAll(self.parentNode.querySelectorAll("input.category"), self.checked)
+            }
+        )
+    })
+
+    toggleModalButton.addEventListener(
         "change",
         e => {
             if (e.target.checked) {
@@ -23,14 +35,20 @@ export default function setEventHandlers(
         false
     )
 
-    close_modal_button.addEventListener(
+    closeModalButton.addEventListener(
         "click",
         e => {
             hide(modal)
-            toggle_modal_button.checked = false
+            toggleModalButton.checked = false
         },
         false
     )
+}
+
+function toggleAll(inputs, toBeChecked) {
+    [...inputs].forEach(elem => {
+        elem.checked = toBeChecked
+    })
 }
 
 function show(elem) {
