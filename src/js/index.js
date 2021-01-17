@@ -18,6 +18,8 @@ import { hideLoadingMessage } from "./loading_indicator_handler.js"
 import fetchPackageById from "./fetch_package_by_query.js"
 import { showErrorMessage } from "./error_indicator_handler.js"
 import updateSampleList from "./usecase/update_sample_list.js"
+import setCategorySelectorEventHandlers from "./category_selector/ui_event_handler.js"
+import generateCategorySelector from "./category_selector/generate_category.js"
 
 deleteOldVersionDatabase()
 
@@ -88,6 +90,17 @@ function init(state) {
         }
     }
 
+    /* Set event listener for category selector */
+    setCategorySelectorEventHandlers(
+        document.querySelector("#modal-category_selector"),
+        document.querySelector("#toggle_category"),
+        document.querySelector("#button-close-category_selector")
+    )
+
+    generateCategorySelector(
+        document.querySelector("#wrapper-category_selector"),
+        state.uiState.language
+    )
 
     updateViewerGeometry(state)
         .then(checkSupportedImageFormat)

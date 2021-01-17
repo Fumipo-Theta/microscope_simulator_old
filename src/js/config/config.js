@@ -11,23 +11,24 @@ import DummyLocalStorage from "../local_storage/DummyLocalStorage.js";
 
 class Config {
     constructor() {
-        this.sampleListURL = compileEnv == "production"
-            ? "https://d3uqzv7l1ih05d.cloudfront.net/rock_list.json"
-            : "../../image_package_root/rock_list.json"
-        this.imageDataRoot = compileEnv == "production"
-            ? "https://d3uqzv7l1ih05d.cloudfront.net/packages/"
-            : "../../image_package_root/packages/"
+        this.endpoint = compileEnv == "production"
+            ? "https://d3uqzv7l1ih05d.cloudfront.net/"
+            : "../../image_package_root/"
 
         this.indexedDBName = "db_v3"
         this.storageName = "files"
     }
 
     getSampleListURL() {
-        return this.sampleListURL
+        return this.endpoint + "rock_list.json"
+    }
+
+    getSampleCategoryURL() {
+        return this.endpoint + "category.json"
     }
 
     getImageDataPath(packageName) {
-        return this.imageDataRoot + packageName + "/"
+        return this.endpoint + "packages/" + packageName + "/"
     }
 
     getDBName() {
