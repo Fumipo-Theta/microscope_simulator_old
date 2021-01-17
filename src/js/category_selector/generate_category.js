@@ -27,9 +27,12 @@ export default async function generateCategorySelector(wrapper, lang) {
  * @param {SampleCategory} category
  */
 function makeCategoryImpl(category, lang, level = 0) {
-    const [outer, inner] = level >= 2
+
+    const [outer, inner] = level >= 3
         ? makeBottomLevel()
-        : makeTopLevel()
+        : level >= 2
+            ? makeMiddleLevel()
+            : makeTopLevel()
     const checkboxId = `category-group-${category.group}`
     const labelClass = category.subcategories.length > 0
         ? "super_category"
@@ -52,7 +55,7 @@ function makeCategoryImpl(category, lang, level = 0) {
 }
 
 function makeTopLevel() {
-    // level == 0
+    // level <= 1
     const thisCategory = document.createElement("div")
     thisCategory.classList.add("category_group")
     thisCategory.classList.add("stretched")
@@ -61,12 +64,21 @@ function makeTopLevel() {
     return [thisCategory, innerCategory]
 }
 
-function makeBottomLevel() {
+function makeMiddleLevel() {
     // level >= 2
+    // ex. rock > igneous rock > volcanic rock
     const thisCategory = document.createElement("div")
     thisCategory.classList.add("sub_category_group")
     const innerCategory = document.createElement("div")
     innerCategory.classList.add("column-direction")
     innerCategory.classList.add("sub_category")
+    return [thisCategory, innerCategory]
+}
+
+function makeBottomLevel() {
+    // level >= 3
+    // ex. rock > igneous rock > volcanic rock > rhyolite
+    const thisCategory = document.createElement("div")
+    const innerCategory = document.createElement("div")
     return [thisCategory, innerCategory]
 }

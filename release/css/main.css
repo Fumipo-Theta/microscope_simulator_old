@@ -283,19 +283,19 @@ input[type=checkbox]:checked+#button-toggle_sample_category{
     height: 100vh;
     width: 100vw;
     background-color: #00000091;
-    z-index: 800;
 }
 
 #modal-wrapper-category_selector {
     background-color: #0c395e;
     box-shadow: 0px 1px 15px 0px rgba(0, 0, 0, 0.5);
-    height: calc(95vh - 64px);
+    max-height: calc(100vh - 64px);
     flex: 1;
     width: calc(100% - 20px);
     max-width: 900px;
-    position: relative;
+    position: absolute;
     top: 64px;
     border-radius: 3px;
+    padding: 0 10px;
     overflow-y: scroll;
 }
 
