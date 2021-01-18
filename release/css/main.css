@@ -297,6 +297,7 @@ input[type=checkbox]:checked+#button-toggle_sample_category{
     border-radius: 3px;
     padding: 0 10px;
     overflow-y: scroll;
+    overscroll-behavior: none;
 }
 
 #button-close-category_selector {

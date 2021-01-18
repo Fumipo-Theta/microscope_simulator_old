@@ -93,12 +93,13 @@ function init(state) {
     /* Set event listener for category selector */
     generateCategorySelector(
         document.querySelector("#wrapper-category_selector"),
-        state.uiState.language
+        state
     ).then(_ => {
         setCategorySelectorEventHandlers(
             document.querySelector("#modal-category_selector"),
             document.querySelector("#toggle_category"),
-            document.querySelector("#button-close-category_selector")
+            document.querySelector("#button-close-category_selector"),
+            state
         )
     })
 

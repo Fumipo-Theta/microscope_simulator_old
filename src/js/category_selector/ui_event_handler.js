@@ -1,3 +1,7 @@
+
+import updateSampleList from "../usecase/update_sample_list.js"
+import { enumCategoryLevels } from "./generate_category.js"
+
 /**
  * This function must be called after element in the
  *   modal window are registered.
@@ -10,15 +14,64 @@
 export default function setEventHandlers(
     modal,
     toggleModalButton,
-    closeModalButton
+    closeModalButton,
+    state
 ) {
     [...modal.querySelectorAll("input.super_category")].forEach(scat => {
         scat.addEventListener(
             "change",
             e => {
                 const self = e.target
-                toggleAll(self.parentNode.querySelectorAll("input.super_category"), self.checked)
-                toggleAll(self.parentNode.querySelectorAll("input.category"), self.checked)
+                const allParent = enumCategoryLevels(self.value)
+                    .slice(0, -1)
+                    .map(level => document.querySelector(`#category-group__${level}`))
+                const allParticipants = [
+                    ...allParent,
+                    ...self.parentNode.querySelectorAll("input.super_category"),
+                    ...self.parentNode.querySelectorAll("input.category")
+                ]
+
+                toggleAll(
+                    allParticipants,
+                    self.checked,
+                    elem => {
+                        state.uiState.sampleFilter.addCategory(elem.value)
+                    },
+                    elem => {
+                        state.uiState.sampleFilter.removeCategory(elem.value)
+                    }
+                )
+                console.log(state.uiState.sampleFilter.listCategory())
+
+                const uiState = state.uiState
+                updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
+            }
+        )
+    });
+
+    [...modal.querySelectorAll("input.category")].forEach(cat => {
+        cat.addEventListener(
+            "change",
+            e => {
+                const self = e.target
+                const allParent = enumCategoryLevels(self.value)
+                    .slice(0, -1)
+                    .map(level => document.querySelector(`#category-group__${level}`))
+
+                toggleAll(
+                    allParent,
+                    self.checked,
+                    elem => {
+                        state.uiState.sampleFilter.addCategory(elem.value)
+                    },
+                    elem => {
+                        state.uiState.sampleFilter.removeCategory(elem.value)
+                    }
+                )
+                console.log(state.uiState.sampleFilter.listCategory())
+
+                const uiState = state.uiState
+                updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
             }
         )
     })
@@ -45,9 +98,14 @@ export default function setEventHandlers(
     )
 }
 
-function toggleAll(inputs, toBeChecked) {
-    [...inputs].forEach(elem => {
+function toggleAll(inputs, toBeChecked, onChecked, onUnChecked) {
+    inputs.forEach(elem => {
         elem.checked = toBeChecked
+        if (toBeChecked) {
+            onChecked(elem)
+        } else {
+            onUnChecked(elem)
+        }
     })
 }
 

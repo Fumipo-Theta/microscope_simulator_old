@@ -3,12 +3,22 @@ export default class SampleFilter {
         this.category = new Set(category)
     }
 
-    appendCategory(value) {
+    addCategory(value) {
         this.category.add(value)
     }
 
-    deleteCategory(value) {
+    addManyCategories(values) {
+        values.forEach(v => {
+            this.category.add(v)
+        })
+    }
+
+    removeCategory(value) {
         this.category.delete(value)
+    }
+
+    listCategory() {
+        return this.category
     }
 
     filter(sampleList) {
@@ -18,7 +28,7 @@ export default class SampleFilter {
     _filterByCategory(sample) {
         if (!sample.hasOwnProperty("category")) return false
 
-        return isSubset(this.category, new Set(sample.category))
+        return isSubset(new Set(sample.category), this.category)
     }
 }
 
