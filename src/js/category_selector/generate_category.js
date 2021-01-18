@@ -1,5 +1,19 @@
 import { staticSettings } from "../config/config.js"
 
+class CategoryState {
+    constructor(name, activated) {
+        this.name = name
+        this.activated = activated
+    }
+
+    getName() {
+        return this.name
+    }
+
+    isActivated() {
+        return this.activated
+    }
+}
 
 /**
  * 
@@ -9,14 +23,17 @@ import { staticSettings } from "../config/config.js"
 export default async function generateCategorySelector(wrapper, state) {
     const category = await fetch(staticSettings.getSampleCategoryURL())
         .then(response => response.json())
-    const categories = category.categories.map(cat => {
+    const activeCategories = category.categories.map(cat => {
         const [child, categories] = makeCategoryImpl(cat, state.uiState.language)
         if (child) {
             wrapper.appendChild(child)
         }
         return categories
     }).flat()
-    state.uiState.sampleFilter.addManyCategories(categories)
+    state.uiState.sampleFilter.reset(
+        activeCategories.filter(catState => catState.isActivated())
+            .map(catState => catState.getName())
+    )
     return state
 }
 
@@ -34,17 +51,20 @@ export default async function generateCategorySelector(wrapper, state) {
 function makeCategoryImpl(category, lang, level = 0, parentCategory = undefined) {
     const thisCategory = concatCategory(parentCategory, category.id)
     const checkboxId = `category-group__${thisCategory}`
+    const checkboxElem = document.querySelector(`#${checkboxId}`)
+    const catState = new CategoryState(category.id, checkboxElem === null ? false : checkboxElem.checked)
     // Because category is static, update label if the category selector exists.
-    if (document.querySelector(`#${checkboxId}`)) {
+    if (catState.activated) {
         const label = document.querySelector(`#${checkboxId}+label`)
         label.innerText = category.label[lang]
         let subcategories = category.subcategories.map(subcat => {
             const [_nextInner, cat] = makeCategoryImpl(subcat, lang, level + 1, thisCategory)
             return cat
-        }).flat()
-        return [null, [...subcategories, category.id]]
+        })
+        return [null, [...subcategories, catState]]
     }
 
+    // Create new elements
     const [outer, inner] = level >= 3
         ? makeBottomLevel()
         : level >= 2
@@ -54,7 +74,7 @@ function makeCategoryImpl(category, lang, level = 0, parentCategory = undefined)
         ? "super_category"
         : "category"
     const checkbox = `
-    <input checked type="checkbox" class="${labelClass}" value="${thisCategory}"
+    <input type="checkbox" class="${labelClass}" value="${thisCategory}"
         id="${checkboxId}">
     <label for="${checkboxId}" class="${labelClass}">${category.label[lang]}</label>
     `
@@ -67,9 +87,9 @@ function makeCategoryImpl(category, lang, level = 0, parentCategory = undefined)
             return cat
         }).flat()
         outer.appendChild(inner)
-        return [outer, [...subcategories, category.id]]
+        return [outer, [...subcategories, catState]]
     }
-    return [outer, [category.id]]
+    return [outer, [catState]]
 }
 
 function concatCategory(parent, child) {

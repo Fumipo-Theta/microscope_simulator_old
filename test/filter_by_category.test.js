@@ -34,17 +34,17 @@ describe("filterSampleByCategories", () => {
     test("should return samples whose categories are superset of query", () => {
         [
             {
-                query: { "category": ["rock", "rhyolite"] },
+                query: { "category": ["rock", "igneous_rock", "volcanic_rock", "rhyolite"] },
                 expected: [rhyolite]
 
             },
             {
-                query: { "category": ["rock", "volcanic_rock"] },
-                expected: [rhyolite]
+                query: { "category": ["rock", "igneous_rock", "volcanic_rock"] },
+                expected: []
 
             },
             {
-                query: { "category": ["igneous_rock"] },
+                query: { "category": ["rock", "igneous_rock", "volcanic_rock", "plutonic_rock", "rhyolite", "granite"] },
                 expected: [rhyolite, granite]
             }
         ].forEach(testCase => {
@@ -53,10 +53,10 @@ describe("filterSampleByCategories", () => {
         })
     })
 
-    test("should return all samples for empty filter", () => {
+    test("should return nothing for empty filter", () => {
         const query = { "category": [] }
         const sampleFilter = new SampleFilter(query.category)
-        expect(sampleFilter.filter(sampleList)).toStrictEqual(sampleList)
+        expect(sampleFilter.filter(sampleList)).toStrictEqual([])
     })
 
     test("should reject sample without category field", () => {

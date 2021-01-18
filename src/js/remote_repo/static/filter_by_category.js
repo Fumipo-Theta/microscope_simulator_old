@@ -23,7 +23,11 @@ export default class SampleFilter {
         })
     }
 
-    listCategory() {
+    reset(category) {
+        this.category = new Set(category)
+    }
+
+    listCategories() {
         return this.category
     }
 

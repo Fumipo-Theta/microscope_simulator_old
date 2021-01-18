@@ -55,7 +55,7 @@ export default function setEventHandlers(
                         }
                     })
                 }
-
+                console.log(uiState.sampleFilter.listCategories())
                 updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
             }
         )
