@@ -1,6 +1,6 @@
 
 import updateSampleList from "../usecase/update_sample_list.js"
-import { enumCategoryLevels } from "./generate_category.js"
+import { splitCategory } from "./generate_category.js"
 
 /**
  * This function must be called after element in the
@@ -17,64 +17,51 @@ export default function setEventHandlers(
     closeModalButton,
     state
 ) {
-    [...modal.querySelectorAll("input.super_category")].forEach(scat => {
-        scat.addEventListener(
+    [
+        ...modal.querySelectorAll("input.super_category"),
+        ...modal.querySelectorAll("input.category")
+    ].forEach((cat, _, arr) => {
+        cat.addEventListener(
             "change",
             e => {
                 const self = e.target
-                const allParent = enumCategoryLevels(self.value)
-                    .slice(0, -1)
-                    .map(level => document.querySelector(`#category-group__${level}`))
-                const allParticipants = [
-                    ...allParent,
-                    ...self.parentNode.querySelectorAll("input.super_category"),
-                    ...self.parentNode.querySelectorAll("input.category")
-                ]
-
-                toggleAll(
-                    allParticipants,
-                    self.checked,
-                    elem => {
-                        state.uiState.sampleFilter.addCategory(elem.value)
-                    },
-                    elem => {
-                        state.uiState.sampleFilter.removeCategory(elem.value)
-                    }
-                )
-                console.log(state.uiState.sampleFilter.listCategory())
-
+                const allCategory = splitCategory(self.value)
                 const uiState = state.uiState
+
+                if (self.checked) {
+                    uiState.sampleFilter.addManyCategories(allCategory)
+                    arr.forEach(elem => {
+                        const elemCategory = splitCategory(elem.value)
+                        if (uiState.sampleFilter.isSubset(new Set(elemCategory))) {
+                            elem.checked = true
+                        } else if (isSubset(new Set(allCategory), new Set(elemCategory))) {
+                            uiState.sampleFilter.addManyCategories(elemCategory)
+                            elem.checked = true
+                        } else {
+                            elem.checked = false
+                        }
+                    })
+                } else {
+                    uiState.sampleFilter.removeCategory(allCategory.slice(-1)[0])
+                    arr.forEach(elem => {
+                        const elemCategory = splitCategory(elem.value)
+                        if (uiState.sampleFilter.isSubset(new Set(elemCategory))) {
+                            elem.checked = true
+                        } else if (isSubset(new Set(allCategory), new Set(elemCategory))) {
+                            uiState.sampleFilter.removeManyCategories(elemCategory.slice(-1))
+                            elem.checked = false
+                        } else {
+                            elem.checked = false
+                        }
+                    })
+                }
+
                 updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
             }
         )
     });
 
-    [...modal.querySelectorAll("input.category")].forEach(cat => {
-        cat.addEventListener(
-            "change",
-            e => {
-                const self = e.target
-                const allParent = enumCategoryLevels(self.value)
-                    .slice(0, -1)
-                    .map(level => document.querySelector(`#category-group__${level}`))
 
-                toggleAll(
-                    allParent,
-                    self.checked,
-                    elem => {
-                        state.uiState.sampleFilter.addCategory(elem.value)
-                    },
-                    elem => {
-                        state.uiState.sampleFilter.removeCategory(elem.value)
-                    }
-                )
-                console.log(state.uiState.sampleFilter.listCategory())
-
-                const uiState = state.uiState
-                updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
-            }
-        )
-    })
 
     toggleModalButton.addEventListener(
         "change",
@@ -98,15 +85,16 @@ export default function setEventHandlers(
     )
 }
 
-function toggleAll(inputs, toBeChecked, onChecked, onUnChecked) {
-    inputs.forEach(elem => {
-        elem.checked = toBeChecked
-        if (toBeChecked) {
-            onChecked(elem)
-        } else {
-            onUnChecked(elem)
+function isSubset(set, superset) {
+    if (set.size == 0) {
+        return true
+    }
+    for (let elem of set) {
+        if (!superset.has(elem)) {
+            return false;
         }
-    })
+    }
+    return true;
 }
 
 function show(elem) {

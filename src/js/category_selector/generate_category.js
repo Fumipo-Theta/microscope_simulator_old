@@ -77,6 +77,10 @@ function concatCategory(parent, child) {
     return parent + "__" + child
 }
 
+export function splitCategory(category) {
+    return category.split("__")
+}
+
 export function enumCategoryLevels(categoryPath) {
     return categoryPath.split("__").reduce((acc, e) => {
         if (acc.length === 0) {

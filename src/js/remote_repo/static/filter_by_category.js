@@ -17,8 +17,22 @@ export default class SampleFilter {
         this.category.delete(value)
     }
 
+    removeManyCategories(values) {
+        values.forEach(v => {
+            this.category.delete(v)
+        })
+    }
+
     listCategory() {
         return this.category
+    }
+
+    isInclude(set) {
+
+    }
+
+    isSubset(set) {
+        return isSubset(set, this.category)
     }
 
     filter(sampleList) {
