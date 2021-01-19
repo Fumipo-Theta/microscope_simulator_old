@@ -1,52 +1,54 @@
 export default class SampleFilter {
-    constructor(category = []) {
-        this.category = new Set(category)
+    constructor(queries = []) {
+        this.queries = new Set(queries.map(this.listToQuery))
     }
 
-    addCategory(value) {
-        this.category.add(value)
+    add(query) {
+        this.queries.add(this.listToQuery(query))
     }
 
-    addManyCategories(values) {
-        values.forEach(v => {
-            this.category.add(v)
+    addMany(queries) {
+        queries.forEach(v => {
+            this.queries.add(this.listToQuery(v))
         })
     }
 
-    removeCategory(value) {
-        this.category.delete(value)
+    remove(value) {
+        this.queries.delete(this.listToQuery(value))
     }
 
-    removeManyCategories(values) {
+    removeMany(values) {
         values.forEach(v => {
-            this.category.delete(v)
+            this.queries.delete(this.listToQuery(v))
         })
     }
 
-    reset(category) {
-        this.category = new Set(category)
+    reset(queries) {
+        this.queries = new Set(queries.map(this.listToQuery))
     }
 
-    listCategories() {
-        return this.category
+    list() {
+        return this.queries
     }
 
-    isInclude(set) {
-
-    }
-
-    isSubset(set) {
-        return isSubset(set, this.category)
+    listToQuery(path) {
+        return path.reduce((acc, e) => {
+            if (acc === "") return e
+            return acc + "." + e
+        }, "")
     }
 
     filter(sampleList) {
-        return sampleList.filter(sample => this._filterByCategory(sample))
-    }
+        if (this.queries.size === 0) return sampleList
 
-    _filterByCategory(sample) {
-        if (!sample.hasOwnProperty("category")) return false
-
-        return isSubset(new Set(sample.category), this.category)
+        const queries = [...this.queries].map(v => v.split("."))
+        return sampleList.filter(sample => {
+            if (!sample.hasOwnProperty("category")) return false
+            const superset = new Set(sample.category)
+            for (let query of queries) {
+                if (isSubset(query, superset)) return true
+            }
+        })
     }
 }
 

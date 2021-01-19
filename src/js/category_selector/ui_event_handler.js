@@ -18,49 +18,54 @@ export default function setEventHandlers(
     state
 ) {
     [
-        ...modal.querySelectorAll("input.super_category"),
-        ...modal.querySelectorAll("input.category")
-    ].forEach((cat, _, arr) => {
+        ...modal.querySelectorAll("input.super_category-checkbox")
+    ].forEach((cat, _,) => {
         cat.addEventListener(
             "change",
             e => {
                 const self = e.target
-                const allCategory = splitCategory(self.value)
+                const query = [...self.classList].slice(1)
+                const queryClass = concatCategory(query, ".")
                 const uiState = state.uiState
 
                 if (self.checked) {
-                    uiState.sampleFilter.addManyCategories(allCategory)
-                    arr.forEach(elem => {
-                        const elemCategory = splitCategory(elem.value)
-                        if (uiState.sampleFilter.isSubset(new Set(elemCategory))) {
-                            elem.checked = true
-                        } else if (isSubset(new Set(allCategory), new Set(elemCategory))) {
-                            uiState.sampleFilter.addManyCategories(elemCategory)
-                            elem.checked = true
-                        } else {
-                            elem.checked = false
-                        }
+                    uiState.sampleFilter.add(query);
+                    [...document.querySelectorAll("label." + queryClass)].forEach(elem => {
+                        elem.classList.add("active")
                     })
                 } else {
-                    uiState.sampleFilter.removeCategory(allCategory.slice(-1)[0])
-                    arr.forEach(elem => {
-                        const elemCategory = splitCategory(elem.value)
-                        if (uiState.sampleFilter.isSubset(new Set(elemCategory))) {
-                            elem.checked = true
-                        } else if (isSubset(new Set(allCategory), new Set(elemCategory))) {
-                            uiState.sampleFilter.removeManyCategories(elemCategory.slice(-1))
-                            elem.checked = false
-                        } else {
-                            elem.checked = false
-                        }
+                    uiState.sampleFilter.remove(query);
+                    [...document.querySelectorAll("label." + queryClass)].forEach(elem => {
+                        elem.classList.remove("active")
                     })
                 }
-                console.log(uiState.sampleFilter.listCategories())
+                console.log(uiState.sampleFilter.list())
                 updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
             }
         )
     });
 
+    [
+        ...modal.querySelectorAll("input.category-checkbox")
+    ].forEach((cat, _,) => {
+        cat.addEventListener(
+            "change",
+            e => {
+                const self = e.target
+                const query = [...self.classList].slice(1)
+                const queryClass = concatCategory(query, ".")
+                const uiState = state.uiState
+
+                if (self.checked) {
+                    uiState.sampleFilter.add(query);
+                } else {
+                    uiState.sampleFilter.remove(query);
+                }
+                console.log(uiState.sampleFilter.list())
+                updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
+            }
+        )
+    });
 
 
     toggleModalButton.addEventListener(
@@ -95,6 +100,13 @@ function isSubset(set, superset) {
         }
     }
     return true;
+}
+
+function concatCategory(categoryList, sep) {
+    return categoryList.reduce((acc, e) => {
+        if (acc === "") return e
+        return acc + sep + e
+    }, "")
 }
 
 function show(elem) {

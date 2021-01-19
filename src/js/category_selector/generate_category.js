@@ -1,17 +1,17 @@
 import { staticSettings } from "../config/config.js"
 
 class CategoryState {
-    constructor(name, activated) {
-        this.name = name
-        this.activated = activated
+    constructor(path, selected) {
+        this.path = path
+        this.selected = selected
     }
 
-    getName() {
-        return this.name
+    getPath() {
+        return this.path
     }
 
-    isActivated() {
-        return this.activated
+    isSelected() {
+        return this.selected
     }
 }
 
@@ -31,8 +31,8 @@ export default async function generateCategorySelector(wrapper, state) {
         return categories
     }).flat()
     state.uiState.sampleFilter.reset(
-        activeCategories.filter(catState => catState.isActivated())
-            .map(catState => catState.getName())
+        activeCategories.filter(catState => catState.isSelected())
+            .map(catState => catState.getPath())
     )
     return state
 }
@@ -48,19 +48,19 @@ export default async function generateCategorySelector(wrapper, state) {
  * }
  * @param {SampleCategory} category
  */
-function makeCategoryImpl(category, lang, level = 0, parentCategory = undefined) {
-    const thisCategory = concatCategory(parentCategory, category.id)
-    const checkboxId = `category-group__${thisCategory}`
+function makeCategoryImpl(category, lang, level = 0, parentCategory = []) {
+    const categoryPath = appendCategory(parentCategory, category.id)
+    const checkboxId = `category-group__${concatCategory(categoryPath, "__")}`
     const checkboxElem = document.querySelector(`#${checkboxId}`)
-    const catState = new CategoryState(category.id, checkboxElem === null ? false : checkboxElem.checked)
+    const catState = new CategoryState(categoryPath, checkboxElem === null ? false : checkboxElem.checked)
     // Because category is static, update label if the category selector exists.
-    if (catState.activated) {
+    if (checkboxElem) {
         const label = document.querySelector(`#${checkboxId}+label`)
         label.innerText = category.label[lang]
         let subcategories = category.subcategories.map(subcat => {
-            const [_nextInner, cat] = makeCategoryImpl(subcat, lang, level + 1, thisCategory)
+            const [_nextInner, cat] = makeCategoryImpl(subcat, lang, level + 1, categoryPath)
             return cat
-        })
+        }).flat()
         return [null, [...subcategories, catState]]
     }
 
@@ -74,15 +74,15 @@ function makeCategoryImpl(category, lang, level = 0, parentCategory = undefined)
         ? "super_category"
         : "category"
     const checkbox = `
-    <input type="checkbox" class="${labelClass}" value="${thisCategory}"
+    <input type="checkbox" class="${labelClass}-checkbox ${concatCategory(categoryPath, " ")}" value="${concatCategory(categoryPath, "__")}"
         id="${checkboxId}">
-    <label for="${checkboxId}" class="${labelClass}">${category.label[lang]}</label>
+    <label for="${checkboxId}" class="${labelClass} ${concatCategory(categoryPath, " ")}">${category.label[lang]}</label>
     `
     outer.innerHTML = checkbox
 
     if (category.subcategories.length > 0) {
         let subcategories = category.subcategories.map(subcat => {
-            const [nextInner, cat] = makeCategoryImpl(subcat, lang, level + 1, thisCategory)
+            const [nextInner, cat] = makeCategoryImpl(subcat, lang, level + 1, categoryPath)
             inner.appendChild(nextInner)
             return cat
         }).flat()
@@ -92,9 +92,16 @@ function makeCategoryImpl(category, lang, level = 0, parentCategory = undefined)
     return [outer, [catState]]
 }
 
-function concatCategory(parent, child) {
-    if (parent === undefined) return child
-    return parent + "__" + child
+function appendCategory(parent, child) {
+    if (parent.length == 0) return [child]
+    return [...parent, child]
+}
+
+function concatCategory(categoryList, sep) {
+    return categoryList.reduce((acc, e) => {
+        if (acc === "") return e
+        return acc + sep + e
+    }, "")
 }
 
 export function splitCategory(category) {

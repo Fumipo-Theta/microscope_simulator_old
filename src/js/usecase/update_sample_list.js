@@ -13,7 +13,7 @@ import SampleFilter from "../remote_repo/static/filter_by_category.js"
  * @return {Promise}
  */
 export default async function updateSampleList(uiLanguage, cachedSampleKeys, sampleFilter) {
-    const responseJson = await fetchOrLookupSampleList()
+    const responseJson = await fetchOrLookupSampleList() // sampleFilter should be passed to this function
     const samplesToBeShown = sampleFilter.filter(responseJson["list_of_sample"])
     showSampleList(samplesToBeShown, uiLanguage, cachedSampleKeys)
     return samplesToBeShown

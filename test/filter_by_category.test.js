@@ -34,17 +34,30 @@ describe("filterSampleByCategories", () => {
     test("should return samples whose categories are superset of query", () => {
         [
             {
-                query: { "category": ["rock", "igneous_rock", "volcanic_rock", "rhyolite"] },
+                query: {
+                    "category": [
+                        ["rock", "igneous_rock", "volcanic_rock", "rhyolite"]
+                    ]
+                },
                 expected: [rhyolite]
 
             },
             {
-                query: { "category": ["rock", "igneous_rock", "volcanic_rock"] },
-                expected: []
+                query: {
+                    "category": [
+                        ["rock", "igneous_rock", "volcanic_rock"]
+                    ]
+                },
+                expected: [rhyolite]
 
             },
             {
-                query: { "category": ["rock", "igneous_rock", "volcanic_rock", "plutonic_rock", "rhyolite", "granite"] },
+                query: {
+                    "category": [
+                        ["rock", "igneous_rock", "volcanic_rock", "rhyolite"],
+                        ["rock", "plutonic_rock"]
+                    ]
+                },
                 expected: [rhyolite, granite]
             }
         ].forEach(testCase => {
@@ -56,10 +69,10 @@ describe("filterSampleByCategories", () => {
     test("should return nothing for empty filter", () => {
         const query = { "category": [] }
         const sampleFilter = new SampleFilter(query.category)
-        expect(sampleFilter.filter(sampleList)).toStrictEqual([])
+        expect(sampleFilter.filter(sampleList)).toStrictEqual(sampleList)
     })
 
-    test("should reject sample without category field", () => {
+    test("should not reject sample without category field", () => {
         const sampleList = [
             {
                 "package-name": "old_sample",
@@ -71,6 +84,6 @@ describe("filterSampleByCategories", () => {
         ]
         const query = { "category": [] }
         const sampleFilter = new SampleFilter(query.category)
-        expect(sampleFilter.filter(sampleList)).toStrictEqual([])
+        expect(sampleFilter.filter(sampleList)).toStrictEqual(sampleList)
     })
 })

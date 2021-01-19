@@ -356,24 +356,32 @@ input[type=checkbox]:checked+#button-toggle_sample_category{
     color: #888888;
 }
 
-#wrapper-category_selector input[type=checkbox]:checked+label {
-    color:#efefef;
-}
-
 #wrapper-category_selector input[type=checkbox]+.category {
     border-left: 3px solid  #88888800;
 }
 
+#wrapper-category_selector input[type=checkbox]:checked+.category.active,
 #wrapper-category_selector input[type=checkbox]:checked+.category {
+    color:#efefef;
     border-left: 3px solid #4488bb;
 }
 
-#wrapper-category_selector input[type=checkbox]+.super_category {
-    border-bottom: 2px solid  #888888;
+#wrapper-category_selector input[type=checkbox]+.category.active {
+    color: #d2d2d2;
 }
 
+#wrapper-category_selector input[type=checkbox]+.super_category {
+    /*border-bottom: 2px solid  #888888;*/
+}
+
+#wrapper-category_selector input[type=checkbox]:checked+.super_category.active,
 #wrapper-category_selector input[type=checkbox]:checked+.super_category {
+    color:#efefef;
     border-bottom: 2px solid #4488bb;
+}
+
+#wrapper-category_selector input[type=checkbox]+.super_category.active {
+    color: #d2d2d2;
 }
 
 #low-navigation {
