@@ -34,14 +34,14 @@ export default class SampleFilter {
     listToQuery(path) {
         return path.reduce((acc, e) => {
             if (acc === "") return e
-            return acc + "." + e
+            return acc + "::" + e
         }, "")
     }
 
     filter(sampleList) {
         if (this.queries.size === 0) return sampleList
 
-        const queries = [...this.queries].map(v => v.split("."))
+        const queries = [...this.queries].map(v => v.split("::"))
         return sampleList.filter(sample => {
             if (!sample.hasOwnProperty("category")) return false
             const superset = new Set(sample.category)
