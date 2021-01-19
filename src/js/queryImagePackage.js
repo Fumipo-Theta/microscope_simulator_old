@@ -46,6 +46,8 @@ class AdhocPackageRepo {
     }
 
     /**
+     * この関数の返り値の構造をもつobjectを返すのが責務。
+     * よってこの関数で画像パッケージのunzipも行っている。
      * 
      * @param {String} packageId
      * @returns {Promise}
@@ -63,7 +65,7 @@ class AdhocPackageRepo {
         const unzipped = async () => unzipper(zipUrl).then(extractFile)
 
         const response = {
-            manifest: manifestText,
+            manifest: manifestText, // もしIndexedDBにObjectを保存できるならシリアライズ不要
             thumbnail: {
                 "o1.jpg": await fetch(open_thumbnailUrl, { mode: 'cors' })
                     .then(response => response.blob())

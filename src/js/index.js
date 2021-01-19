@@ -7,18 +7,19 @@ import setRockSelectEventHandlers from "./setRockSelectEventHandlers.js"
 import setCanvasEventHandlers from "./setCanvasEventHandlers.js"
 import setLanguageSelectEventHandlers from "./setLanguageSelectEventHandlers.js"
 import setContactFormEventHandlers from "./setContactFormEventHandlers.js"
-import initState from "./initState.js"
+import initState from "./state/initState.js"
 import updateViewerGeometry from "./updateViewerGeometry.js"
 import updateView from "./updateView.js"
 import es6Available from "./es6Available.js"
-import connectLocalStorage from "./connectLocalStorage.js"
 import checkSupportedImageFormat from "./checkSupportedImageFormat.js"
-import overrideLanguageByLocalStorage from "./overrideLanguageByLocalStorage.js"
 import connectDatabase from "./connectDatabase.js"
 import getStoredDBEntryKeys from "./getStoredDBEntryKeys.js"
-import loadSampleListFromRemote from "./loadSampleListFromRemote.js"
 import { hideLoadingMessage } from "./loading_indicator_handler.js"
 import fetchPackageById from "./fetch_package_by_query.js"
+import { showErrorMessage } from "./error_indicator_handler.js"
+import updateSampleList from "./usecase/update_sample_list.js"
+import setCategorySelectorEventHandlers from "./category_selector/ui_event_handler.js"
+import generateCategorySelector from "./category_selector/generate_category.js"
 
 deleteOldVersionDatabase()
 
@@ -82,14 +83,34 @@ function init(state) {
         false
     );
 
+    function tee(f) {
+        return (value) => {
+            f(value)
+            return value
+        }
+    }
+
+    /* Set event listener for category selector */
+    generateCategorySelector(
+        document.querySelector("#wrapper-category_selector"),
+        state
+    ).then(_ => {
+        setCategorySelectorEventHandlers(
+            document.querySelector("#modal-category_selector"),
+            document.querySelector("#toggle_category"),
+            document.querySelector("#button-close-category_selector"),
+            state
+        )
+    })
 
     updateViewerGeometry(state)
-        .then(connectLocalStorage)
         .then(checkSupportedImageFormat)
-        .then(overrideLanguageByLocalStorage)
         .then(connectDatabase)
         .then(getStoredDBEntryKeys)
-        .then(loadSampleListFromRemote)
+        .then(tee(_ => {
+            const uiState = state.uiState
+            updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
+        }))
         .then(state => {
             const packageID = get_package_id()
             if (packageID) {
@@ -102,6 +123,7 @@ function init(state) {
         .then(hideLoadingMessage)
         .catch(e => {
             console.error(e)
+            showErrorMessage("<p>Internet disconnected.</p>")()
             hideLoadingMessage(e);
         })
 

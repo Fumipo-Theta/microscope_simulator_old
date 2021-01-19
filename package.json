@@ -1,6 +1,6 @@
 {
     "name": "scopin",
-    "version": "1.7.1",
+    "version": "1.8.0",
     "description": "![SCOPin rock logo](./images/SCOPin_rock_logo.png)",
     "main": "/release/js/app.js",
     "directories": {
@@ -8,7 +8,7 @@
         "test": "test"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest",
         "build": "webpack",
         "watch": "webpack --watch",
         "start": "webpack-dev-server"
@@ -25,8 +25,12 @@
     },
     "homepage": "https://github.com/Fumipo-Theta/microscope_simulator#readme",
     "devDependencies": {
+        "@babel/core": "^7.12.10",
+        "@babel/preset-env": "^7.12.11",
+        "babel-jest": "^26.6.3",
         "html-webpack-plugin": "^3.0.0",
         "html-webpack-string-replace-plugin": "^1.1.0",
+        "jest": "^26.6.3",
         "npm-check-updates": "^4.1.2",
         "preload-webpack-plugin": "^3.0.0-beta.3",
         "string-replace-loader": "^2.3.0",

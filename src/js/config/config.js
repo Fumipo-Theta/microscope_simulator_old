@@ -1,5 +1,3 @@
-import StaticManager from "../StaticManager.js";
-
 /**
  * TODO split these config as different objects
  *
@@ -8,23 +6,49 @@ import StaticManager from "../StaticManager.js";
  * - Cache DB version name
  * - Cache DB table name
  */
+import NativeLocalStorage from "../local_storage/NativeLocalStorage.js";
+import DummyLocalStorage from "../local_storage/DummyLocalStorage.js";
+
+class Config {
+    constructor() {
+        this.endpoint = compileEnv == "production"
+            ? "https://d3uqzv7l1ih05d.cloudfront.net/"
+            : "../../image_package_root/"
+
+        this.indexedDBName = "db_v3"
+        this.storageName = "files"
+    }
+
+    getSampleListURL() {
+        return this.endpoint + "rock_list.json"
+    }
+
+    getSampleCategoryURL() {
+        return this.endpoint + "category.json"
+    }
+
+    getImageDataPath(packageName) {
+        return this.endpoint + "packages/" + packageName + "/"
+    }
+
+    getDBName() {
+        return this.indexedDBName;
+    }
+
+    getStorageName() {
+        return this.storageName
+    }
+}
+
 
 const compileEnv = process.env.NODE_ENV
 
 console.info("config.js: compileEnv: ", compileEnv)
 
-const packageListEndpoint = compileEnv == "production"
-    ? "https://d3uqzv7l1ih05d.cloudfront.net/rock_list.json"
-    : "../../image_package_root/rock_list.json"
-const packageCdnEndpoint = compileEnv == "production"
-    ? "https://d3uqzv7l1ih05d.cloudfront.net/packages/"
-    : "../../image_package_root/packages/"
-
-export const staticSettings = new StaticManager(
-    packageListEndpoint,
-    packageCdnEndpoint,
-    "db_v3",
-    "files"
-)
+export const staticSettings = new Config()
 
 export const VIEW_PADDING = 0 // px
+
+export const cacheStorage = window.localStorage
+    ? new NativeLocalStorage()
+    : new DummyLocalStorage()
