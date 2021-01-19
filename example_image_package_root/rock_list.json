@@ -5,14 +5,26 @@
             "list-name": {
                 "ja": "流紋岩中の石英",
                 "en": "Quartz in rhyolite"
-            }
+            },
+            "category": [
+                "rock",
+                "igneous_rock",
+                "volcanic_rock",
+                "rhyolite"
+            ]
         },
         {
             "package-name": "Grc-1_quartz",
             "list-name": {
                 "ja": "花崗岩中の波動消光を示す石英",
                 "en": "Quartz showing wavy extinction in granite"
-            }
+            },
+            "category": [
+                "rock",
+                "igneous_rock",
+                "plutonic_rock",
+                "granite"
+            ]
         }
     ]
 }
