@@ -161,6 +161,35 @@ TODO: 更新を楽にするため、既存のパッケージを読み込める�
 
 また、静的配信で使用する`rock_list.json` の `"list_of_sample"` フィールドの配列に追加するjson文字列も生成される。
 
+**カテゴリ情報に関して**
+
+カテゴリでサンプルを絞り込めるようにする場合、`rock_list.json` に登録するjson文字列に、手動でカテゴリ情報を書き込む必要がある。
+カテゴリは、パッケージディレクトリの `category.json` の定義内容(例えば[これ](../../example_image_package_root/category.json))と整合的である必要がある。
+
+上の例では、以下のような階層構造でカテゴリを定義している。
+
+```
+|-rock
+|  |-igneous_rock
+|  |  |-volcanic_rock
+|  |  |  |-rhyolite
+|  |  |  |-andesite
+|  |  |-plutonic_rock
+|  |     |-granite
+|  |-metamorphic_rock
+|
+|-sediment
+```
+
+Rhyoliteであるサンプルのカテゴリを表すリストは、`category.json` に定義された `rhyolite` を表す階層構造のリストのスーパーセットでなければならない。
+すなわち、`category.json` に定義された `rhyolite` の階層構造は `['rock', 'igneous_rock', 'volcanic_rock', 'rhyolite']` と定義されている。
+サンプルのカテゴリがそのスーパーセットであるとは以下のように定義されているということ。
+- `['rock', 'igneous_rock', 'volcanic_rock', 'rhyolite']`
+- `['rock', 'igneous_rock', 'volcanic_rock', 'lava', 'rhyolite']`
+
+Rhyoliteサンプルの定義として以下は `category.json` と整合的でない。
+- `['rock', 'igneous_rock', 'lava', 'rhyolite']`
+
 ## 画像データの変換
 
 必要であれば、画像変換ツール([python script (準備中)](../../cli/make_package.md))を使用し、画像フォーマットを変換したり、ファイルサイズを縮小したりする。
