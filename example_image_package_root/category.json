@@ -20,48 +20,7 @@
                                 "ja": "火山岩",
                                 "en": "Volcanic rocks"
                             },
-                            "subcategories": [
-                                {
-                                    "id": "rhyolite",
-                                    "label": {
-                                        "ja": "流紋岩",
-                                        "en": "Rhyolite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "andesite",
-                                    "label": {
-                                        "ja": "安山岩",
-                                        "en": "Andesite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "basalt",
-                                    "label": {
-                                        "ja": "玄武岩",
-                                        "en": "Basalt"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "komatiite",
-                                    "label": {
-                                        "ja": "コマチアイト",
-                                        "en": "Komatiite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "volcanic_rock_others",
-                                    "label": {
-                                        "ja": "その他",
-                                        "en": "Others"
-                                    },
-                                    "subcategories": []
-                                }
-                            ]
+                            "subcategories": []
                         },
                         {
                             "id": "plutonic_rock",
@@ -69,48 +28,7 @@
                                 "ja": "深成岩",
                                 "en": "Plutonic rocks"
                             },
-                            "subcategories": [
-                                {
-                                    "id": "granite",
-                                    "label": {
-                                        "ja": "花こう岩",
-                                        "en": "Granite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "diorite",
-                                    "label": {
-                                        "ja": "閃緑岩",
-                                        "en": "Diorite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "gabbro",
-                                    "label": {
-                                        "ja": "斑れい岩",
-                                        "en": "Gabbro"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "peridotite",
-                                    "label": {
-                                        "ja": "かんらん岩",
-                                        "en": "Peridotite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "plutonic_rock_others",
-                                    "label": {
-                                        "ja": "その他",
-                                        "en": "Others"
-                                    },
-                                    "subcategories": []
-                                }
-                            ]
+                            "subcategories": []
                         }
                     ]
                 },
@@ -127,40 +45,7 @@
                                 "ja": "広域変成岩",
                                 "en": "Regional metamorphic rocks"
                             },
-                            "subcategories": [
-                                {
-                                    "id": "schist",
-                                    "label": {
-                                        "ja": "結晶片岩",
-                                        "en": "Schist"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "gneiss",
-                                    "label": {
-                                        "ja": "片麻岩",
-                                        "en": "Gneiss"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "serpentinite",
-                                    "label": {
-                                        "ja": "蛇紋岩",
-                                        "en": "Serpentinite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "regional_metamorphic_rock_others",
-                                    "label": {
-                                        "ja": "その他",
-                                        "en": "Others"
-                                    },
-                                    "subcategories": []
-                                }
-                            ]
+                            "subcategories": []
                         },
                         {
                             "id": "contact_metamorphic_rock",
@@ -168,32 +53,7 @@
                                 "ja": "接触変成岩",
                                 "en": "Contact metamorphic rocks"
                             },
-                            "subcategories": [
-                                {
-                                    "id": "hornfels",
-                                    "label": {
-                                        "ja": "ホルンフェルス",
-                                        "en": "Hornfels"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "skarn",
-                                    "label": {
-                                        "ja": "スカルン",
-                                        "en": "Skarn"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "contact_metamorphic_others",
-                                    "label": {
-                                        "ja": "その他",
-                                        "en": "Others"
-                                    },
-                                    "subcategories": []
-                                }
-                            ]
+                            "subcategories": []
                         }
                     ]
                 },
@@ -210,48 +70,7 @@
                                 "ja": "砕屑岩",
                                 "en": "Clastic rocks"
                             },
-                            "subcategories": [
-                                {
-                                    "id": "conglomerate",
-                                    "label": {
-                                        "ja": "礫岩",
-                                        "en": "Conglomerate"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "sandstone",
-                                    "label": {
-                                        "ja": "砂岩",
-                                        "en": "Sandstone"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "mudstone",
-                                    "label": {
-                                        "ja": "泥岩",
-                                        "en": "Mudstone"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "tuff",
-                                    "label": {
-                                        "ja": "凝灰岩",
-                                        "en": "Tuff"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "clastic_rock_others",
-                                    "label": {
-                                        "ja": "その他",
-                                        "en": "Others"
-                                    },
-                                    "subcategories": []
-                                }
-                            ]
+                            "subcategories": []
                         },
                         {
                             "id": "biochemical_rocks",
@@ -259,32 +78,7 @@
                                 "ja": "生物岩",
                                 "en": "Biochemical rocks"
                             },
-                            "subcategories": [
-                                {
-                                    "id": "limestone",
-                                    "label": {
-                                        "ja": "石灰岩",
-                                        "en": "Limestone"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "chert",
-                                    "label": {
-                                        "ja": "チャート",
-                                        "en": "Chert"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "biochemical_rock_others",
-                                    "label": {
-                                        "ja": "その他",
-                                        "en": "Others"
-                                    },
-                                    "subcategories": []
-                                }
-                            ]
+                            "subcategories": []
                         },
                         {
                             "id": "chemical_rocks",
@@ -292,24 +86,7 @@
                                 "ja": "化学岩",
                                 "en": "Chemical rocks"
                             },
-                            "subcategories": [
-                                {
-                                    "id": "evaporite",
-                                    "label": {
-                                        "ja": "蒸発岩",
-                                        "en": "Evaporite"
-                                    },
-                                    "subcategories": []
-                                },
-                                {
-                                    "id": "chemical_rock_others",
-                                    "label": {
-                                        "ja": "その他",
-                                        "en": "Others"
-                                    },
-                                    "subcategories": []
-                                }
-                            ]
+                            "subcategories": []
                         }
                     ]
                 }
