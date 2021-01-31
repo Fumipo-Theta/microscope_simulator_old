@@ -1,3 +1,6 @@
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import { Footer } from './component/footer/footer'
 /**
  *  Language code of sample list is such as "ja" or "en".
  */
@@ -6,7 +9,6 @@ import setToggleNicolEvents from "./setToggleNicolEvents.js"
 import setRockSelectEventHandlers from "./setRockSelectEventHandlers.js"
 import setCanvasEventHandlers from "./setCanvasEventHandlers.js"
 import setLanguageSelectEventHandlers from "./setLanguageSelectEventHandlers.js"
-import setContactFormEventHandlers from "./setContactFormEventHandlers.js"
 import initState from "./state/initState.js"
 import updateViewerGeometry from "./updateViewerGeometry.js"
 import updateView from "./updateView.js"
@@ -132,8 +134,11 @@ function init(state) {
     setRockSelectEventHandlers(state)
     setCanvasEventHandlers(state)
     setLanguageSelectEventHandlers(state)
-    setContactFormEventHandlers(state)
 
+    ReactDOM.render(
+        <Footer />,
+        document.getElementById("footer")
+    )
 }
 
 window.addEventListener(
