@@ -28,6 +28,9 @@ jobs:
       - run:
           name: upload to S3
           command: aws s3 cp ./release s3://scopinrock-dev/ --recursive
+      - run:
+          name: clear cache of CloudFront
+          command: aws cloudfront create-invalidation --distribution-id E2C8QROZUQ04O5 --paths "/*"
 
 orbs:
   node: circleci/node@4.1.0
