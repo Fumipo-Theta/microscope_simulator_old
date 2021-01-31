@@ -30,22 +30,28 @@ Switch open Nicol and crossed Nicols by a toggle button.
 
 ## For development
 
+### Pre-requirements
+
+* install Node.js
+  * ver. 15.4 or later is recommended.
+* install yarn
+
 ### Install packages
 
-```
-npm install
+```console
+yarn install
 ```
 
 ### Testing
 
-```
-npm test
+```console
+yarn test
 ```
 
 ### Build
 
-```
-$ npm run build
+```console
+yarn build
 ```
 
 The build products are output under the `release` directory.
@@ -55,26 +61,34 @@ You can switch build mode as below.
 
 Windows (powershell):
 
-```
+```console
 $env:NODE_ENV="development"; npm run build
 $env:NODE_ENV="production"; npm run build
 ```
 
 Mac & Linux
 
-```
+```console
 NODE_ENV=development npm run build
 NODE_ENV=production npm run build
 ```
 
 ### Launch dev server
 
-```
-npm run start
+```console
+yarn start
 ```
 
-Then access to http://localhost:8080/release/.
-If you use Google Chrome, and testing with fetching image packages from remote server, please access via http://lvh.me:8080/release/ to avoid CORS problem.
+Then access to http://localhost:8081/release/ .
+If you use Google Chrome, and testing with fetching image packages from remote server, please access via http://lvh.me:8081/release/ to avoid CORS problem.
+
+### Launch storybook
+
+```
+yarn storybook
+```
+
+Then access to http://localhost:9001 .
 
 ### Prepare thin-section image package
 
