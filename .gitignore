@@ -6,3 +6,4 @@ data-packages/
 image_package_root/
 zipped/
 zipped-min/
+*.log
