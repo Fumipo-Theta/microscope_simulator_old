@@ -12,8 +12,8 @@ import DummyLocalStorage from "../local_storage/DummyLocalStorage.js";
 class Config {
     constructor() {
         this.endpoint = compileEnv == "production"
-            ? "https://d3uqzv7l1ih05d.cloudfront.net/"
-            : "../../image_package_root/"
+            ? "https://d3uqzv7l1ih05d.cloudfront.net/" // Endpoint should be URL or
+            : "../../example_image_package_root/"      // relative path from deployed index.html
 
         this.indexedDBName = "db_v3"
         this.storageName = "files"
