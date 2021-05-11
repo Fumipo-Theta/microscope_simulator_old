@@ -13,7 +13,7 @@ class Config {
     constructor() {
         this.endpoint = compileEnv == "production"
             ? "https://d3uqzv7l1ih05d.cloudfront.net/"
-            : "../../image_package_root/"
+            : "../../example_image_package_root/"
 
         this.indexedDBName = "db_v3"
         this.storageName = "files"
