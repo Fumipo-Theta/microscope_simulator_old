@@ -1,5 +1,5 @@
 import sanitizeID from "./sanitizeID.js"
-import { cycleBy, stepBy } from "./rotation_degree_handlers.js"
+import { cycleBy, stepBy, mirrorBy } from "./rotation_degree_handlers.js"
 
 function getRotationCenter(meta) {
     return (meta.hasOwnProperty("rotate_center"))
