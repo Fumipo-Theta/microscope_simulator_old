@@ -79,8 +79,8 @@ NODE_ENV=production npm run build
 yarn start
 ```
 
-Then access to http://localhost:8081/release/ .
-If you use Google Chrome, and testing with fetching image packages from remote server, please access via http://lvh.me:8081/release/ to avoid CORS problem.
+Then access to http://localhost:8080/release/ .
+If you use Google Chrome, and testing with fetching image packages from remote server, please access via http://lvh.me:8080/release/ to avoid CORS problem.
 
 ### Launch storybook
 
