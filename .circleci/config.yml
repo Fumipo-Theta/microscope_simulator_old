@@ -8,8 +8,8 @@ jobs:
           install-yarn: true
       - run: node --version
       - run:
-          name: install node modules
-          command: npm ci
+          name: install node modules by yarn
+          command: yarn install
       - run:
           name: build for production
           command: NODE_ENV=production npm run build
