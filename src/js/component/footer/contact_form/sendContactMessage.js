@@ -1,5 +1,7 @@
-export default async function sendContactMessage(e, messageDOM) {
+export default async function sendContactMessage(e) {
+    if (Array.from(e.target.classList).includes("pending")) return
 
+    const messageDOM = document.querySelector("#form-contact .form-message")
     const button = e.target
     button.classList.add("pending")
 

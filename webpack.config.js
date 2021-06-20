@@ -5,13 +5,12 @@ const VERSION = process.env.npm_package_version;
 const compileEnv = process.env.NODE_ENV == "production" ? "production" : "development"
 
 console.log("Compile env: ", compileEnv)
-console.log("Access to local server from: http://lvh.me:8080/release")
 
 const outputPath = `${__dirname}/release`
 
 module.exports = [
     {
-        entry: `${__dirname}/src/js/index.js`,
+        entry: `${__dirname}/src/js/index.jsx`,
         output: {
             path: `${outputPath}/js/`,
             filename: "app.js",
@@ -34,7 +33,23 @@ module.exports = [
         devServer: {
             contentBase: __dirname,
             disableHostCheck: true
-        }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.(js|ts|jsx|tsx)$/,
+                    use: 'ts-loader'
+                },
+                {
+                    test: /\.css$/,
+                    loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+                }
+            ]
+        },
+        resolve: {
+            extensions: [".ts", ".tsx", ".js", ".json"]
+        },
+        target: "web"
     },
     {
         entry: `${__dirname}/src/sw/service_worker.js`,
@@ -81,6 +96,22 @@ module.exports = [
         devServer: {
             contentBase: __dirname,
             disableHostCheck: true
-        }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.js$/,
+                    loader: 'string-replace-loader',
+                    options: {
+                        search: '@VERSION@',
+                        replace: VERSION,
+                    }
+                }
+            ]
+        },
+        resolve: {
+            extensions: [".ts", ".tsx", ".js", ".json"]
+        },
+        target: "web"
     }
 ]
