@@ -131,7 +131,7 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                      "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
+                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
                         "in_crossed": "Another text to be shown in crossed Nicols mode."
                     }
                 }
