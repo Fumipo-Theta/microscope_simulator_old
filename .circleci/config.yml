@@ -1,5 +1,24 @@
 jobs:
-  build:
+  build-dev:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: true
+      - run: node --version
+      - run:
+          name: install node modules by yarn
+          command: yarn install
+      - run:
+          name: build for production
+          command: CONFIG_JSON=$CONFIG_JSON_PROD npm run build
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - release/dev
+  build-prod:
     docker:
       - image: "cimg/base:stable"
     steps:
@@ -24,10 +43,10 @@ jobs:
       - aws-cli/setup
       - attach_workspace:
           at: .
-      - run: ls ./release/prod
+      - run: ls ./release/dev
       - run:
           name: upload to S3
-          command: aws s3 cp ./release/prod s3://scopinrock-dev/ --recursive
+          command: aws s3 cp ./release/dev s3://scopinrock-dev/ --recursive
       - run:
           name: clear cache in CDN
           command: aws cloudfront create-invalidation --distribution-id $CF_DIST_ID_DEV --paths "/*" "/"
@@ -52,17 +71,18 @@ version: 2.1
 workflows:
   deploy-to-dev:
     jobs:
-      - build
+      - build-dev
+      - build-prod
       - deploy-to-dev:
           requires:
-            - build
+            - build-dev
           filters:
             branches:
               only:
                 - master
       - deploy-to-prod:
           requires:
-            - build
+            - build-prod
           filters:
             branches:
               only:
