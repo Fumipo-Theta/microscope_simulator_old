@@ -12,7 +12,7 @@ module.exports = (process_env, argv) => {
     console.log("compile mode: ", compileMode)
     console.log("config", configJson)
 
-    const outputPath = compileMode == "production" ? `${__dirname}/release/prod` : `${__dirname}/release/dev`
+    const outputPath = `${__dirname}/release`
 
     const conf_main = {
         entry: `${__dirname}/src/js/index.jsx`,

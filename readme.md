@@ -50,27 +50,38 @@ yarn test
 
 ### Build
 
-```console
-yarn build
-```
+- For production mode
+  ```console
+  yarn build:prod
+  ```
+  - JavaScript is minified
+- For developing mode
+  ```console
+  yarn build
+  ```
+  - Source map is available
 
 The build products are output under the `release` directory.
 The entry point of the application is `release/index.html`.
 
-You can switch build mode as below.
+#### configuration
 
-Windows (powershell):
+You can configure the app by environmental variable `CONFIG_JSON`, which is JSON string.
 
-```console
-$env:NODE_ENV="development"; npm run build
-$env:NODE_ENV="production"; npm run build
+Now you can set:
+
+- `package_endpoint`: indicates path or url to the image packages repository
+
+Windows (PowerShell)
+
+```sh
+$env:CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}' yarn build
 ```
 
-Mac & Linux
+MAc/Linux
 
-```console
-NODE_ENV=development npm run build
-NODE_ENV=production npm run build
+```sh
+CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}' yarn build
 ```
 
 ### Launch dev server

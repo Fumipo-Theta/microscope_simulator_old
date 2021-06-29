@@ -12,7 +12,7 @@
         "build:prod": "webpack build --env COMPILE_ENV=prod",
         "build": "webpack build",
         "watch": "webpack --watch",
-        "start": "webpack serve --mode development --hot --port 8080",
+        "start": "webpack serve --mode development --hot --inline --port 8080",
         "storybook": "start-storybook -p 9001 -c ./internals/storybook"
     },
     "repository": {
