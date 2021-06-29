@@ -11,24 +11,21 @@ import DummyLocalStorage from "../local_storage/DummyLocalStorage.js";
 
 class Config {
     constructor() {
-        this.endpoint = compileEnv == "production"
-            ? "https://d3uqzv7l1ih05d.cloudfront.net/" // Endpoint should be URL or
-            : "../../example_image_package_root/"      // relative path from deployed index.html
-
+        this.endpoint = configJson.package_endpoint
         this.indexedDBName = "db_v3"
         this.storageName = "files"
     }
 
     getSampleListURL() {
-        return this.endpoint + "rock_list.json"
+        return this.endpoint + "/rock_list.json"
     }
 
     getSampleCategoryURL() {
-        return this.endpoint + "category.json"
+        return this.endpoint + "/category.json"
     }
 
     getImageDataPath(packageName) {
-        return this.endpoint + "packages/" + packageName + "/"
+        return this.endpoint + "/packages/" + packageName + "/"
     }
 
     getDBName() {
@@ -41,9 +38,7 @@ class Config {
 }
 
 
-const compileEnv = process.env.NODE_ENV
-
-console.info("config.js: compileEnv: ", compileEnv)
+const configJson = JSON.parse('@CONFIG_JSON@')
 
 export const staticSettings = new Config()
 

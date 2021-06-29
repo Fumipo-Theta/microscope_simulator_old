@@ -12,38 +12,38 @@ jobs:
           command: yarn install
       - run:
           name: build for production
-          command: NODE_ENV=production npm run build
+          command: CONFIG_JSON=$CONFIG_JSON_PROD npm run build:prod
 
       - persist_to_workspace:
           root: .
           paths:
-            - release
+            - release/prod
   deploy-to-dev:
     executor: aws-cli/default
     steps:
       - aws-cli/setup
       - attach_workspace:
           at: .
-      - run: ls ./release
+      - run: ls ./release/prod
       - run:
           name: upload to S3
-          command: aws s3 cp ./release s3://scopinrock-dev/ --recursive
+          command: aws s3 cp ./release/prod s3://scopinrock-dev/ --recursive
       - run:
           name: clear cache in CDN
-          command: aws cloudfront create-invalidation --distribution-id E2C8QROZUQ04O5 --paths "/*" "/"
+          command: aws cloudfront create-invalidation --distribution-id $CF_DIST_ID_DEV --paths "/*" "/"
   deploy-to-prod:
     executor: aws-cli/default
     steps:
       - aws-cli/setup
       - attach_workspace:
           at: .
-      - run: ls ./release
+      - run: ls ./release/prod
       - run:
           name: upload to S3
-          command: aws s3 cp ./release s3://fumipo-theta-microscope/ --recursive
+          command: aws s3 cp ./release/prod s3://fumipo-theta-microscope/ --recursive
       - run:
           name: clear cache in CDN
-          command: aws cloudfront create-invalidation --distribution-id E1YKTP3UQCYHGE --paths "/*" "/"
+          command: aws cloudfront create-invalidation --distribution-id $CF_DIST_ID_PROD --paths "/*" "/"
 
 orbs:
   node: circleci/node@4.1.0
