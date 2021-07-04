@@ -70,6 +70,7 @@ module.exports = (process_env, argv) => {
             ]
         },
         resolve: {
+            alias: { '@src': path.resolve(__dirname, 'src/') },
             extensions: [".ts", ".tsx", ".js", ".json"]
         },
         target: "web"
