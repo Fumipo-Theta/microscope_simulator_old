@@ -67,6 +67,7 @@ The entry point of the application is `release/index.html`.
 #### configuration
 
 You can configure the app by environmental variable `CONFIG_JSON`, which is JSON string.
+When the variable is not set, [`config.example.json`](./config.example.json) is loaded as default.
 
 Now you can set:
 
@@ -78,7 +79,7 @@ Windows (PowerShell)
 $env:CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}' yarn build
 ```
 
-MAc/Linux
+Mac/Linux
 
 ```sh
 CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}' yarn build
