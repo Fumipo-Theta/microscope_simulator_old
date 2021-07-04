@@ -8,6 +8,7 @@
         "test": "test"
     },
     "scripts": {
+        "test:watch": "jest --watch",
         "test": "jest",
         "build:prod": "webpack build --env COMPILE_ENV=prod",
         "build": "webpack build",
