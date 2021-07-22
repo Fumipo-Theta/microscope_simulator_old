@@ -11,6 +11,4 @@ export const cycleBy = unit => val => {
 
 export const mirrorBy = (center) => val => val > center ? 2 * center - val : val
 
-export const isInverse = degree => (180 <= degree)
-
 export const rotateSign = (clockwise = true) => clockwise ? -1 : 1

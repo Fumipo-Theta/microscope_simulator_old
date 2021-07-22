@@ -1,3 +1,4 @@
+// Deprecated
 export default function clipGeometoryFromImageCenter(state) {
 
     return [

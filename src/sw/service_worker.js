@@ -8,14 +8,15 @@ const STATIC_FILES = [
     ORIGIN + '/index.html',
     ORIGIN + '/js/app.js',
     ORIGIN + '/css/main.css',
-    ORIGIN + '/js/zip.js',
-    ORIGIN + '/js/jsinflate.js',
+    ORIGIN + '/js/lib/zip.js',
+    ORIGIN + '/js/lib/jsinflate.js',
     ORIGIN + '/images/SCOPin_image.svg',
     ORIGIN + '/images/ProfilePhoto.jpg',
     ORIGIN + '/images/facebook-brands.svg',
     ORIGIN + '/images/twitter-square-brands.svg',
     ORIGIN + '/images/line-brands.svg',
     ORIGIN + '/images/SCOPin_favicon.png',
+    ORIGIN + '/images/tune.svg',
 
     ORIGIN + "/js/lib/axios/dist/axios.standalone.js",
     ORIGIN + "/js/lib/CryptoJS/rollups/hmac-sha256.js",
@@ -27,10 +28,10 @@ const STATIC_FILES = [
     ORIGIN + "/js/lib/apiGatewayCore/apiGatewayClient.js",
     ORIGIN + "/js/lib/apiGatewayCore/simpleHttpClient.js",
     ORIGIN + "/js/lib/apiGatewayCore/utils.js",
-    ORIGIN + "/js/apigClient.js",
-    ORIGIN + "/js/payment.js",
+    ORIGIN + "/js/lib/apigClient.js",
+    ORIGIN + "/js/lib/payment.js",
     //"https://js.stripe.com/v3/",
-    ORIGIN + "/js/app_social_connection.js",
+    ORIGIN + "/js/lib/app_social_connection.js",
 
 ];
 

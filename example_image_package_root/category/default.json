@@ -1,0 +1,154 @@
+{
+    "categories": [
+        {
+            "id": "rock",
+            "label": {
+                "ja": "岩石",
+                "en": "Rock samples"
+            },
+            "subcategories": [
+                {
+                    "id": "igneous_rock",
+                    "label": {
+                        "ja": "火成岩",
+                        "en": "Igneous rocks"
+                    },
+                    "subcategories": [
+                        {
+                            "id": "volcanic_rock",
+                            "label": {
+                                "ja": "火山岩",
+                                "en": "Volcanic rocks"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "plutonic_rock",
+                            "label": {
+                                "ja": "深成岩",
+                                "en": "Plutonic rocks"
+                            },
+                            "subcategories": []
+                        }
+                    ]
+                },
+                {
+                    "id": "metamorphic_rock",
+                    "label": {
+                        "ja": "変成岩",
+                        "en": "Metamorphic rocks"
+                    },
+                    "subcategories": [
+                        {
+                            "id": "regional_metamorphic_rock",
+                            "label": {
+                                "ja": "広域変成岩",
+                                "en": "Regional metamorphic rocks"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "contact_metamorphic_rock",
+                            "label": {
+                                "ja": "接触変成岩",
+                                "en": "Contact metamorphic rocks"
+                            },
+                            "subcategories": []
+                        }
+                    ]
+                },
+                {
+                    "id": "sedimentary_rock",
+                    "label": {
+                        "ja": "堆積岩",
+                        "en": "Sedimentary rocks"
+                    },
+                    "subcategories": [
+                        {
+                            "id": "clastic_rock",
+                            "label": {
+                                "ja": "砕屑岩",
+                                "en": "Clastic rocks"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "biochemical_rocks",
+                            "label": {
+                                "ja": "生物岩",
+                                "en": "Biochemical rocks"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "chemical_rocks",
+                            "label": {
+                                "ja": "化学岩",
+                                "en": "Chemical rocks"
+                            },
+                            "subcategories": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "sediment",
+            "label": {
+                "ja": "堆積物",
+                "en": "Sediments"
+            },
+            "subcategories": [
+                {
+                    "id": "clastic_sediment",
+                    "label": {
+                        "ja": "砕屑物",
+                        "en": "Clastic sediments"
+                    },
+                    "subcategories": [
+                        {
+                            "id": "gravel",
+                            "label": {
+                                "ja": "礫",
+                                "en": "Gravel"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "sand",
+                            "label": {
+                                "ja": "砂",
+                                "en": "Sand"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "mud",
+                            "label": {
+                                "ja": "泥",
+                                "en": "Mud"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "bioclastic_sediment",
+                            "label": {
+                                "ja": "生物砕屑物",
+                                "en": "Bioclast"
+                            },
+                            "subcategories": []
+                        },
+                        {
+                            "id": "sediment_others",
+                            "label": {
+                                "ja": "その他",
+                                "en": "Others"
+                            },
+                            "subcategories": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

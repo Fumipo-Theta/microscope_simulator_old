@@ -30,45 +30,77 @@ Switch open Nicol and crossed Nicols by a toggle button.
 
 ## For development
 
+### Pre-requirements
+
+* install Node.js
+  * ver. 15.4 or later is recommended.
+* install yarn
+
 ### Install packages
 
+```console
+yarn install
 ```
-npm install
+
+### Testing
+
+```console
+yarn test
 ```
 
 ### Build
 
-```
-$ npm run build
-```
+- For production mode
+  ```console
+  yarn build:prod
+  ```
+  - JavaScript is minified
+- For developing mode
+  ```console
+  yarn build
+  ```
+  - Source map is available
 
 The build products are output under the `release` directory.
 The entry point of the application is `release/index.html`.
 
-You can switch build mode as below.
+#### configuration
 
-Windows (powershell):
+You can configure the app by environmental variable `CONFIG_JSON`, which is JSON string.
+When the variable is not set, [`config.example.json`](./config.example.json) is loaded as default.
 
+Now you can set:
+
+- `package_endpoint`: indicates path or url to the image packages repository
+
+Windows (PowerShell)
+
+```sh
+$env:CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}'; yarn build
 ```
-$env:NODE_ENV="development"; npm run build
-$env:NODE_ENV="production"; npm run build
-```
 
-Mac & Linux
+Mac/Linux
 
-```
-NODE_ENV=development npm run build
-NODE_ENV=production npm run build
+```sh
+CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}' yarn build
 ```
 
 ### Launch dev server
 
-```
-npm run start
+```console
+yarn start
 ```
 
-Then access to http://localhost:8080/release/.
+Then access to http://localhost:8080/release/ .
 If you use Google Chrome, and testing with fetching image packages from remote server, please access via http://lvh.me:8080/release/ to avoid CORS problem.
+
+### Launch storybook
+
+```
+yarn storybook
+```
+
+Then access to http://localhost:9001 .
 
 ### Prepare thin-section image package
 

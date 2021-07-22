@@ -7,10 +7,10 @@
 ## 薄片画像パッケージについて
 
 静的配信の場合、薄片画像パッケージは下のようなディレクトリ構造をもつ。
-`manifest.json`、`o1.jpg`、`c1.jpg`は必須である。
+`manifest.json`、`o1.jpg`、`c1.jpg`、`jpg.zip`は必須である。
 薄片画像はオープンニコル下の写真 (ファイル名`o1`～連番) とクロスニコル下の写真 (ファイル名 `c1`～連番) をzip形式でまとめる必要がある。
 zipファイルの名前は`"画像フォーマット名".zip`とする。
-この例では、薄片画像の画像フォーマットとして `jpg`、`webp`、`jp2`形式に対応している。
+薄片画像の画像フォーマットとして `jpg`、`webp`、`jp2`形式を使用できる。
 
 ```
 id_of_package
@@ -97,6 +97,8 @@ TODO: 更新を楽にするため、既存のパッケージを読み込める�
 オープンニコル、クロスニコルそれぞれ別セットとして画像を選択する。
 このときパッケージ内の画像は選択順に格納されるので、視野を連続的に回転させながら撮影した場合は最初に撮影したものから順に選択するよう注意する。
 
+ファイル名はパッケージングされるとき自動的に変更される。
+
 画像を選択した段階で、ページ下部にプレビュー画面が表示される。
 
 ### サンプル情報を入力
@@ -158,6 +160,35 @@ TODO: 更新を楽にするため、既存のパッケージを読み込める�
 静的配信の場合、薄片画像用のディレクトリにzipファイルを展開して配置すればいい。
 
 また、静的配信で使用する`rock_list.json` の `"list_of_sample"` フィールドの配列に追加するjson文字列も生成される。
+
+**カテゴリ情報に関して**
+
+カテゴリでサンプルを絞り込めるようにする場合、`rock_list.json` に登録するjson文字列に、手動でカテゴリ情報を書き込む必要がある。
+カテゴリは、パッケージディレクトリの `category.json` の定義内容(例えば[これ](../../example_image_package_root/category.json))と整合的である必要がある。
+
+上の例では、以下のような階層構造でカテゴリを定義している。
+
+```
+|-rock
+|  |-igneous_rock
+|  |  |-volcanic_rock
+|  |  |  |-rhyolite
+|  |  |  |-andesite
+|  |  |-plutonic_rock
+|  |     |-granite
+|  |-metamorphic_rock
+|
+|-sediment
+```
+
+Rhyoliteであるサンプルのカテゴリを表すリストは、`category.json` に定義された `rhyolite` を表す階層構造のリストのスーパーセットでなければならない。
+すなわち、`category.json` に定義された `rhyolite` の階層構造は `['rock', 'igneous_rock', 'volcanic_rock', 'rhyolite']` と定義されている。
+サンプルのカテゴリがそのスーパーセットであるとは以下のように定義されているということ。
+- `['rock', 'igneous_rock', 'volcanic_rock', 'rhyolite']`
+- `['rock', 'igneous_rock', 'volcanic_rock', 'lava', 'rhyolite']`
+
+Rhyoliteサンプルの定義として以下は `category.json` と整合的でない。
+- `['rock', 'igneous_rock', 'lava', 'rhyolite']`
 
 ## 画像データの変換
 
