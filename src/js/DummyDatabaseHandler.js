@@ -1,4 +1,4 @@
-import DatabaseHandler from "./DatabaseHandler.js"
+import DatabaseHandler from "./DatabaseHandler"
 
 export default class DummyDatabaseHandler extends DatabaseHandler {
     constructor(db_name, version, storeName, primaryKeyName) {
