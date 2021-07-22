@@ -1,8 +1,8 @@
 import { staticSettings, cacheStorage } from "../config/config"
 
-export default function fetchSampleListWithCache() {
+export default function fetchSampleListWithCache(sampleListName) {
     return new Promise(async (res, rej) => {
-        const listURL = staticSettings.getSampleListURL();
+        const listURL = staticSettings.getSampleListURL(sampleListName);
         try {
             var response = await fetch(listURL, { mode: 'cors' })
                 .catch((e) => { throw Error(e) })

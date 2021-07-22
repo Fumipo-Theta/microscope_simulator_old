@@ -19,7 +19,8 @@ class CategoryState {
 }
 
 export default async function generateCategorySelector(wrapper: HTMLElement, state: RootState) {
-    const category = await fetch(staticSettings.getSampleCategoryURL())
+    const { uiState: { queryParams } } = state
+    const category = await fetch(staticSettings.getSampleCategoryURL(queryParams.category))
         .then(response => response.json())
     const activeCategories = category.categories.map(cat => {
         const [child, categories] = makeCategoryImpl(cat, state.uiState.language)
