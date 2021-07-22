@@ -4,7 +4,7 @@ import { Footer } from '@src/js/component/footer/footer'
 /**
  *  Language code of sample list is such as "ja" or "en".
  */
-import { RootState } from '@src/js/type/entity'
+import { RootState, QueryParams } from '@src/js/type/entity'
 import deleteOldVersionDatabase from "./deleteOldVersionDatabase"
 import setToggleNicolEvents from "./setToggleNicolEvents"
 import setRockSelectEventHandlers from "./setRockSelectEventHandlers"
@@ -58,6 +58,11 @@ const get_package_id = () => {
     return hash === "" ? undefined : hash
 }
 
+const parseQueryParams = (): QueryParams => {
+    const queryString = location.search;
+    return queryString.substring(1).split('&').map((p) => p.split('=')).reduce((obj, e) => ({ ...obj, [e[0]]: e[1] }), {});
+}
+
 /**
     *
     * Entry point function !
@@ -79,6 +84,7 @@ function init(state: RootState) {
             false
         );
 
+    state.uiState.queryParams = parseQueryParams()
 
     window.addEventListener(
         "resize",
@@ -112,7 +118,7 @@ function init(state: RootState) {
         .then(getStoredDBEntryKeys)
         .then(tee(_ => {
             const uiState = state.uiState
-            updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter)
+            updateSampleList(uiState.language, uiState.storedKeys, uiState.sampleFilter, uiState.queryParams.sample_list)
         }))
         .then(state => {
             const packageID = get_package_id()

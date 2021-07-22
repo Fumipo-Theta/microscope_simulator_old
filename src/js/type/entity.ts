@@ -102,6 +102,7 @@ export type UiState = {
     sampleId?: PackageId,
     samplePackage?: SamplePackage,
     sampleMeta?: SampleMeta,
+    queryParams?: QueryParams,
 }
 
 
@@ -121,4 +122,9 @@ export type RootState = {
         repo?: any,
         handler?: any,
     }
+}
+
+export interface QueryParams {
+    sample_list?: string,
+    category?: string,
 }

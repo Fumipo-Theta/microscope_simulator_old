@@ -20,12 +20,14 @@ class Config {
         this.storageName = "files"
     }
 
-    getSampleListURL() {
-        return this.endpoint + "/rock_list.json"
+    getSampleListURL(listName?: string) {
+        const fileName = listName || "default"
+        return this.endpoint + "/sample_list/" + fileName + ".json"
     }
 
-    getSampleCategoryURL() {
-        return this.endpoint + "/category.json"
+    getSampleCategoryURL(categorySetName?: string) {
+        const fileName = categorySetName || "default"
+        return this.endpoint + "/category/" + fileName + ".json"
     }
 
     getImageDataPath(packageName) {
