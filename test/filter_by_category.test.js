@@ -1,4 +1,4 @@
-import SampleFilter from "../src/js/remote_repo/static/filter_by_category.js"
+import SampleFilter from "../src/js/remote_repo/static/filter_by_category"
 
 const rhyolite = {
     "package-name": "Q27_quartz",

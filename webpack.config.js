@@ -15,7 +15,7 @@ module.exports = (process_env, argv) => {
     const outputPath = `${__dirname}/release`
 
     const conf_main = {
-        entry: `${__dirname}/src/js/index.jsx`,
+        entry: `${__dirname}/src/js/index.tsx`,
         output: {
             path: `${outputPath}/js/`,
             filename: "app.js",
@@ -60,7 +60,7 @@ module.exports = (process_env, argv) => {
                     use: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
                 },
                 {
-                    test: /\.(js|ts)$/,
+                    test: /src.*\.(js|ts)$/,
                     loader: 'string-replace-loader',
                     options: {
                         search: "'@CONFIG_JSON@'",
@@ -70,6 +70,7 @@ module.exports = (process_env, argv) => {
             ]
         },
         resolve: {
+            alias: { '@src': path.resolve(__dirname, 'src/') },
             extensions: [".ts", ".tsx", ".js", ".json"]
         },
         target: "web"
@@ -98,7 +99,7 @@ module.exports = (process_env, argv) => {
     }
 
     const conf_make_package = {
-        entry: `${__dirname}/src/js/index_make_package.js`,
+        entry: `${__dirname}/src/js/index_make_package.ts`,
         output: {
             path: `${outputPath}/js/`,
             filename: "app_make_package.js",
@@ -120,16 +121,29 @@ module.exports = (process_env, argv) => {
         module: {
             rules: [
                 {
+                    test: /\.(js|ts|jsx|tsx)$/,
+                    use: 'ts-loader'
+                },
+                {
                     test: /\.js$/,
                     loader: 'string-replace-loader',
                     options: {
                         search: '@VERSION@',
                         replace: version,
                     }
-                }
+                },
+                {
+                    test: /src.*\.(js|ts)$/,
+                    loader: 'string-replace-loader',
+                    options: {
+                        search: "'@CONFIG_JSON@'",
+                        replace: JSON.stringify(configJson),
+                    }
+                },
             ]
         },
         resolve: {
+            alias: { '@src': path.resolve(__dirname, 'src/') },
             extensions: [".ts", ".tsx", ".js", ".json"]
         },
         target: "web"

@@ -1,6 +1,6 @@
 
-import updateSampleList from "../usecase/update_sample_list.js"
-import { splitCategory } from "./generate_category.js"
+import updateSampleList from "../usecase/update_sample_list"
+import { splitCategory } from "./generate_category"
 
 /**
  * This function must be called after element in the
