@@ -16,6 +16,7 @@ const STATIC_FILES = [
     ORIGIN + '/images/twitter-square-brands.svg',
     ORIGIN + '/images/line-brands.svg',
     ORIGIN + '/images/SCOPin_favicon.png',
+    ORIGIN + '/images/tune.svg',
 
     ORIGIN + "/js/lib/axios/dist/axios.standalone.js",
     ORIGIN + "/js/lib/CryptoJS/rollups/hmac-sha256.js",
