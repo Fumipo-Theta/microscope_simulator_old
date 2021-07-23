@@ -12,6 +12,8 @@ import { viewer_ctx } from "./viewer_canvas"
 import { renderCurrentStateOnCanvas } from "@src/js/component/ViewerContainer/viewer/sample_viewer"
 const JSZip = require('@src/js/lib/jszip.min')
 
+type Base64String = string;
+
 interface State extends RootState {
     loadImages: boolean[],
     autoRotate: boolean,
@@ -19,30 +21,30 @@ interface State extends RootState {
     language: Language,
     desiredImageSize: number,
     desiredThumbnailImageSize: number,
-    open_image_srcs: any,
-    cross_image_srcs: any,
+    open_image_srcs: Array<Base64String>,
+    cross_image_srcs: Array<Base64String>,
+    open_images?: Array<CanvasImageSource>,
+    cross_images?: Array<CanvasImageSource>,
 }
 
 const packageMap = new PackageManifest();
-const upload_state: State = Object.assign(
-    initState(),
-    {
-        "loadImages": [false, true],
-        "autoRotate": false,
-        "viewMode": "validation",
-        "language": "ja" as Language,
-        "desiredImageSize": 150,
-        "desiredThumbnailImageSize": 100,
-        open_image_srcs: {},
-        cross_image_srcs: {},
-    }
-)
+const upload_state: State = {
+    ...initState(),
+    "loadImages": [false, true],
+    "autoRotate": false,
+    "viewMode": "validation",
+    "language": "ja" as Language,
+    "desiredImageSize": 150,
+    "desiredThumbnailImageSize": 100,
+    open_image_srcs: [],
+    cross_image_srcs: [],
+}
 
 function bothImagesLoaded(flags) {
     return flags.reduce((acc, e) => acc && e, true)
 }
 
-function fileSelectHander(e) {
+async function fileSelectHandler(e): Promise<Array<Base64String>> {
     function read(file) {
         return new Promise((res, rej) => {
             const reader = new FileReader()
@@ -58,30 +60,27 @@ function fileSelectHander(e) {
         Promise.all(
             Array.from(files)
                 .map(file => read(file))
-        ).then(res)
+        ).then(res as (arg: Array<Base64String>) => any)
     })
 }
 
 function readImageSize(state: State) {
-    const { uiState: { samplePackage } } = state
-    packageMap.setImageSize(samplePackage.open_images[0])
+    packageMap.setImageSize(state.uiState.samplePackage.open_images[0])
     return state
 }
 
 function readImagesNumber(state: State) {
-    const { uiState: { samplePackage } } = state
-    packageMap.setImagesNumber(samplePackage.open_images.length)
+    packageMap.setImagesNumber(state.uiState.samplePackage.open_images.length)
     return state
 }
 
 async function showImages(state: State) {
-    const { uiState: { samplePackage } } = state
     readImageSize(state)
     readImagesNumber(state)
     const new_state = await updateStateByMeta(state)(packageMap.getPackageID(), packageMap.toJSON())
 
-    samplePackage.open_images = await Promise.all(state.open_image_srcs.map(loadImageFromSrc))
-    samplePackage.cross_images = await Promise.all(state.cross_image_srcs.map(loadImageFromSrc))
+    state.uiState.samplePackage.open_images = await Promise.all(state.open_image_srcs.map(loadImageFromSrc))
+    state.uiState.samplePackage.cross_images = await Promise.all(state.cross_image_srcs.map(loadImageFromSrc))
 
     return updateView(new_state)
         .then(showViewer)
@@ -104,7 +103,7 @@ function loadImageFromSrc(src): Promise<CanvasImageSource> {
 
 function openImagesSelectHandler(state: State) {
     return e => new Promise(async (res, rej) => {
-        state.open_image_srcs = await fileSelectHander(e)
+        state.open_image_srcs = await fileSelectHandler(e)
         state.loadImages[0] = true
         state.uiState.samplePackage.open_images = await Promise.all(state.open_image_srcs.map(loadImageFromSrc))
         await showImages(state)
@@ -115,9 +114,9 @@ function openImagesSelectHandler(state: State) {
 
 function crossImagesSelectHandler(state) {
     return e => new Promise(async (res, rej) => {
-        state.cross_image_srcs = await fileSelectHander(e)
+        state.cross_image_srcs = await fileSelectHandler(e)
         state.loadImages[1] = true
-        state.cross_images = await Promise.all(state.cross_image_srcs.map(loadImageFromSrc))
+        state.uiState.samplePackage.cross_images = await Promise.all(state.cross_image_srcs.map(loadImageFromSrc))
         await showImages(state)
 
         res(state)
@@ -393,8 +392,8 @@ function showPackageSize(state: State) {
 
     const toggleNicolHandler = state => new Promise((res, rej) => {
 
-        toggleNicolButton.checked = state.isCrossNicol
-        state.isCrossNicol = !state.isCrossNicol;
+        toggleNicolButton.checked = state.viewerState.isCrossNicol
+        state.viewerState.isCrossNicol = !state.viewerState.isCrossNicol;
 
         res(state)
     })
@@ -449,6 +448,9 @@ function showPackageSize(state: State) {
 
         state.uiState.sampleMeta.rotateCenter.fromLeft += shift[0] * imageRadius / canvasWidth * 2
         state.uiState.sampleMeta.rotateCenter.fromTop += shift[1] * imageRadius / canvasWidth * 2
+
+        state.viewerState.imageCenterInfo.rotateCenterToRight = state.uiState.sampleMeta.rotateCenter.fromLeft
+        state.viewerState.imageCenterInfo.rotateCenterToBottom = state.uiState.sampleMeta.rotateCenter.fromTop
 
         packageMap.setRotateCenter(
             state.uiState.sampleMeta.rotateCenter.fromLeft,

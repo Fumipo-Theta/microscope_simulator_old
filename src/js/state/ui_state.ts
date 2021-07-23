@@ -7,7 +7,8 @@ function overrideLanguageByLocalStorage(systemLanguage) {
     const lang = (langInLocalStorage !== undefined)
         ? langInLocalStorage
         : systemLanguage;
-    (document.querySelector("option[value=" + lang + "]") as HTMLOptionElement).selected = true
+    const selectedOption = document.querySelector("option[value=" + lang + "]") as HTMLOptionElement
+    if (selectedOption) selectedOption.selected = true
     return lang
 }
 
@@ -25,4 +26,5 @@ export const uiState: UiState = {
     sampleFilter: new SampleFilter(),
     storedKeys: [],
     language: overrideLanguageByLocalStorage(getSystemLanguage()),
+    samplePackage: {}
 }
