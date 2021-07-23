@@ -3,6 +3,7 @@ const fs = require('fs')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const webpack = require('webpack');
 const version = process.env.npm_package_version;
 
 module.exports = (process_env, argv) => {
@@ -61,6 +62,7 @@ module.exports = (process_env, argv) => {
                 },
                 {
                     test: /src.*\.(js|ts)$/,
+                    exclude: `${__dirname}/webpack.config.js`,
                     loader: 'string-replace-loader',
                     options: {
                         search: "'@CONFIG_JSON@'",
@@ -134,6 +136,7 @@ module.exports = (process_env, argv) => {
                 },
                 {
                     test: /src.*\.(js|ts)$/,
+                    exclude: `${__dirname}/webpack.config.js`,
                     loader: 'string-replace-loader',
                     options: {
                         search: "'@CONFIG_JSON@'",
