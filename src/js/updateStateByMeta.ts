@@ -36,7 +36,7 @@ function formatMetadata(meta: Manifest): SampleMeta {
         location: meta.location,
         rockType: meta.rock_type,
         owner: meta.owner,
-        description: meta.description,
+        description: meta.description || meta.discription,
         rotateCenter: getRotationCenter(meta),
         imageWidth: meta.image_width,
         imageHeight: meta.image_height,

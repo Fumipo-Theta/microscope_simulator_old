@@ -4,6 +4,41 @@
 2. メタデータの作成とパッケージ化
 3. 画像データの変換
 
+## パッケージを格納するディレクトリ構造
+
+下記のようなディレクトリ構造とすること。
+
+```
+sample_packages_directory/
+    |- packages/
+    |    |- id_of_package_1/
+    |    |- id_of_package_2/
+    |
+    |- sample_list/
+    |    |- default.json
+    |    |- sample_list_definition.json
+    |
+    |- category/
+         |- default.json
+         |- category_definition.json
+```
+
+### `packages`サブディレクトリ
+
+[後述の薄片画像パッケージ](#薄片画像パッケージについて)を格納する。
+
+### `sample_list`
+
+アプリのサンプルリストに表示するパッケージ一覧を定義したJSONファイルを配置する。
+サンプルリストはクエリパラメータ`?sample_list=sample_list_definition_file_name`のように指定して使用できる。
+クエリパラメータを指定しない場合, `default.json`が使用される。
+
+### `category`サブディレクトリ
+
+[後述のカテゴリ情報](#カテゴリ情報に関して)を定義したJSONファイルを格納する。
+サンプルリストはクエリパラメータ`?category=category_definition_file_name`のように指定して使用できる。
+クエリパラメータを指定しない場合, `default.json`が使用される。
+
 ## 薄片画像パッケージについて
 
 静的配信の場合、薄片画像パッケージは下のようなディレクトリ構造をもつ。
@@ -161,7 +196,7 @@ TODO: 更新を楽にするため、既存のパッケージを読み込める�
 
 また、静的配信で使用する`rock_list.json` の `"list_of_sample"` フィールドの配列に追加するjson文字列も生成される。
 
-**カテゴリ情報に関して**
+### カテゴリ情報に関して
 
 カテゴリでサンプルを絞り込めるようにする場合、`rock_list.json` に登録するjson文字列に、手動でカテゴリ情報を書き込む必要がある。
 カテゴリは、パッケージディレクトリの `category.json` の定義内容(例えば[これ](../../example_image_package_root/category.json))と整合的である必要がある。

@@ -44,6 +44,7 @@ export interface Manifest {
     owner?: I18nMap<string>,
     rock_type?: I18nMap<string>,
     description?: I18nMap<string>,
+    discription?: I18nMap<string>,
     ["scale-unit"]?: string,
     ["scale-pixel"]?: number,
     magnify?: number,
