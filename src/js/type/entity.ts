@@ -60,15 +60,15 @@ export interface Manifest {
 }
 
 export interface SamplePackageZipped {
-    thumbnail: {
+    thumbnail?: {
         "o1.jpg": CanvasImageSource,
         "c1.jpg": CanvasImageSource
     },
-    lastModified: string,
-    id: PackageId,
-    image_format: SampleImageType,
+    lastModified?: string,
+    id?: PackageId,
+    image_format?: SampleImageType,
     zip?: any
-    manifest: string,
+    manifest?: string,
 }
 
 export interface SamplePackage extends SamplePackageZipped {
@@ -101,7 +101,7 @@ export type UiState = {
     storedKeys: Array<string>,
     language: Language,
     sampleId?: PackageId,
-    samplePackage?: SamplePackage,
+    samplePackage: SamplePackage,
     sampleMeta?: SampleMeta,
     queryParams?: QueryParams,
 }
