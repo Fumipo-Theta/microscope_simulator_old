@@ -10,17 +10,17 @@ export const DonationFormCard: React.FC<DonationFormProps> = (_props) => {
             </div>
             <div className="spread">
                 <span className="important">Please donate</span> for maintenence and updating service ! <br />
-                        We will not hold any personal information.
-                </div>
+                We will not hold any personal information.
+            </div>
 
 
-            <form id="payment-form" className="spread inactive">
+            <form id="payment-form" className="spread active">
                 <div className="space-around column-direction">
 
                     <div className="spread">
                         <select id="select-amount" defaultValue="placeholder">
                             <option value='placeholder' disabled style={{ display: 'none' }}>Select amount
-                                </option>
+                            </option>
                             <option value="small">100 JPY (1 USD)</option>
                             <option value="middle">1,000 JPY (10 USD)</option>
                             <option value="large">10,000 JPY (100 USD)</option>
@@ -34,7 +34,7 @@ export const DonationFormCard: React.FC<DonationFormProps> = (_props) => {
                         <div id="card-success" className=" info-text inactive">
                             Payment was successful !
                             Thank you very much !
-                            </div>
+                        </div>
                     </div>
 
                     <div className="spread">
