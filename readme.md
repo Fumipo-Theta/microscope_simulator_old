@@ -100,7 +100,7 @@ If you use Google Chrome, and testing with fetching image packages from remote s
 yarn storybook
 ```
 
-Then access to http://localhost:9001 .
+Then access to http://localhost:6006 .
 
 ### Prepare thin-section image package
 
