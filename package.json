@@ -1,62 +1,71 @@
 {
-    "name": "scopin",
-    "version": "1.10.3",
-    "description": "![SCOPin rock logo](./images/SCOPin_rock_logo.png)",
-    "main": "/release/js/app.js",
-    "directories": {
-        "doc": "docs",
-        "test": "test"
-    },
-    "scripts": {
-        "test:watch": "jest --watch",
-        "test": "jest",
-        "build:prod": "webpack build --env COMPILE_ENV=prod",
-        "build": "webpack build",
-        "watch": "webpack --watch",
-        "start": "webpack serve --mode development --hot --inline --port 8080",
-        "storybook": "start-storybook -p 9001 -c ./internals/storybook"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Fumipo-Theta/microscope_simulator.git"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/Fumipo-Theta/microscope_simulator/issues"
-    },
-    "homepage": "https://github.com/Fumipo-Theta/microscope_simulator#readme",
-    "devDependencies": {
-        "@types/jest": "^26.0.23",
-        "@types/storybook__react": "^5.2.1",
-        "babel-jest": "^27.0.6",
-        "copy-webpack-plugin": "^9.0.1",
-        "css-loader": "^5.0.1",
-        "dotenv-webpack": "^7.0.3",
-        "html-replace-webpack-plugin": "^2.6.0",
-        "html-webpack-plugin": "^5.3.2",
-        "jest": "^27.0.6",
-        "npm-check-updates": "^11.7.1",
-        "preload-webpack-plugin": "^2.3.0",
-        "react": "^17.0.1",
-        "react-docgen-typescript-webpack-plugin": "^1.1.0",
-        "string-replace-loader": "^3.0.3",
-        "style-loader": "^3.0.0",
-        "ts-jest": "^27.0.3",
-        "ts-loader": "^9.2.3",
-        "typescript": "^4.1.3",
-        "webpack": "^5.41.0",
-        "webpack-cli": "^4.7.2",
-        "webpack-dev-server": "^3.11.2"
-    },
-    "dependencies": {
-        "@types/react": "^17.0.0",
-        "@types/react-dom": "^17.0.0",
-        "kind-of": "^6.0.3",
-        "minimist": "^1.2.5",
-        "react-dom": "^17.0.1",
-        "serialize-javascript": "^6.0.0",
-        "set-value": "^4.0.0"
-    }
+  "name": "scopin",
+  "version": "1.10.3",
+  "description": "![SCOPin rock logo](./images/SCOPin_rock_logo.png)",
+  "main": "/release/js/app.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test:watch": "jest --watch",
+    "test": "jest",
+    "build:prod": "webpack build --env COMPILE_ENV=prod",
+    "build": "webpack build",
+    "watch": "webpack --watch",
+    "start": "webpack serve --mode development --hot --inline --port 8080",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fumipo-Theta/microscope_simulator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fumipo-Theta/microscope_simulator/issues"
+  },
+  "homepage": "https://github.com/Fumipo-Theta/microscope_simulator#readme",
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@storybook/addon-actions": "^6.3.6",
+    "@storybook/addon-essentials": "^6.3.6",
+    "@storybook/addon-knobs": "^6.3.0",
+    "@storybook/addon-links": "^6.3.6",
+    "@storybook/react": "^6.3.6",
+    "@types/jest": "^26.0.23",
+    "@types/storybook__react": "^5.2.1",
+    "babel-jest": "^27.0.6",
+    "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^9.0.1",
+    "css-loader": "^5.2.6",
+    "dotenv-webpack": "^7.0.3",
+    "html-replace-webpack-plugin": "^2.6.0",
+    "html-webpack-plugin": "^5.3.2",
+    "jest": "^27.0.6",
+    "npm-check-updates": "^11.7.1",
+    "preload-webpack-plugin": "^2.3.0",
+    "react": "^17.0.1",
+    "react-docgen-typescript-webpack-plugin": "^1.1.0",
+    "storybook-css-modules-preset": "^1.1.1",
+    "string-replace-loader": "^3.0.3",
+    "style-loader": "^3.0.0",
+    "ts-jest": "^27.0.3",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.1.3",
+    "webpack": "^5.41.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "kind-of": "^6.0.3",
+    "minimist": "^1.2.5",
+    "react-dom": "^17.0.1",
+    "serialize-javascript": "^6.0.0",
+    "set-value": "^4.0.0"
+  }
 }
