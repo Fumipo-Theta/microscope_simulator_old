@@ -3,7 +3,6 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { SampleListKeys, SampleListItemKeys, SampleCategoryItemKeys, SampleCategoriesKeys } from "@src/js/type/sample";
 import { SampleListContainer } from "@src/js/component/sample_list/sample_list_container"
-import styles from "./index.module.css"
 
 const sampleListFixture = {
     [SampleListKeys.ListOfSample]: Array(20).fill(0).map((_, i) => {
@@ -52,4 +51,5 @@ Primary.args = {
     sampleList: sampleListFixture,
     sampleCategories: categoriesFixture,
     toBeShrink: false,
+    lang: "ja"
 }
