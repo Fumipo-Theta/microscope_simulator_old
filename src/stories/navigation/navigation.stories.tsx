@@ -1,6 +1,5 @@
 import * as React from "react";
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { RecoilRoot } from "recoil";
 
 import { Navigation } from "@src/js/component/navigation/navigation";
