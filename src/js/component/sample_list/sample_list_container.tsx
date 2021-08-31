@@ -75,6 +75,7 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
         {
             listOfSample.map((sampleListItem, i) => {
                 return <SampleSelectorOption
+                    key={sampleListItem[SampleListItemKeys.PackageName]}
                     index={i + 1}
                     item={sampleListItem}
                     lang={lang}
