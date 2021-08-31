@@ -24,4 +24,5 @@ export const parameters = {
             ...customViewports,
         },
     },
+    layout: 'fullscreen',
 };
