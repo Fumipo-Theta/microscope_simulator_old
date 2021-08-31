@@ -62,29 +62,33 @@ const SampleSelectorOption: React.FC<SampleSelectorOptionProps> = ({ index, item
     const cachedSymbol = cached ? "✔" : ""
     return (
         <div className={styles.optionContainer} onClick={sampleSelectedHandler(item[SampleListItemKeys.PackageName])}>
-            <div className={styles.cachedSymbol}>{cachedSymbol}</div>
-            <div className={styles.optionIndex}>{index}</div>
-            <div className={styles.optionLabel}>
-                {item[SampleListItemKeys.ListName][lang]}
+            <div className={styles.optionWrapper}>
+                <div className={styles.cachedSymbol}>{cachedSymbol}</div>
+                <div className={styles.optionIndex}>{index}</div>
+                <div className={styles.optionLabel}>
+                    {item[SampleListItemKeys.ListName][lang]}
+                </div>
             </div>
         </div>
     )
 }
 
 const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys.ListOfSample]: listOfSample, lang }) => {
-    return <>
-        {
-            listOfSample.map((sampleListItem, i) => {
-                return <SampleSelectorOption
-                    key={sampleListItem[SampleListItemKeys.PackageName]}
-                    index={i + 1}
-                    item={sampleListItem}
-                    lang={lang}
-                    cached={isSampleLocallyCached(sampleListItem, i)}
-                    sampleSelectedHandler={onSampleSelected} />
-            })
-        }
-    </>
+    return <div className={styles.sampleListSelector}>
+        <div className={styles.sampleSelectorWrapper}>
+            {
+                listOfSample.map((sampleListItem, i) => {
+                    return <SampleSelectorOption
+                        key={sampleListItem[SampleListItemKeys.PackageName]}
+                        index={i + 1}
+                        item={sampleListItem}
+                        lang={lang}
+                        cached={isSampleLocallyCached(sampleListItem, i)}
+                        sampleSelectedHandler={onSampleSelected} />
+                })
+            }
+        </div>
+    </div>
 }
 
 export const SampleListContainer: React.FC<Props> = ({ sampleList, sampleCategories }) => {

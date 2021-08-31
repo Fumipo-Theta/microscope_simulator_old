@@ -13,7 +13,7 @@ const sampleListFixture = {
             [SampleListItemKeys.PackageName]: `rhyolite_test_sample_${index}`,
             [SampleListItemKeys.ListName]: {
                 "ja": `流紋岩テストサンプル ${index}`,
-                "en": `Rhyolite test sample ${index}`
+                "en": `Rhyolite test sample long long sample name ${index}`
             },
             [SampleListItemKeys.Category]: ["rock", "igneous_rock", "volcanic_rock", "rhyolite"]
         }
