@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { Language } from "@src/js/type/entity"
 import { SampleListItem, SampleCategoryItemKeys, SampleList, SampleListKeys, SampleCategories, SampleCategoriesKeys, SampleListItemKeys } from "@src/js/type/sample"
+import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
+import { systemLanguageState } from '@src/js/state/atom/system_language_state'
 import styles from "./index.module.css"
 
 type Props = {
     sampleList: SampleList,
     sampleCategories: SampleCategories,
-    toBeShrink: boolean,
-    lang: Language,
 }
 
 type BreadcrumbProps = {
@@ -86,9 +87,11 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
     </>
 }
 
-export const SampleListContainer: React.FC<Props> = ({ sampleList, sampleCategories, toBeShrink, lang }) => {
-    return <div className={`${styles.sampleListContainer} ${toBeShrink ? styles.inActive : ''}`}>
+export const SampleListContainer: React.FC<Props> = ({ sampleList, sampleCategories }) => {
+    const sampleListIsActive = useRecoilValue(sampleListAppearanceState)
+    const currentLanguage = useRecoilValue(systemLanguageState)
+    return <div className={`${styles.sampleListContainer} ${sampleListIsActive ? '' : styles.inActive}`}>
         <SampleCategoryContainer {...sampleCategories} />
-        <SampleListSelector {...sampleList} lang={lang} />
+        <SampleListSelector {...sampleList} lang={currentLanguage} />
     </div>
 }

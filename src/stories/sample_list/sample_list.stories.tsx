@@ -1,4 +1,5 @@
 import React from "react";
+import { RecoilRoot } from "recoil";
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { SampleListKeys, SampleListItemKeys, SampleCategoryItemKeys, SampleCategoriesKeys } from "@src/js/type/sample";
@@ -42,6 +43,9 @@ const categoriesFixture = {
 export default {
     title: 'SCOPin/SampleListContainer',
     component: SampleListContainer,
+    decorators: [
+        (Story) => <RecoilRoot>{Story()}</RecoilRoot>
+    ],
 } as ComponentMeta<typeof SampleListContainer>;
 
 const Template: ComponentStory<typeof SampleListContainer> = (args) => <SampleListContainer {...args} />;
@@ -50,6 +54,4 @@ export const Primary = Template.bind({})
 Primary.args = {
     sampleList: sampleListFixture,
     sampleCategories: categoriesFixture,
-    toBeShrink: false,
-    lang: "ja"
 }

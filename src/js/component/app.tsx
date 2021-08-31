@@ -9,8 +9,6 @@ import { SampleListItem, SampleCategoryItemKeys, SampleList, SampleListKeys, Sam
 type Props = {
     sampleList: SampleList,
     sampleCategories: SampleCategories,
-    toBeShrink: boolean,
-    lang: Language,
 }
 
 export const App: React.FC<Props> = (arg) => {

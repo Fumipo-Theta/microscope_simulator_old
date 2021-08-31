@@ -52,6 +52,5 @@ export const Primary = Template.bind({})
 Primary.args = {
     sampleList: sampleListFixture,
     sampleCategories: categoriesFixture,
-    toBeShrink: false,
     lang: "ja"
 }

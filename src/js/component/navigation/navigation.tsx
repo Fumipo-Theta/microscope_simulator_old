@@ -11,7 +11,7 @@ const SampleListExpander: React.FC = () => {
     const onClick = useCallback(
         (event: React.MouseEvent | React.TouchEvent) => {
             setListIsActive((prev) => !prev)
-            setSampleListAppearanceValue(!listIsActive)
+            setSampleListAppearanceValue((prev) => !prev)
         },
         [setSampleListAppearanceValue]
     )
@@ -36,7 +36,7 @@ const SystemLanguageSelector: React.FC = () => {
     return (
         <div className={styles.languageSelectorContainer}>
             <select onChange={onChange} className={styles.languageSelector}>
-                <option defaultValue='ja'>日本</option>
+                <option defaultValue='ja' value='ja'>日本</option>
                 <option value='en'>ENG</option>
             </select>
         </div>
