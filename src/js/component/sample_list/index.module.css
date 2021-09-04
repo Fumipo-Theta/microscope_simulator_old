@@ -45,46 +45,6 @@
     margin: 10px auto;
 }
 
-.optionContainer {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 3rem;
-    font-size: 1.2rem;
-    padding: 5px 0;
-    border-bottom: 1px solid #114875;
-}
-
-.optionContainer:hover {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #184c77;
-}
-
-.optionWrapper{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cachedSymbol {
-    min-width: 16px;
-    margin: 0 3px 0 6px;
-}
-
-.optionIndex {
-    min-width: 24px;
-    text-align: right;
-    margin: 0 3px;
-}
-
-.optionLabel {
-    flex-grow: 1;
-    padding-left: 7.5px;
-}
-
 .categoryContainer {
     position: sticky;
     top: 0;

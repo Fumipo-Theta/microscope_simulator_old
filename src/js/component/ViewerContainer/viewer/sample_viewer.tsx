@@ -24,11 +24,11 @@ function with_restore_canvas_ctx(ctx: CanvasRenderingContext2D, callback: (_ctx:
     return ctx
 }
 
-function clearView(viewer_ctx, { canvasHeight, canvasWidth }: ViewerState) {
+function clearView(viewer_ctx, { canvasHeight, canvasWidth }) {
     viewer_ctx.clearRect(-canvasWidth * 0.5, -canvasHeight * 0.5, canvasWidth, canvasHeight)
 }
 
-function drawHairLine(viewer_ctx, { canvasHeight, canvasWidth, isCrossNicol, drawHairLine }: ViewerState) {
+function drawHairLine(viewer_ctx, { canvasHeight, canvasWidth, isCrossNicol, drawHairLine }) {
     if (!drawHairLine) return
     viewer_ctx.strokeStyle = isCrossNicol ? "white" : "black";
     viewer_ctx.globalAlpha = 1
@@ -91,7 +91,7 @@ export function renderCurrentStateOnCanvas(viewer_ctx: CanvasRenderingContext2D)
         })
 
         with_restore_canvas_ctx(viewer_ctx, (ctx) => {
-            clip_by_circle(ctx, viewerState.canvasWidth)
+            clip_by_circle(ctx, canvasWidth)
             ctx.rotate(rotationHandler.calcRotationDegreesOfImage(rotate, 1))
             ctx.globalAlpha = 1 - rotationHandler.getAlpha(rotate)
             const imageIndex = rotationHandler.getImageNumberToBeShown(rotate, 1)
@@ -113,5 +113,71 @@ export function renderCurrentStateOnCanvas(viewer_ctx: CanvasRenderingContext2D)
 
         drawHairLine(viewer_ctx, viewerState)
         drawScale(viewer_ctx, viewerState, sampleMeta)
+    }
+}
+
+
+export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D) {
+    console.log(viewer_ctx)
+    return (imageSource, rotationHandler): void => {
+        const { rotate, canvasHeight, canvasWidth, imageCenterInfo, doDrawHairLine, isCrossNicol } = {
+            rotate: 0,
+            canvasHeight: 1000,
+            canvasWidth: 1000,
+            imageCenterInfo: { rotateCenterToRight: 0, rotateCenterToBottom: 0, imageRadius: 500 },
+            doDrawHairLine: true,
+            isCrossNicol: false
+        }
+        const image_src = isCrossNicol
+            ? imageSource.crossImages
+            : imageSource.openImages
+
+        clearView(viewer_ctx, { canvasHeight, canvasWidth })
+
+        with_restore_canvas_ctx(viewer_ctx, (ctx) => {
+            clip_by_circle(ctx, canvasWidth)
+            ctx.rotate(rotationHandler.calcRotationDegreesOfImage(rotate, 0))
+            ctx.globalAlpha = 1
+            const imageIndex = rotationHandler.getImageNumberToBeShown(rotate, 0)
+            const image1 = image_src[imageIndex]
+            try {
+                ctx.drawImage(
+                    image1,
+                    ...clipGeometryFromImageCenter(imageCenterInfo),
+                    -canvasWidth / 2,
+                    -canvasHeight / 2,
+                    canvasWidth,
+                    canvasHeight
+                );
+            } catch (e) {
+                console.log(e)
+                console.log({ rotate, imageIndex })
+            }
+            return ctx
+        })
+
+        with_restore_canvas_ctx(viewer_ctx, (ctx) => {
+            clip_by_circle(ctx, canvasWidth)
+            ctx.rotate(rotationHandler.calcRotationDegreesOfImage(rotate, 1))
+            ctx.globalAlpha = 1 - rotationHandler.getAlpha(rotate)
+            const imageIndex = rotationHandler.getImageNumberToBeShown(rotate, 1)
+            const image2 = image_src[imageIndex]
+            try {
+                ctx.drawImage(
+                    image2,
+                    ...clipGeometryFromImageCenter(imageCenterInfo),
+                    -canvasWidth / 2,
+                    -canvasHeight / 2,
+                    canvasWidth,
+                    canvasHeight)
+            } catch (e) {
+                console.log(e)
+                console.log({ rotate, imageIndex })
+            }
+            return ctx
+        })
+
+        drawHairLine(viewer_ctx, { canvasWidth, canvasHeight, isCrossNicol, drawHairLine: doDrawHairLine })
+        //drawScale(viewer_ctx, viewerState, sampleMeta)
     }
 }

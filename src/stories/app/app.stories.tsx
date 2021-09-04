@@ -6,17 +6,45 @@ import { SampleListKeys, SampleListItemKeys, SampleCategoryItemKeys, SampleCateg
 import { App } from "@src/js/component/app"
 
 const sampleListFixture = {
-    [SampleListKeys.ListOfSample]: Array(20).fill(0).map((_, i) => {
-        const index = i + 1
-        return {
-            [SampleListItemKeys.PackageName]: `rhyolite_test_sample_${index}`,
-            [SampleListItemKeys.ListName]: {
-                "ja": `流紋岩テストサンプル ${index}`,
-                "en": `Rhyolite test sample long long sample name ${index}`
+    [SampleListKeys.ListOfSample]: [
+        {
+            "package-name": "Q27_quartz",
+            "list-name": {
+                "ja": "流紋岩中の石英",
+                "en": "Quartz in rhyolite"
             },
-            [SampleListItemKeys.Category]: ["rock", "igneous_rock", "volcanic_rock", "rhyolite"]
-        }
-    })
+            "category": [
+                "rock",
+                "igneous_rock",
+                "volcanic_rock",
+                "rhyolite"
+            ]
+        },
+        {
+            "package-name": "Grc-1_quartz",
+            "list-name": {
+                "ja": "花崗岩中の波動消光を示す石英",
+                "en": "Quartz showing wavy extinction in granite"
+            },
+            "category": [
+                "rock",
+                "igneous_rock",
+                "plutonic_rock",
+                "granite"
+            ]
+        },
+        ...Array(20).fill(0).map((_, i) => {
+            const index = i + 1
+            return {
+                [SampleListItemKeys.PackageName]: `rhyolite_test_sample_${index}`,
+                [SampleListItemKeys.ListName]: {
+                    "ja": `流紋岩テストサンプル ${index}`,
+                    "en": `Rhyolite test sample long long sample name ${index}`
+                },
+                [SampleListItemKeys.Category]: ["rock", "igneous_rock", "volcanic_rock", "rhyolite"]
+            }
+        })
+    ]
 }
 
 const categoriesFixture = {

@@ -1,67 +1,26 @@
-import React, { useEffect, useState, useRef, MutableRefObject } from "react"
+import React, { useEffect } from "react"
 import { SetRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { useCanvas } from "@src/js/component/ViewerContainer/viewer/use_canvas"
-import { ImageSource, SamplePackage, SampleImageType } from "@src/js/type/entity"
-
+import { SamplePackage, Manifest, ImageSource, SampleImageType } from "@src/js/type/entity"
+import RotationManager from "./viewer/rotation_manager_for_stepwise_photos"
 import { supportedImageTypeState } from "@src/js/state/atom/supported_image_type_state"
-import RotationManager from "../viewer/rotation_manager_for_stepwise_photos"
-import { renderOnCanvas } from "../viewer/sample_viewer"
+import { samplePackageState } from "@src/js/state/atom/sample_package_state"
 
-export type CanvasProps = {
-    width: number,
-    height: number,
-    sample: SamplePackage
+type Props = {
+    sample: SamplePackage,
+    imageSetter: React.Dispatch<React.SetStateAction<ImageSource>>
 }
-
-const getMaxViewerSize = (windowWidth, windowHeight) => {
-    const padding = 20 // px
-    const navigationAndNicolHeight = 64 + 100 + 20 // px
-    const width = windowWidth
-    const height = windowHeight - navigationAndNicolHeight
-    return (width < height ? width : height) - padding
-}
-
-export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
+export const ImageSrcProvider: React.FC<Props> = ({ sample, imageSetter, children }) => {
     const { rotate_clockwise, cycle_rotate_degree, rotate_by_degree } = sample.manifest
     const rotationManager = new RotationManager(rotate_clockwise, rotate_by_degree, cycle_rotate_degree)
     const supportedImage = useRecoilValue(supportedImageTypeState)
-    const viewerSize = getMaxViewerSize(width, height)
-
-    const onClick = (e) => { console.log("canvas clicked") }
-    const addHandlers = (canvas: HTMLCanvasElement) => {
-        canvas.addEventListener("click", onClick, false)
-    }
-    const removeHandlers = (canvas: HTMLCanvasElement) => {
-        canvas.removeEventListener("click", onClick)
-    }
-
-    const [imageSource, setImageSource] = useState<ImageSource>({ openImages: [], crossImages: [] })
-    const [canvasRef, ref] = useCanvas(addHandlers, removeHandlers)
 
     useEffect(() => {
         updateImageSrc(rotationManager.getRequiredImageNumber(), sample.thumbnail, "jpg")
-            .then(setImageSource)
-        sample.zip()
-            .then(imageMap => updateImageSrc(rotationManager.getRequiredImageNumber(), imageMap, supportedImage))
-            .then(setImageSource)
-            .catch(console.log)
-    }, [sample])
+            .then(imageSetter)
+    }, [rotationManager, imageSetter, sample])
 
-    const [context, setContext] = useState<CanvasRenderingContext2D>(null)
-    useEffect(() => {
-        const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>).current
-        const ctx = canvas.getContext("2d")
-        setContext(ctx)
-    }, [])
-
-    useEffect(() => {
-        if (context) {
-            renderOnCanvas(context)(imageSource, rotationManager)
-        }
-    }, [context, imageSource])
-    return <canvas ref={ref} width={viewerSize} height={viewerSize} />
+    return <>{children}</>
 }
-
 
 async function updateImageSrc(imageNumber, imagesMap, ext: SampleImageType): Promise<ImageSource> {
     const repeats = Array(imageNumber - 1).fill(0)

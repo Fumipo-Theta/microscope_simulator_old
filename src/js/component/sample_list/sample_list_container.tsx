@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useState, useCallback } from 'react'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { Language } from "@src/js/type/entity"
-import { SampleListItem, SampleCategoryItemKeys, SampleList, SampleListKeys, SampleCategories, SampleCategoriesKeys, SampleListItemKeys } from "@src/js/type/sample"
+import { SampleListItem, SampleList, SampleListKeys, SampleCategories, SampleCategoriesKeys, SampleListItemKeys } from "@src/js/type/sample"
 import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
 import { systemLanguageState } from '@src/js/state/atom/system_language_state'
+import { selectedSampleIdState } from '@src/js/state/atom/selected_sample_id_state'
+import { SampleSelectorOption } from './sample_selector_option/sample_selector_option'
 import styles from "./index.module.css"
 
 type Props = {
@@ -16,20 +18,8 @@ type BreadcrumbProps = {
     path: Array<string>
 }
 
-type SampleSelectorOptionProps = {
-    item: SampleListItem,
-    index: number,
-    lang: Language,
-    cached: boolean,
-    sampleSelectedHandler: (v: SampleListItem[SampleListItemKeys.PackageName]) => (e: React.MouseEvent | React.TouchEvent) => void
-}
-
 interface SampleListSelectorProps extends SampleList {
     lang: Language
-}
-
-const onSampleSelected = (sample_id: SampleListItem[SampleListItemKeys.PackageName]) => (_e) => {
-    console.log(sample_id)
 }
 
 const isSampleLocallyCached = (sampleListItem: SampleListItem, i: number) => {
@@ -57,23 +47,12 @@ const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCategories
     </div>
 }
 
-
-const SampleSelectorOption: React.FC<SampleSelectorOptionProps> = ({ index, item, lang, cached, sampleSelectedHandler }) => {
-    const cachedSymbol = cached ? "✔" : ""
-    return (
-        <div className={styles.optionContainer} onClick={sampleSelectedHandler(item[SampleListItemKeys.PackageName])}>
-            <div className={styles.optionWrapper}>
-                <div className={styles.cachedSymbol}>{cachedSymbol}</div>
-                <div className={styles.optionIndex}>{index}</div>
-                <div className={styles.optionLabel}>
-                    {item[SampleListItemKeys.ListName][lang]}
-                </div>
-            </div>
-        </div>
-    )
-}
-
 const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys.ListOfSample]: listOfSample, lang }) => {
+    const setSelectedSampleIdValue = useSetRecoilState(selectedSampleIdState)
+    const onSampleSelected = useCallback((sampleId: SampleListItem[SampleListItemKeys.PackageName]) => {
+        setSelectedSampleIdValue(sampleId)
+    }, [setSelectedSampleIdValue])
+
     return <div className={styles.sampleListSelector}>
         <div className={styles.sampleSelectorWrapper}>
             {

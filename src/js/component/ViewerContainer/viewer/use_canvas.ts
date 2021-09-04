@@ -20,5 +20,5 @@ export const useCanvas = (addHandlers: ManageCanvasEventHandlers, removeHandlers
         canvasRef.current = node
     }, [])
 
-    return [setRef]
+    return [canvasRef, setRef]
 }

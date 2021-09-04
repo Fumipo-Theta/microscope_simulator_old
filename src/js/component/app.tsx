@@ -16,14 +16,16 @@ type Props = {
 export const App: React.FC<Props> = (arg) => {
     return (
         <RecoilRoot>
-            <Window>
-                <Navigation></Navigation>
-                <SampleListContainer {...arg}></SampleListContainer>
-                <div className={styles.appWrapper}>
-                    <ViewerContainer />
-                </div>
+            <React.Suspense fallback={<div>Loading...</div>}>
+                <Window>
+                    <Navigation></Navigation>
+                    <SampleListContainer {...arg}></SampleListContainer>
+                    <div className={styles.appWrapper}>
+                        <ViewerContainer />
+                    </div>
 
-            </Window>
+                </Window>
+            </React.Suspense>
         </RecoilRoot>
     )
 }
