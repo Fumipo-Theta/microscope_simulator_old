@@ -1,10 +1,12 @@
 import React from "react"
 import { RecoilRoot } from "recoil"
+import { Window } from "./window/window"
 import { Navigation } from "./navigation/navigation"
 import { SampleListContainer } from "./sample_list/sample_list_container"
-
-import { Language } from "@src/js/type/entity"
-import { SampleListItem, SampleCategoryItemKeys, SampleList, SampleListKeys, SampleCategories, SampleCategoriesKeys, SampleListItemKeys } from "@src/js/type/sample"
+import { ViewerContainer } from "./ViewerContainer/viewer_container"
+import { Footer } from "./footer/footer"
+import { SampleList, SampleCategories } from "@src/js/type/sample"
+import styles from "./index.module.css"
 
 type Props = {
     sampleList: SampleList,
@@ -14,8 +16,14 @@ type Props = {
 export const App: React.FC<Props> = (arg) => {
     return (
         <RecoilRoot>
-            <Navigation></Navigation>
-            <SampleListContainer {...arg}></SampleListContainer>
+            <Window>
+                <Navigation></Navigation>
+                <SampleListContainer {...arg}></SampleListContainer>
+                <div className={styles.appWrapper}>
+                    <ViewerContainer />
+                </div>
+
+            </Window>
         </RecoilRoot>
     )
 }

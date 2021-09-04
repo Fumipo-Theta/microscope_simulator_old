@@ -3,6 +3,11 @@ export type SampleImageType = 'jpg' | 'webp' | 'jp2'
 
 export type Language = 'ja' | 'en'
 
+export interface RectSize {
+    width: number,
+    height: number
+}
+
 type fromLeft = number
 type fromTop = number
 export type Coordinate = [fromLeft, fromTop]

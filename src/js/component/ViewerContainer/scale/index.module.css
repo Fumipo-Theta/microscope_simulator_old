@@ -1,0 +1,19 @@
+
+.scale {
+  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.scaleLabel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: inherit;
+    color: white;
+}
+
+.scaleBar{
+  height: 5px;
+  background-color: white;
+}

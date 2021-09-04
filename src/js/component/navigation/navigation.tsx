@@ -45,11 +45,14 @@ const SystemLanguageSelector: React.FC = () => {
 
 export const Navigation: React.FC = () => {
     return (
-        <div className={styles.navigationContainer}>
-            <div className={styles.wrapper}>
-                <SampleListExpander />
-                <SystemLanguageSelector />
+        <>
+            <div className={styles.navigationContainer}>
+                <div className={styles.wrapper}>
+                    <SampleListExpander />
+                    <SystemLanguageSelector />
+                </div>
             </div>
-        </div>
+            <div className={styles.navigationSpace}></div>
+        </>
     )
 }

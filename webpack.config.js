@@ -79,7 +79,7 @@ module.exports = (process_env, argv) => {
         },
         resolve: {
             alias: { '@src': path.resolve(__dirname, 'src/') },
-            extensions: [".ts", ".tsx", ".js", ".json", ".css"]
+            extensions: [".ts", ".tsx", ".js", ".json", ".svg", ".css"]
         },
         target: "web"
     }
@@ -153,7 +153,7 @@ module.exports = (process_env, argv) => {
         },
         resolve: {
             alias: { '@src': path.resolve(__dirname, 'src/') },
-            extensions: [".ts", ".tsx", ".js", ".json"]
+            extensions: [".ts", ".tsx", ".js", ".json", ".svg", ".css"]
         },
         target: "web"
     }

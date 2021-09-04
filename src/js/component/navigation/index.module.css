@@ -1,14 +1,18 @@
 .navigationContainer {
-    z-index: -1;
+    z-index: 500;
     position: fixed;
     top: 0px;
     display: flex;
     align-items: center;
-    width: 100vw;
-    height: 64px;
     color: #eeeeff;
     background-color: #0c395e;
     font-size: 1.25rem;
+}
+
+.navigationSpace,
+.navigationContainer{
+    width: 100vw;
+    height: 64px;
 }
 
 .wrapper {
