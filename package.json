@@ -14,7 +14,7 @@
     "build": "webpack build",
     "watch": "webpack --watch",
     "start": "webpack serve --mode development --hot --inline --port 8080",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 -s ./",
     "build-storybook": "build-storybook"
   },
   "repository": {
