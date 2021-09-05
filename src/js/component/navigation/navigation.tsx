@@ -6,11 +6,10 @@ import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appear
 import styles from "./index.module.css"
 
 const SampleListExpander: React.FC = () => {
-    const [listIsActive, setListIsActive] = useState(false)
+    const listIsActive = useRecoilValue(sampleListAppearanceState)
     const setSampleListAppearanceValue = useSetRecoilState(sampleListAppearanceState)
     const onClick = useCallback(
         (event: React.MouseEvent | React.TouchEvent) => {
-            setListIsActive((prev) => !prev)
             setSampleListAppearanceValue((prev) => !prev)
         },
         []

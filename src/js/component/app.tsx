@@ -23,7 +23,9 @@ export const App: React.FC<Props> = (arg) => {
                     <Router>
                         <Switch>
                             <Route path="/">
-                                <SampleListContainer {...arg}></SampleListContainer>
+                                <React.Suspense fallback={<div>Loading...</div>}>
+                                    <SampleListContainer {...arg}></SampleListContainer>
+                                </React.Suspense>
                                 <div className={styles.appWrapper}>
                                     <React.Suspense fallback={<div>Loading...</div>}>
                                         <ViewerContainer />
