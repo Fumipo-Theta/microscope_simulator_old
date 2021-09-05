@@ -12,7 +12,7 @@ type SampleSelectorOptionProps = {
 }
 
 export const SampleSelectorOption: React.FC<SampleSelectorOptionProps> = ({ index, item, lang, cached, sampleSelectedHandler }) => {
-    const cachedSymbol = cached ? "✔" : ""
+    const cachedSymbol = cached ? "" : ""
     const onClick = useCallback((e) => {
         sampleSelectedHandler(item[SampleListItemKeys.PackageName])
     }, [sampleSelectedHandler])
