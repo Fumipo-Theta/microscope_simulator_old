@@ -16,22 +16,25 @@ type Props = {
 
 export const App: React.FC<Props> = (arg) => {
     return (
-        <RecoilRoot>
-            <Router>
-                <React.Suspense fallback={<div>Loading...</div>}>
-                    <Window>
-                        <Navigation></Navigation>
+        <>
+            <RecoilRoot>
+                <Window>
+                    <Navigation></Navigation>
+                    <Router>
                         <Switch>
                             <Route path="/">
                                 <SampleListContainer {...arg}></SampleListContainer>
                                 <div className={styles.appWrapper}>
-                                    <ViewerContainer />
+                                    <React.Suspense fallback={<div>Loading...</div>}>
+                                        <ViewerContainer />
+                                    </React.Suspense>
                                 </div>
                             </Route>
                         </Switch>
-                    </Window>
-                </React.Suspense>
-            </Router>
-        </RecoilRoot>
+                    </Router>
+                </Window>
+            </RecoilRoot>
+            <Footer />
+        </>
     )
 }

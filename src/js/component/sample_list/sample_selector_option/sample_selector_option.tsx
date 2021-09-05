@@ -19,7 +19,7 @@ export const SampleSelectorOption: React.FC<SampleSelectorOptionProps> = ({ inde
     const onClick = useCallback((e) => {
         sampleSelectedHandler(item[SampleListItemKeys.PackageName])
         location.hash = item[SampleListItemKeys.PackageName]
-    }, [sampleSelectedHandler, location])
+    }, [])
     return (
         <div className={styles.optionContainer} onClick={onClick}>
             <div className={styles.optionWrapper}>

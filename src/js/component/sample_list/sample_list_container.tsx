@@ -54,7 +54,7 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
     const setSelectedSampleIdValue = useSetRecoilState(selectedSampleIdState)
     const onSampleSelected = useCallback((sampleId: SampleListItem[SampleListItemKeys.PackageName]) => {
         setSelectedSampleIdValue(sampleId)
-    }, [setSelectedSampleIdValue])
+    }, [])
 
     return <div className={styles.sampleListSelector}>
         <div className={styles.sampleSelectorWrapper}>
