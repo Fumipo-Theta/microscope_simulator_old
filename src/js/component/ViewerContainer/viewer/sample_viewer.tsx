@@ -1,4 +1,4 @@
-import { ImageCenterInfo, RootState, SampleMeta, ViewerState } from '../../../type/entity'
+import { ImageCenterInfo, ImageSource, RootState, SampleMeta, ViewerState } from '../../../type/entity'
 import { IRotationManager } from '../../../type/sample_viewer'
 
 function clipGeometryFromImageCenter({ rotateCenterToRight, rotateCenterToBottom, imageRadius }: ImageCenterInfo): [number, number, number, number] {
@@ -28,8 +28,7 @@ function clearView(viewer_ctx, { canvasHeight, canvasWidth }) {
     viewer_ctx.clearRect(-canvasWidth * 0.5, -canvasHeight * 0.5, canvasWidth, canvasHeight)
 }
 
-function drawHairLine(viewer_ctx, { canvasHeight, canvasWidth, isCrossNicol, drawHairLine }) {
-    if (!drawHairLine) return
+function drawHairLine(viewer_ctx, { canvasHeight, canvasWidth, isCrossNicol }) {
     viewer_ctx.strokeStyle = isCrossNicol ? "white" : "black";
     viewer_ctx.globalAlpha = 1
     viewer_ctx.beginPath()
@@ -116,18 +115,19 @@ export function renderCurrentStateOnCanvas(viewer_ctx: CanvasRenderingContext2D)
     }
 }
 
+type Props = {
+    imageSource: ImageSource,
+    rotationHandler: IRotationManager,
+    canvasHeight: number,
+    canvasWidth: number,
+    imageCenterInfo: ImageCenterInfo,
+    isCrossNicol: boolean,
+    rotate: number
+}
 
-export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D) {
-    console.log(viewer_ctx)
-    return (imageSource, rotationHandler): void => {
-        const { rotate, canvasHeight, canvasWidth, imageCenterInfo, doDrawHairLine, isCrossNicol } = {
-            rotate: 0,
-            canvasHeight: 1000,
-            canvasWidth: 1000,
-            imageCenterInfo: { rotateCenterToRight: 0, rotateCenterToBottom: 0, imageRadius: 500 },
-            doDrawHairLine: true,
-            isCrossNicol: false
-        }
+export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D): (props: Props) => void {
+    return (props): void => {
+        const { imageSource, rotationHandler, canvasHeight, canvasWidth, imageCenterInfo, isCrossNicol, rotate } = props
         const image_src = isCrossNicol
             ? imageSource.crossImages
             : imageSource.openImages
@@ -135,6 +135,7 @@ export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D) {
         clearView(viewer_ctx, { canvasHeight, canvasWidth })
 
         with_restore_canvas_ctx(viewer_ctx, (ctx) => {
+            ctx.translate(canvasWidth * 0.5, canvasHeight * 0.5)
             clip_by_circle(ctx, canvasWidth)
             ctx.rotate(rotationHandler.calcRotationDegreesOfImage(rotate, 0))
             ctx.globalAlpha = 1
@@ -157,6 +158,7 @@ export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D) {
         })
 
         with_restore_canvas_ctx(viewer_ctx, (ctx) => {
+            ctx.translate(canvasWidth * 0.5, canvasHeight * 0.5)
             clip_by_circle(ctx, canvasWidth)
             ctx.rotate(rotationHandler.calcRotationDegreesOfImage(rotate, 1))
             ctx.globalAlpha = 1 - rotationHandler.getAlpha(rotate)
@@ -176,8 +178,11 @@ export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D) {
             }
             return ctx
         })
-
-        drawHairLine(viewer_ctx, { canvasWidth, canvasHeight, isCrossNicol, drawHairLine: doDrawHairLine })
+        with_restore_canvas_ctx(viewer_ctx, (ctx) => {
+            ctx.translate(canvasWidth * 0.5, canvasHeight * 0.5)
+            drawHairLine(ctx, { canvasWidth, canvasHeight, isCrossNicol })
+            return ctx
+        })
         //drawScale(viewer_ctx, viewerState, sampleMeta)
     }
 }
