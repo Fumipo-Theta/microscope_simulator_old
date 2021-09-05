@@ -13,7 +13,7 @@ const SampleListExpander: React.FC = () => {
             setListIsActive((prev) => !prev)
             setSampleListAppearanceValue((prev) => !prev)
         },
-        [setSampleListAppearanceValue]
+        []
     )
     return (
         <div className={styles.sampleListExpanderContainer}>
@@ -31,7 +31,7 @@ const SystemLanguageSelector: React.FC = () => {
             const selectedOptionIndex = event.target.options.selectedIndex
             setSystemLanguageValue(event.target.options[selectedOptionIndex].value as Language)
         },
-        [setSystemLanguageValue]
+        []
     )
     return (
         <div className={styles.languageSelectorContainer}>
