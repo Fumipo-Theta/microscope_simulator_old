@@ -36,7 +36,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     const [canvasRef, ref] = useCanvas()
     const [context, setContext] = useState<CanvasRenderingContext2D>(null)
     const [cvs, setCvs] = useState<HTMLCanvasElement>(null)
-    const [rotate, setRotate] = useState(359)
+    const [rotate, setRotate] = useState(0)
     const [imageCenterInfo, setImageCenterInfo] = useState(getImageCenterInfo(sample.manifest))
     const state = useRef<UiState>({
         touching: false,
