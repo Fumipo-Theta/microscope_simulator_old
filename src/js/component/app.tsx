@@ -1,4 +1,5 @@
 import React from "react"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import { RecoilRoot } from "recoil"
 import { Window } from "./window/window"
 import { Navigation } from "./navigation/navigation"
@@ -16,16 +17,21 @@ type Props = {
 export const App: React.FC<Props> = (arg) => {
     return (
         <RecoilRoot>
-            <React.Suspense fallback={<div>Loading...</div>}>
-                <Window>
-                    <Navigation></Navigation>
-                    <SampleListContainer {...arg}></SampleListContainer>
-                    <div className={styles.appWrapper}>
-                        <ViewerContainer />
-                    </div>
-
-                </Window>
-            </React.Suspense>
+            <Router>
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <Window>
+                        <Navigation></Navigation>
+                        <Switch>
+                            <Route path="/">
+                                <SampleListContainer {...arg}></SampleListContainer>
+                                <div className={styles.appWrapper}>
+                                    <ViewerContainer />
+                                </div>
+                            </Route>
+                        </Switch>
+                    </Window>
+                </React.Suspense>
+            </Router>
         </RecoilRoot>
     )
 }

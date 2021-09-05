@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { useState, useCallback } from 'react'
+import { useLocation } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { Language } from "@src/js/type/entity"
+import { Language, QueryParams } from "@src/js/type/entity"
 import { SampleListItem, SampleList, SampleListKeys, SampleCategories, SampleCategoriesKeys, SampleListItemKeys } from "@src/js/type/sample"
 import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
 import { systemLanguageState } from '@src/js/state/atom/system_language_state'
 import { selectedSampleIdState } from '@src/js/state/atom/selected_sample_id_state'
+import { sampleListNameState } from '@src/js/state/atom/sample_list_name_state'
+import { sampleListSelector } from '@src/js/state/atom/sample_list_state'
 import { SampleSelectorOption } from './sample_selector_option/sample_selector_option'
 import styles from "./index.module.css"
 
@@ -70,11 +73,21 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
     </div>
 }
 
-export const SampleListContainer: React.FC<Props> = ({ sampleList, sampleCategories }) => {
+export const SampleListContainer: React.FC<Props> = ({ sampleCategories }) => {
+    const location = useLocation()
+    const { sample_list, category } = parseQueryParams(location.search)
+    const setSampleListNameValue = useSetRecoilState(sampleListNameState)
+    setSampleListNameValue(sample_list)
+    const sampleList = useRecoilValue(sampleListSelector)
     const sampleListIsActive = useRecoilValue(sampleListAppearanceState)
     const currentLanguage = useRecoilValue(systemLanguageState)
+
     return <div className={`${styles.sampleListContainer} ${sampleListIsActive ? '' : styles.inActive}`}>
         <SampleCategoryContainer {...sampleCategories} />
         <SampleListSelector {...sampleList} lang={currentLanguage} />
     </div>
+}
+
+const parseQueryParams = (queryString): QueryParams => {
+    return queryString.substring(1).split('&').map((p) => p.split('=')).reduce((obj, e) => ({ ...obj, [e[0]]: e[1] }), {});
 }

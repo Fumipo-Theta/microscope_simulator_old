@@ -29,10 +29,7 @@ const DescriptionContainer: React.FC<DescriptionProps> = ({ sample }) => {
 }
 
 export const ViewerContainer: React.FC = () => {
-
     const currentSample = useRecoilValue(samplePackageState)
-    console.log("viewer_container", currentSample)
-
     const mainLayerProps = {
         ...useRecoilValue(windowInnerSizeState),
         sample: currentSample

@@ -37,6 +37,7 @@
     "@storybook/addon-viewport": "^6.3.7",
     "@storybook/react": "^6.3.7",
     "@types/jest": "^26.0.23",
+    "@types/react-router-dom": "^5.1.8",
     "@types/storybook__react": "^5.2.1",
     "babel-jest": "^27.0.6",
     "babel-loader": "^8.2.2",
