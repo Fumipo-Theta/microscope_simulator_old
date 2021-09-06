@@ -6,7 +6,7 @@ export const DonationFormCard: React.FC<DonationFormProps> = (_props) => {
     return (
         <div className="form-wrapper space-around column-direction">
             <div className="card-icon">
-                <img className="icon" src="./images/ProfilePhoto.jpg" alt="Fumipo-Theta's icon" />
+                <img className="icon" src="/images/ProfilePhoto.jpg" alt="Fumipo-Theta's icon" />
             </div>
             <div className="spread">
                 <span className="important">Please donate</span> for maintenence and updating service ! <br />

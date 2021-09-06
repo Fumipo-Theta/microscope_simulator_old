@@ -14,6 +14,7 @@ const SampleListExpander: React.FC = () => {
         },
         []
     )
+    // TODO: Show sample name if one sample has been selected
     return (
         <div className={styles.sampleListExpanderContainer}>
             <button className={styles.expandSampleListButton} onClick={onClick}>
