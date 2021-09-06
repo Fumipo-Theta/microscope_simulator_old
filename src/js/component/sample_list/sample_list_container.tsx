@@ -13,8 +13,7 @@ import { SampleSelectorOption } from './sample_selector_option/sample_selector_o
 import styles from "./index.module.css"
 
 type Props = {
-    sampleList: SampleList,
-    sampleCategories: SampleCategories,
+
 }
 
 type BreadcrumbProps = {
@@ -75,7 +74,7 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
     </div>
 }
 
-export const SampleListContainer: React.FC<Props> = ({ sampleCategories }) => {
+export const SampleListContainer: React.FC<Props> = ({ }) => {
     const location = useLocation()
     const { sample_list, category } = parseQueryParams(location.search)
     const setSampleListNameValue = useSetRecoilState(sampleListNameState)
@@ -83,6 +82,8 @@ export const SampleListContainer: React.FC<Props> = ({ sampleCategories }) => {
     const sampleList = useRecoilValue(sampleListSelector)
     const sampleListIsActive = useRecoilValue(sampleListAppearanceState)
     const currentLanguage = useRecoilValue(systemLanguageState)
+
+    const sampleCategories = { categories: [] }
 
     return <div className={`${styles.sampleListContainer} ${sampleListIsActive ? '' : styles.inActive}`}>
         <SampleCategoryContainer {...sampleCategories} />

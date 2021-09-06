@@ -1,0 +1,9 @@
+.appWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px 10px 20px 10px;
+    min-height: 96vh;
+    background-color: #dfdfdf;
+}

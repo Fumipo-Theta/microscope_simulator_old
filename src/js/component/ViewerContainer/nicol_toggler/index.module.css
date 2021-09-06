@@ -43,7 +43,7 @@
     left: 1px;
     width: 46px;
     height: 46px;
-    background-image: url("~@src/images/SCOPin_image.svg");
+    background-image: url("/images/SCOPin_image.svg");
     background-color: #888888;
     background-size: contain;
     border-radius: 50%;

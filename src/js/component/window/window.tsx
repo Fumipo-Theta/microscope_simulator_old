@@ -14,9 +14,17 @@ export const Window: React.FC = ({ children }) => {
     }, [setWindowInnerSizeValue])
     useEffect(() => {
         window.addEventListener("resize", handleResize);
+        window.addEventListener(
+            "orientationchange",
+            handleResize,
+            false
+        );
         // Call handler right away so state gets updated with initial window size
         handleResize();
-        return () => window.removeEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            window.removeEventListener("orientationchange", handleResize);
+        }
     }, [])
     return (<>{children}</>)
 }

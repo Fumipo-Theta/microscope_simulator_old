@@ -87,14 +87,14 @@ export const AppLogo: React.FC<AppLogoProps> = (_props) => {
                             <feComposite in2="SourceAlpha" operator="in"></feComposite>
                             <feGaussianBlur stdDeviation="2.65"></feGaussianBlur>
                             <feOffset dx="2" dy="-2" result="afterOffset"></feOffset>
-                            <feFlood flood-color="#008cff" flood-opacity="0.69"></feFlood>
+                            <feFlood floodColor="#008cff" floodOpacity="0.69"></feFlood>
                             <feComposite in2="afterOffset" operator="in"></feComposite>
                             <feMorphology operator="dilate" radius="1"></feMorphology>
                             <feComposite in2="SourceAlpha" operator="out"></feComposite>
                         </filter>
                         <path
                             d="M160.1 82.5C160.1 125.33 125.33 160.1 82.5 160.1C39.67 160.1 4.9 125.33 4.9 82.5C4.9 39.67 39.67 4.9 82.5 4.9C125.33 4.9 160.1 39.67 160.1 82.5Z"
-                            id="bfEYO4Zok" fill="white" fill-opacity="1" filter="url(#shadow15869114)">
+                            id="bfEYO4Zok" fill="white" fillOpacity="1" filter="url(#shadow15869114)">
                         </path>
                     </g>
                     <g id="shadow-leftbottom">
@@ -104,14 +104,14 @@ export const AppLogo: React.FC<AppLogoProps> = (_props) => {
                             <feComposite in2="SourceAlpha" operator="in"></feComposite>
                             <feGaussianBlur stdDeviation="2.65"></feGaussianBlur>
                             <feOffset dx="-2" dy="2" result="afterOffset"></feOffset>
-                            <feFlood flood-color="#c000ff" flood-opacity="0.69"></feFlood>
+                            <feFlood floodColor="#c000ff" floodOpacity="0.69"></feFlood>
                             <feComposite in2="afterOffset" operator="in"></feComposite>
                             <feMorphology operator="dilate" radius="1"></feMorphology>
                             <feComposite in2="SourceAlpha" operator="out"></feComposite>
                         </filter>
                         <path
                             d="M160.1 82.5C160.1 125.33 125.33 160.1 82.5 160.1C39.67 160.1 4.9 125.33 4.9 82.5C4.9 39.67 39.67 4.9 82.5 4.9C125.33 4.9 160.1 39.67 160.1 82.5Z"
-                            id="a3bgK3J7G" fill="white" fill-opacity="1" filter="url(#shadow11909372)">
+                            id="a3bgK3J7G" fill="white" fillOpacity="1" filter="url(#shadow11909372)">
                         </path>
                     </g>
                 </defs>
