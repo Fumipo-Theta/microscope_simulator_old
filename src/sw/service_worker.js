@@ -8,7 +8,6 @@ const STATIC_FILES = [
     ORIGIN + '/index.html',
     ORIGIN + '/js/app.js',
     ORIGIN + '/css/main.css',
-    ORIGIN + '/js/lib/zip.js',
     ORIGIN + '/js/lib/jsinflate.js',
     ORIGIN + '/images/SCOPin_image.svg',
     ORIGIN + '/images/ProfilePhoto.jpg',
@@ -29,8 +28,6 @@ const STATIC_FILES = [
     ORIGIN + "/js/lib/apiGatewayCore/simpleHttpClient.js",
     ORIGIN + "/js/lib/apiGatewayCore/utils.js",
     ORIGIN + "/js/lib/apigClient.js",
-    ORIGIN + "/js/lib/payment.js",
-    //"https://js.stripe.com/v3/",
     ORIGIN + "/js/lib/app_social_connection.js",
 
 ];

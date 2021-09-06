@@ -3,6 +3,11 @@ export type SampleImageType = 'jpg' | 'webp' | 'jp2'
 
 export type Language = 'ja' | 'en'
 
+export interface RectSize {
+    width: number,
+    height: number
+}
+
 type fromLeft = number
 type fromTop = number
 export type Coordinate = [fromLeft, fromTop]
@@ -71,9 +76,23 @@ export interface SamplePackageZipped {
     manifest?: string,
 }
 
-export interface SamplePackage extends SamplePackageZipped {
+export interface SamplePackage {
+    thumbnail?: {
+        "o1.jpg": CanvasImageSource,
+        "c1.jpg": CanvasImageSource
+    },
+    lastModified?: string,
+    id?: PackageId,
+    image_format?: SampleImageType,
+    zip?: any
+    manifest?: Manifest,
     open_images?: Array<CanvasImageSource>,
     cross_images?: Array<CanvasImageSource>,
+}
+
+export type ImageSource = {
+    openImages: Array<CanvasImageSource>,
+    crossImages: Array<CanvasImageSource>,
 }
 
 export type ImageCenterInfo = {

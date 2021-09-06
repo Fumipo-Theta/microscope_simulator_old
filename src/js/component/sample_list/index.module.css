@@ -1,0 +1,88 @@
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.267);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(126, 148, 245, 0.267);
+  border-radius: 10px;
+}
+
+.sampleListContainer {
+    z-index: 500;
+    position: fixed;
+    inset: 0;
+    top: 64px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 50vh;
+    overflow-x: hidden;
+    color: #eeeeff;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.sampleListContainer.inActive {
+    max-height: 0;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.sampleListSelector {
+    width: 100%;
+    max-width: 600px;
+    overflow-y: scroll;
+    background-color: #0c395e;
+    border-radius: 0 0 3px 3px;
+}
+
+.sampleSelectorWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 10px auto;
+}
+
+.categoryContainer {
+    position: sticky;
+    top: 0;
+    display: flex;
+    min-height: 50px;
+    width: 100%;
+    max-width: 600px;
+    background-color: #113d60;
+    box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.5), 0 -3px 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.categoryContainerMenuBar {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.breadcrumb {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb > div > span {
+    margin: 0 3px;
+}
+
+.toggleFilterButton {
+    font-size: 1.25rem;
+    height: 40px;
+    width: 50px;
+    background-color: #00000000;
+    border: none;
+    border-radius: 3px;
+}
+
+.toggleFilterButton.active {
+    background-color: #2196f3;
+}

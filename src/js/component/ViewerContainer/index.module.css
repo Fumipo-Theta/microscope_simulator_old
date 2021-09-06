@@ -1,0 +1,30 @@
+
+.viewerLayerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222222;
+    border-radius: 3px;
+    flex-direction: column;
+}
+
+.descriptionContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  top: 64px;
+  padding: 0 20px;
+  width: 780px;
+  max-width: 100%;
+  background-color: #ebebeb;
+  border-radius: 5px;
+}
+
+.descriptionContainer ul {
+    padding: 0;
+}
+
+.descriptionContainer li {
+    margin: 5px 0;
+}

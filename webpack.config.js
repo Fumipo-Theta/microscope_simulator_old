@@ -57,8 +57,14 @@ module.exports = (process_env, argv) => {
                     use: 'ts-loader'
                 },
                 {
-                    test: /\.css$/,
-                    use: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+                    test: /module\.css$/,
+                    use: [
+                        "style-loader",
+                        {
+                            loader: "css-loader",
+                            options: { url: false, modules: true }
+                        }
+                    ]
                 },
                 {
                     test: /src.*\.(js|ts)$/,
@@ -73,7 +79,7 @@ module.exports = (process_env, argv) => {
         },
         resolve: {
             alias: { '@src': path.resolve(__dirname, 'src/') },
-            extensions: [".ts", ".tsx", ".js", ".json"]
+            extensions: [".ts", ".tsx", ".js", ".json", ".svg", ".css"]
         },
         target: "web"
     }
@@ -147,7 +153,7 @@ module.exports = (process_env, argv) => {
         },
         resolve: {
             alias: { '@src': path.resolve(__dirname, 'src/') },
-            extensions: [".ts", ".tsx", ".js", ".json"]
+            extensions: [".ts", ".tsx", ".js", ".json", ".svg", ".css"]
         },
         target: "web"
     }
