@@ -131,7 +131,11 @@ export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D): (props: Pr
         const image_src = isCrossNicol
             ? imageSource.crossImages
             : imageSource.openImages
-        clearView(viewer_ctx, { canvasHeight, canvasWidth })
+
+        with_restore_canvas_ctx(viewer_ctx, (ctx) => {
+            clearView(ctx, { canvasHeight, canvasWidth })
+            return ctx
+        })
 
         with_restore_canvas_ctx(viewer_ctx, (ctx) => {
             ctx.translate(canvasWidth * 0.5, canvasHeight * 0.5)
