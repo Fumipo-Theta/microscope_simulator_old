@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useLocation } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { Language, QueryParams } from "@src/js/type/entity"
@@ -78,7 +78,9 @@ export const SampleListContainer: React.FC<Props> = ({ }) => {
     const location = useLocation()
     const { sample_list, category } = parseQueryParams(location.search)
     const setSampleListNameValue = useSetRecoilState(sampleListNameState)
-    setSampleListNameValue(sample_list)
+    useEffect(() => {
+        setSampleListNameValue(sample_list)
+    }, [sample_list])
     const sampleList = useRecoilValue(sampleListSelector)
     const sampleListIsActive = useRecoilValue(sampleListAppearanceState)
     const currentLanguage = useRecoilValue(systemLanguageState)

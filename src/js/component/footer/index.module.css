@@ -17,3 +17,10 @@
     margin: 10px;
     font-family: 'Arial';
 }
+
+@media screen and (max-width:1024px) {
+    .footer {
+        flex-direction: column;
+        margin: 0;
+    }
+}

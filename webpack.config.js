@@ -158,7 +158,7 @@ module.exports = (process_env, argv) => {
         target: "web"
     }
     if (compileMode != "production") {
-        conf_main.devtool = 'eval-source-map'
+        //conf_main.devtool = 'eval-source-map'
         conf_make_package.devtool = 'eval-source-map'
     }
     return [conf_main, conf_sw, conf_make_package]
