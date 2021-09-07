@@ -24,8 +24,8 @@ interface SampleListSelectorProps extends SampleList {
     lang: Language
 }
 
-const isSampleLocallyCached = (sampleListItem: SampleListItem, i: number) => {
-    return i % 3 == 0 || i % 5 == 0
+const isSampleLocallyCached = (sampleListItem: SampleListItem) => {
+    return false
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
@@ -52,21 +52,24 @@ const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCategories
 const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys.ListOfSample]: listOfSample, lang }) => {
     const setSelectedSampleIdValue = useSetRecoilState(selectedSampleIdState)
     const setSampleListAppearanceValue = useSetRecoilState(sampleListAppearanceState)
-    const onSampleSelected = useCallback((sampleId: SampleListItem[SampleListItemKeys.PackageName]) => {
+    const [selectedSampleIndex, setSelectedSampleIndex] = useState<number>()
+    const onSampleSelected = useCallback((sampleId: SampleListItem[SampleListItemKeys.PackageName], index) => {
         setSelectedSampleIdValue(sampleId)
+        setSelectedSampleIndex(index)
         setSampleListAppearanceValue(false)
     }, [setSelectedSampleIdValue])
 
     return <div className={styles.sampleListSelector}>
         <div className={styles.sampleSelectorWrapper}>
             {
-                listOfSample.map((sampleListItem, i) => {
+                listOfSample.map((sampleListItem) => {
                     return <SampleSelectorOption
                         key={sampleListItem[SampleListItemKeys.PackageName]}
-                        index={i + 1}
+                        index={sampleListItem.globalIndex}
                         item={sampleListItem}
                         lang={lang}
-                        cached={isSampleLocallyCached(sampleListItem, i)}
+                        cached={isSampleLocallyCached(sampleListItem)}
+                        isSelected={sampleListItem.globalIndex == selectedSampleIndex}
                         sampleSelectedHandler={onSampleSelected} />
                 })
             }

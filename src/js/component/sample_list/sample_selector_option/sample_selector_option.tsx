@@ -10,18 +10,19 @@ type SampleSelectorOptionProps = {
     index: number,
     lang: Language,
     cached: boolean,
-    sampleSelectedHandler: (v: SampleListItem[SampleListItemKeys.PackageName]) => void
+    isSelected: boolean,
+    sampleSelectedHandler: (v: SampleListItem[SampleListItemKeys.PackageName], index: number) => void
 }
 
-export const SampleSelectorOption: React.FC<SampleSelectorOptionProps> = ({ index, item, lang, cached, sampleSelectedHandler }) => {
+export const SampleSelectorOption: React.FC<SampleSelectorOptionProps> = ({ index, item, lang, cached, isSelected, sampleSelectedHandler }) => {
     const cachedSymbol = cached ? "" : ""
     const location = useLocation()
     const onClick = useCallback((e) => {
-        sampleSelectedHandler(item[SampleListItemKeys.PackageName])
+        sampleSelectedHandler(item[SampleListItemKeys.PackageName], index)
         location.hash = item[SampleListItemKeys.PackageName]
     }, [])
     return (
-        <div className={styles.optionContainer} onClick={onClick}>
+        <div className={`${styles.optionContainer} ${isSelected ? styles.selected : ""}`} onClick={onClick}>
             <div className={styles.optionWrapper}>
                 <div className={styles.cachedSymbol}>{cachedSymbol}</div>
                 <div className={styles.optionIndex}>{index}</div>

@@ -20,7 +20,7 @@ const fetchSampleList = async (sampleListName: string): Promise<SampleList> => {
         const response = await fetch(listURL, { mode: 'cors' })
             .catch((e) => { throw Error(e) })
             .then(r => r.json()) as { "list_of_sample": any }
-        return response
+        return { "list_of_sample": response.list_of_sample.map((item, i) => { return { ...item, globalIndex: i + 1 } }) }
     } catch (e) {
         return { "list_of_sample": [] }
     }
