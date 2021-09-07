@@ -42,7 +42,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
         touching: false,
         isRotateClockwise: true,
         canRotate: false,
-        rotate: 359,
+        rotate: 359.9,
         imageCenterInfo: getImageCenterInfo(sample.manifest)
     })
 
@@ -117,6 +117,9 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     }, [cvs])
 
     useEffect(() => {
+        console.log(sample)
+        state.current.rotate = 0
+        setImageCenterInfo(getImageCenterInfo(sample.manifest))
         state.current.canRotate = false
         updateImageSrc(rotationManager.getRequiredImageNumber(), sample.thumbnail, "jpg")
             .then(setImageSource)
@@ -124,6 +127,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
             .then(imageMap => updateImageSrc(rotationManager.getRequiredImageNumber(), imageMap, supportedImage))
             .then(setImageSource)
             .then(() => {
+                state.current.rotate = 359.9
                 state.current.canRotate = true
             })
             .catch(console.log)
@@ -146,7 +150,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
                 canvasWidth: viewerSize,
                 imageCenterInfo: imageCenterInfo,
                 isCrossNicol: !isOpenNicol,
-                rotate: rotate
+                rotate: state.current.rotate
             })
         }
     }, [context, imageSource, isOpenNicol, imageCenterInfo, rotate, viewerSize])
@@ -339,5 +343,5 @@ function updateMagnifyByPinch(state: React.MutableRefObject<UiState>, originalRa
         : (candRadius < 100)
             ? 100
             : candRadius
-    return state.current.imageCenterInfo.imageRadius = newRadius
+    state.current.imageCenterInfo = { ...state.current.imageCenterInfo, imageRadius: newRadius }
 }
