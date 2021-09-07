@@ -1,6 +1,6 @@
 {
   "name": "scopin",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "![SCOPin rock logo](./images/SCOPin_rock_logo.png)",
   "main": "/release/js/app.js",
   "directories": {
