@@ -24,8 +24,8 @@ interface SampleListSelectorProps extends SampleList {
     lang: Language
 }
 
-const isSampleLocallyCached = (sampleListItem: SampleListItem, i: number) => {
-    return i % 3 == 0 || i % 5 == 0
+const isSampleLocallyCached = (sampleListItem: SampleListItem) => {
+    return false
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
@@ -60,13 +60,13 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
     return <div className={styles.sampleListSelector}>
         <div className={styles.sampleSelectorWrapper}>
             {
-                listOfSample.map((sampleListItem, i) => {
+                listOfSample.map((sampleListItem) => {
                     return <SampleSelectorOption
                         key={sampleListItem[SampleListItemKeys.PackageName]}
-                        index={i + 1}
+                        index={sampleListItem.globalIndex}
                         item={sampleListItem}
                         lang={lang}
-                        cached={isSampleLocallyCached(sampleListItem, i)}
+                        cached={isSampleLocallyCached(sampleListItem)}
                         sampleSelectedHandler={onSampleSelected} />
                 })
             }

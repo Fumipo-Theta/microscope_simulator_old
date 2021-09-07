@@ -4,6 +4,7 @@ export enum SampleListItemKeys {
     PackageName = "package-name",
     ListName = "list-name",
     Category = "category",
+    GlobalIndex = "globalIndex",
 }
 
 export interface SampleListItem {
@@ -12,6 +13,7 @@ export interface SampleListItem {
         [key in keyof Language]: string
     }
     [SampleListItemKeys.Category]: Array<string>
+    [SampleListItemKeys.GlobalIndex]: number
 }
 
 export enum SampleListKeys {
