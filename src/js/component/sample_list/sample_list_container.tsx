@@ -52,8 +52,10 @@ const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCategories
 const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys.ListOfSample]: listOfSample, lang }) => {
     const setSelectedSampleIdValue = useSetRecoilState(selectedSampleIdState)
     const setSampleListAppearanceValue = useSetRecoilState(sampleListAppearanceState)
-    const onSampleSelected = useCallback((sampleId: SampleListItem[SampleListItemKeys.PackageName]) => {
+    const [selectedSampleIndex, setSelectedSampleIndex] = useState<number>()
+    const onSampleSelected = useCallback((sampleId: SampleListItem[SampleListItemKeys.PackageName], index) => {
         setSelectedSampleIdValue(sampleId)
+        setSelectedSampleIndex(index)
         setSampleListAppearanceValue(false)
     }, [setSelectedSampleIdValue])
 
@@ -67,6 +69,7 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
                         item={sampleListItem}
                         lang={lang}
                         cached={isSampleLocallyCached(sampleListItem)}
+                        isSelected={sampleListItem.globalIndex == selectedSampleIndex}
                         sampleSelectedHandler={onSampleSelected} />
                 })
             }

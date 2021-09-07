@@ -11,10 +11,12 @@
 }
 
 .optionContainer:hover {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background-color: #184c77;
+}
+
+
+.optionContainer.selected {
+    background-color: #1a75c0;
 }
 
 .optionWrapper{
