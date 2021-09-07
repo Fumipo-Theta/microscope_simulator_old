@@ -1,13 +1,15 @@
 import { atom, selector } from "recoil"
 import { SamplePackage } from "@src/js/type/entity"
 import { retrieve } from "@src/js/remote_repo/static/package_repo"
-import { selectedSampleIdState } from "./selected_sample_id_state"
+import { selectedSampleListItemState } from "./selected_sample_list_item_state"
 import { supportedImageTypeState } from "./supported_image_type_state"
+import { SampleListItemKeys } from "@src/js/type/sample"
 
 export const samplePackageSelector = selector<SamplePackage>({
     key: 'samplePackageSelector',
     get: async ({ get }) => {
-        const currentSampleId = get(selectedSampleIdState)
+        const currentSampleListItem = get(selectedSampleListItemState)
+        const currentSampleId = currentSampleListItem?.[SampleListItemKeys.PackageName] || ''
         console.log("selector", currentSampleId)
         if (currentSampleId != '') {
             const imageType = get(supportedImageTypeState)
