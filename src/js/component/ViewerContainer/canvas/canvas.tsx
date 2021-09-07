@@ -119,7 +119,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     useEffect(() => {
         console.log(sample)
         state.current.rotate = 0
-        setImageCenterInfo(getImageCenterInfo(sample.manifest))
+        state.current.imageCenterInfo = getImageCenterInfo(sample.manifest)
         state.current.canRotate = false
         updateImageSrc(rotationManager.getRequiredImageNumber(), sample.thumbnail, "jpg")
             .then(setImageSource)
@@ -148,7 +148,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
                 rotationHandler: rotationManager,
                 canvasHeight: viewerSize,
                 canvasWidth: viewerSize,
-                imageCenterInfo: imageCenterInfo,
+                imageCenterInfo: state.current.imageCenterInfo,
                 isCrossNicol: !isOpenNicol,
                 rotate: state.current.rotate
             })
