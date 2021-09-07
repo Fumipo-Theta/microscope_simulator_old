@@ -6,11 +6,12 @@ import { Language, QueryParams } from "@src/js/type/entity"
 import { SampleListItem, SampleList, SampleListKeys, SampleCategories, SampleCategoriesKeys, SampleListItemKeys } from "@src/js/type/sample"
 import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
 import { systemLanguageState } from '@src/js/state/atom/system_language_state'
-import { selectedSampleIdState } from '@src/js/state/atom/selected_sample_id_state'
+import { selectedSampleListItemState } from '@src/js/state/atom/selected_sample_list_item_state'
 import { sampleListNameState } from '@src/js/state/atom/sample_list_name_state'
 import { sampleListSelector } from '@src/js/state/atom/sample_list_state'
 import { SampleSelectorOption } from './sample_selector_option/sample_selector_option'
 import styles from "./index.module.css"
+import { selectedSampleNameState } from '@src/js/state/atom/selected_sample_name_state'
 
 type Props = {
 
@@ -50,14 +51,14 @@ const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCategories
 }
 
 const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys.ListOfSample]: listOfSample, lang }) => {
-    const setSelectedSampleIdValue = useSetRecoilState(selectedSampleIdState)
+    const setSelectedSampleListItemValue = useSetRecoilState(selectedSampleListItemState)
     const setSampleListAppearanceValue = useSetRecoilState(sampleListAppearanceState)
     const [selectedSampleIndex, setSelectedSampleIndex] = useState<number>()
-    const onSampleSelected = useCallback((sampleId: SampleListItem[SampleListItemKeys.PackageName], index) => {
-        setSelectedSampleIdValue(sampleId)
+    const onSampleSelected = useCallback((sample: SampleListItem, index) => {
+        setSelectedSampleListItemValue(sample)
         setSelectedSampleIndex(index)
         setSampleListAppearanceValue(false)
-    }, [setSelectedSampleIdValue])
+    }, [setSelectedSampleListItemValue])
 
     return <div className={styles.sampleListSelector}>
         <div className={styles.sampleSelectorWrapper}>

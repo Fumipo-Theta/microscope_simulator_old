@@ -7,11 +7,13 @@ export enum SampleListItemKeys {
     GlobalIndex = "globalIndex",
 }
 
+export type SampleListItemName = {
+    [key in Language]: string;
+};
+
 export interface SampleListItem {
     [SampleListItemKeys.PackageName]: string
-    [SampleListItemKeys.ListName]: {
-        [key in keyof Language]: string
-    }
+    [SampleListItemKeys.ListName]: SampleListItemName
     [SampleListItemKeys.Category]: Array<string>
     [SampleListItemKeys.GlobalIndex]: number
 }

@@ -2,8 +2,10 @@ import React, { useCallback, useState } from 'react'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 import { Language } from '@src/js/type/entity'
 import { systemLanguageState } from '@src/js/state/atom/system_language_state'
+import { selectedSampleListItemState } from '@src/js/state/atom/selected_sample_list_item_state'
 import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
 import styles from "./index.module.css"
+import { SampleListItemKeys } from '@src/js/type/sample'
 
 const SampleListExpander: React.FC = () => {
     const listIsActive = useRecoilValue(sampleListAppearanceState)
@@ -14,11 +16,15 @@ const SampleListExpander: React.FC = () => {
         },
         []
     )
-    // TODO: Show sample name if one sample has been selected
+    const currentLang = useRecoilValue(systemLanguageState)
+    const currentListItem = useRecoilValue(selectedSampleListItemState)
+    const currentLitItemIndex = currentListItem?.[SampleListItemKeys.GlobalIndex] || ''
+    const buttonWord = currentListItem?.[SampleListItemKeys.ListName]?.[currentLang] || "<< Select sample >>"
+
     return (
         <div className={styles.sampleListExpanderContainer}>
             <button className={styles.expandSampleListButton} onClick={onClick}>
-                {listIsActive ? "Close" : ">> Select sample <<"}
+                {listIsActive ? ">> Close <<" : `${currentLitItemIndex} ${buttonWord}`}
             </button>
         </div>
     )
