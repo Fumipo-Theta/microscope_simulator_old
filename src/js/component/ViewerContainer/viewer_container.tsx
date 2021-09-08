@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil"
 import { NicolToggler } from "./nicol_toggler/nicol_toggler"
 import { Canvas } from "./canvas/canvas"
 import { Scale } from "./scale/scale"
+import { Welcome } from "@src/js/component/welcome/welcome"
 import { windowInnerSizeState } from "@src/js/state/atom/window_inner_size_state"
 import { samplePackageState } from "@src/js/state/atom/sample_package_state"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
@@ -74,7 +75,7 @@ export const ViewerContainer: React.FC = () => {
                     <NicolToggler />
                     <DescriptionContainer sample={currentSample} />
                 </> :
-                <></>
+                <Welcome />
             }
         </>
     )
