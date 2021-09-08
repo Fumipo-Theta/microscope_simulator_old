@@ -130,12 +130,13 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
                 cvs.removeEventListener("wheel", wheelHandler)
             }
         }
-    }, [cvs])
+    }, [cvs, sample])
 
     useEffect(() => {
         console.log(sample)
         state.current.rotate = 0
         state.current.imageCenterInfo = getImageCenterInfo(sample.manifest)
+        setImageCenterInfo(getImageCenterInfo(sample.manifest))
         state.current.canRotate = false
         updateImageSrc(rotationManager.getRequiredImageNumber(), sample.thumbnail, "jpg")
             .then(setImageSource)
