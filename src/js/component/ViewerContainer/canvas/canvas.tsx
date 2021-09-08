@@ -154,7 +154,11 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
             })
         }
     }, [context, imageSource, isOpenNicol, imageCenterInfo, rotate, viewerSize])
-    return <canvas ref={ref} width={viewerSize} height={viewerSize} />
+
+
+    return <>
+        <canvas ref={ref} width={viewerSize} height={viewerSize} />
+    </>
 }
 
 
