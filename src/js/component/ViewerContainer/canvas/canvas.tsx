@@ -68,6 +68,13 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
                     updateCoordinate(state, coordinateOnCanvas, e)
                     updateMagnifyByPinch(state, getImageCenterInfo(sample.manifest).imageRadius)
                     setImageCenterInfo({ ...state.current.imageCenterInfo })
+                    setScaleValue((scale) => {
+                        return {
+                            ...scale,
+                            imageRadius: state.current.imageCenterInfo.imageRadius,
+                            viewerSize: viewerSize,
+                        }
+                    })
                 }
             }
             const touchEndHandler = e => {
