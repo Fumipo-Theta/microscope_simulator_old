@@ -1,13 +1,13 @@
-import React, { useState } from "react"
+import React from "react"
 import { useRecoilValue } from "recoil"
 import { NicolToggler } from "./nicol_toggler/nicol_toggler"
 import { Canvas } from "./canvas/canvas"
-import { Scale } from "./scale/scale"
+import { SampleScale } from "./sample_scale/sample_scale"
 import { Welcome } from "@src/js/component/welcome/welcome"
 import { windowInnerSizeState } from "@src/js/state/atom/window_inner_size_state"
 import { samplePackageState } from "@src/js/state/atom/sample_package_state"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
-import { SamplePackage, SampleMeta, Manifest, ImageSource, Language } from "@src/js/type/entity"
+import { SamplePackage, Manifest, Language } from "@src/js/type/entity"
 import styles from "./index.module.css"
 
 type DescriptionProps = {
@@ -62,7 +62,6 @@ export const ViewerContainer: React.FC = () => {
         ...useRecoilValue(windowInnerSizeState),
         sample: currentSample
     }
-
     return (
         <>
             {currentSample ?
@@ -70,7 +69,7 @@ export const ViewerContainer: React.FC = () => {
                     <div>
                         <Canvas {...mainLayerProps} />
                     </div>
-                    <Scale width={100} label={"10mm"} />
+                    <SampleScale />
                 </div>
                     <NicolToggler />
                     <DescriptionContainer sample={currentSample} />

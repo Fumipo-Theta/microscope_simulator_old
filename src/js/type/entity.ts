@@ -64,6 +64,13 @@ export interface Manifest {
     },
 }
 
+export interface Scale {
+    label?: string | null,
+    pixel?: number | null,
+    imageRadius?: number | null,
+    viewerSize?: number | null,
+}
+
 export interface SamplePackageZipped {
     thumbnail?: {
         "o1.jpg": CanvasImageSource,

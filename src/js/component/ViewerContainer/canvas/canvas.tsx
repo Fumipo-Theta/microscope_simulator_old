@@ -1,9 +1,10 @@
 import React, { useEffect, useState, MutableRefObject, useRef } from "react"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { useCanvas } from "@src/js/component/ViewerContainer/viewer/use_canvas"
 import { ImageSource, SamplePackage, SampleImageType, Coordinate, ImageCenterInfo } from "@src/js/type/entity"
 import { supportedImageTypeState } from "@src/js/state/atom/supported_image_type_state"
 import { isOpenNicolState } from "@src/js/state/atom/nicol_state"
+import { scaleState } from "@src/js/state/atom/scale_state"
 import RotationManager from "../viewer/rotation_manager_for_stepwise_photos"
 import { renderOnCanvas } from "../viewer/sample_viewer"
 
@@ -31,6 +32,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     const supportedImage = useRecoilValue(supportedImageTypeState)
     const viewerSize = getMaxViewerSize(width, height)
     const isOpenNicol = useRecoilValue(isOpenNicolState)
+    const setScaleValue = useSetRecoilState(scaleState)
 
     const [imageSource, setImageSource] = useState<ImageSource>({ openImages: [], crossImages: [] })
     const [canvasRef, ref] = useCanvas()
@@ -85,6 +87,13 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
                             ? 100
                             : newRadius
                 setImageCenterInfo({ ...state.current.imageCenterInfo })
+                setScaleValue((scale) => {
+                    return {
+                        ...scale,
+                        imageRadius: state.current.imageCenterInfo.imageRadius,
+                        viewerSize: viewerSize,
+                    }
+                })
                 e.preventDefault()
             }
 
@@ -131,6 +140,12 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
                 state.current.canRotate = true
             })
             .catch(console.log)
+        setScaleValue({
+            label: sample?.manifest?.["scale-unit"],
+            pixel: sample?.manifest?.["scale-pixel"],
+            imageRadius: state.current.imageCenterInfo.imageRadius,
+            viewerSize: viewerSize,
+        })
     }, [sample])
 
 
