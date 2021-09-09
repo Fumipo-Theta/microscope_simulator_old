@@ -1,6 +1,4 @@
 import React, { useCallback } from "react"
-import ReactDOM from "react-dom"
-import { useLocation } from "react-router-dom"
 import { Language } from "@src/js/type/entity"
 import { SampleListItem, SampleListItemKeys, SampleListItemName } from "@src/js/type/sample"
 import styles from "./index.module.css"
@@ -16,10 +14,8 @@ type SampleSelectorOptionProps = {
 
 export const SampleSelectorOption: React.FC<SampleSelectorOptionProps> = ({ index, item, lang, cached, isSelected, sampleSelectedHandler }) => {
     const cachedSymbol = cached ? "" : ""
-    const location = useLocation()
     const onClick = useCallback((e) => {
         sampleSelectedHandler(item, index)
-        location.hash = item[SampleListItemKeys.PackageName]
     }, [])
     return (
         <div className={`${styles.optionContainer} ${isSelected ? styles.selected : ""}`} onClick={onClick}>

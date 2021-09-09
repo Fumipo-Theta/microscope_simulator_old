@@ -18,6 +18,7 @@ export const samplePackageSelector = selector<SamplePackage>({
                 const currentSample = await retrieve(currentSampleId, imageType)
                 return { ...currentSample, manifest: JSON.parse(currentSample.manifest) }
             } catch {
+                console.log(`Failed to fetch sample by id: ${currentSampleId}`)
                 return null
             }
 
