@@ -1,6 +1,6 @@
 # SCOPin rock: Polarizing microscope simulator
 
-![SCOPin rock logo](./release/images/SCOPin_rock_logo.png)
+![SCOPin rock logo](./src/images/SCOPin_rock_logo.png)
 
 This Web application simulates polarizing microscope view of the thin section of rock samples.
 
@@ -33,7 +33,7 @@ Switch open Nicol and crossed Nicols by a toggle button.
 ### Pre-requirements
 
 * install Node.js
-  * ver. 15.4 or later is recommended.
+  * ver. 16.0 or later is recommended.
 * install yarn
 
 ### Install packages
