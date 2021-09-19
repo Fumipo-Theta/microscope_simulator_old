@@ -6,9 +6,13 @@ type BreadcrumbProps = {
     path: Array<string>
 }
 
+const MAX_DEPTH = 3
+
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
+    const depth = path.length
+    const shownPath = depth > MAX_DEPTH ? path.slice(MAX_DEPTH - 3, depth) : path
     return <div className={styles.breadcrumb}>
-        {path.map((directory) => (<div key={directory}><span>{">"}</span><span>{directory}</span></div>))}
+        {shownPath.map((directory) => (<div key={directory}><span>{">"}</span><span>{directory}</span></div>))}
     </div>
 }
 export const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCategoriesKeys.Categories]: sampleCategoryItems }) => {
