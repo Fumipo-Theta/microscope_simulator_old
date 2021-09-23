@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { selector } from "recoil";
 import { SampleList } from "@src/js/type/sample";
 import { staticSettings } from "@src/js/config/config";
 import { sampleListNameState } from "./sample_list_name_state";

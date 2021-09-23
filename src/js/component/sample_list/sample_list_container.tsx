@@ -14,8 +14,6 @@ import { sampleListSelector } from '@src/js/state/atom/sample_list_state'
 import { sampleCategoriesSelector, sampleCategoriesNameState } from '@src/js/state/atom/sample_category_state'
 import { SampleSelectorOption } from './sample_selector_option/sample_selector_option'
 import styles from "./index.module.css"
-import { useSharedState } from '@storybook/client-api'
-import { createSourceMapSource } from 'typescript'
 
 type Props = {
 
