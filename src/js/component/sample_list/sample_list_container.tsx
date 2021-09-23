@@ -3,21 +3,20 @@ import { useState, useCallback, useEffect } from 'react'
 import { useLocation } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { Language, PackageId, QueryParams } from "@src/js/type/entity"
-import { SampleListItem, SampleList, SampleListKeys, SampleCategories, SampleCategoriesKeys, SampleListItemKeys } from "@src/js/type/sample"
+import { SampleListItem, SampleList, SampleListKeys, SampleListItemKeys, ROOT_CATEGORY_ID } from "@src/js/type/sample"
+import { SampleCategoryContainer } from '../sample_filter/sample_filter'
+import { currentCategoryState } from '@src/js/state/atom/sample_category_state'
 import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
 import { systemLanguageState } from '@src/js/state/atom/system_language_state'
 import { selectedSampleListItemState } from '@src/js/state/atom/selected_sample_list_item_state'
 import { sampleListNameState } from '@src/js/state/atom/sample_list_name_state'
 import { sampleListSelector } from '@src/js/state/atom/sample_list_state'
+import { sampleCategoriesSelector, sampleCategoriesNameState } from '@src/js/state/atom/sample_category_state'
 import { SampleSelectorOption } from './sample_selector_option/sample_selector_option'
 import styles from "./index.module.css"
 
 type Props = {
 
-}
-
-type BreadcrumbProps = {
-    path: Array<string>
 }
 
 interface SampleListSelectorProps extends SampleList {
@@ -26,27 +25,6 @@ interface SampleListSelectorProps extends SampleList {
 
 const isSampleLocallyCached = (sampleListItem: SampleListItem) => {
     return false
-}
-
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ path }) => {
-    return <div className={styles.breadcrumb}>
-        {path.map((directory) => (<div key={directory}><span>{">"}</span><span>{directory}</span></div>))}
-    </div>
-}
-
-const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCategoriesKeys.Categories]: sampleCategoryItems }) => {
-    const currentPath = ["Rock", "Igneous rock"]
-    const [isActive, updateActive] = useState(false)
-    return <div className={styles.categoryContainer}>
-        <div className={styles.categoryContainerMenuBar}>
-            <Breadcrumb path={currentPath} />
-            <button
-                className={`${styles.toggleFilterButton} ${isActive ? styles.active : ""}`}
-                onClick={(_) => { updateActive(!isActive) }}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#eeeeff" color="#000000"><path d="M0 0h24v24H0z" fill="none"></path><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path></svg>
-            </button>
-        </div>
-    </div>
 }
 
 const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys.ListOfSample]: listOfSample, lang }) => {
@@ -70,36 +48,49 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
         setSampleListAppearanceValue(false)
         window.location.hash = sample[SampleListItemKeys.PackageName]
     }, [])
+    const currentCategoryValue = useRecoilValue(currentCategoryState)
+    console.log("currentCategoryValue", currentCategoryValue)
 
     return <div className={styles.sampleListSelector}>
         <div className={styles.sampleSelectorWrapper}>
             {
-                listOfSample.map((sampleListItem) => {
-                    return <SampleSelectorOption
-                        key={sampleListItem[SampleListItemKeys.PackageName]}
-                        index={sampleListItem.globalIndex}
-                        item={sampleListItem}
-                        lang={lang}
-                        cached={isSampleLocallyCached(sampleListItem)}
-                        isSelected={sampleListItem.globalIndex == selectedSampleIndex}
-                        sampleSelectedHandler={onSampleSelected} />
-                })
+                listOfSample
+                    .filter(belongsToCategory(currentCategoryValue))
+                    .map((sampleListItem) => {
+                        return <SampleSelectorOption
+                            key={sampleListItem[SampleListItemKeys.PackageName]}
+                            index={sampleListItem.globalIndex}
+                            item={sampleListItem}
+                            lang={lang}
+                            cached={isSampleLocallyCached(sampleListItem)}
+                            isSelected={sampleListItem.globalIndex == selectedSampleIndex}
+                            sampleSelectedHandler={onSampleSelected} />
+                    })
             }
         </div>
     </div>
 }
 
+// TODO: Move this logic close to sample category definition
+function belongsToCategory(category: string) {
+    if (category === ROOT_CATEGORY_ID) return (_) => true
+    return (sample: SampleListItem) => {
+        return (sample?.[SampleListItemKeys.Category] || []).includes(category)
+    }
+}
+
 export const SampleListContainer: React.FC<Props> = ({ }) => {
     const { sample_list, category } = parseQueryParams(location.search)
     const setSampleListNameValue = useSetRecoilState(sampleListNameState)
+    const setSampleCategoriesNameValue = useSetRecoilState(sampleCategoriesNameState)
     useEffect(() => {
         setSampleListNameValue(sample_list)
-    }, [sample_list])
+        setSampleCategoriesNameValue(category)
+    }, [sample_list, category])
     const sampleList = useRecoilValue(sampleListSelector)
     const sampleListIsActive = useRecoilValue(sampleListAppearanceState)
     const currentLanguage = useRecoilValue(systemLanguageState)
-
-    const sampleCategories = { categories: [] }
+    const sampleCategories = useRecoilValue(sampleCategoriesSelector)
 
     return <div className={`${styles.sampleListContainer} ${sampleListIsActive ? '' : styles.inActive}`}>
         <SampleCategoryContainer {...sampleCategories} />

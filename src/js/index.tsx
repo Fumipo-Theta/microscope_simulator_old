@@ -7,10 +7,3 @@ ReactDOM.render(
     <App />,
     document.getElementById("app")
 )
-
-
-const get_package_id = () => {
-    const hash = location.hash.slice(1)
-    return hash === "" ? undefined : hash
-}
-

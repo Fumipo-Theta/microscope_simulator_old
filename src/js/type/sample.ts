@@ -1,4 +1,4 @@
-import { Language } from "./entity";
+import { I18nMap } from "./entity";
 
 export enum SampleListItemKeys {
     PackageName = "package-name",
@@ -7,9 +7,7 @@ export enum SampleListItemKeys {
     GlobalIndex = "globalIndex",
 }
 
-export type SampleListItemName = {
-    [key in Language]: string;
-};
+export type SampleListItemName = I18nMap<string>;
 
 export interface SampleListItem {
     [SampleListItemKeys.PackageName]: string
@@ -34,9 +32,7 @@ export enum SampleCategoryItemKeys {
 
 export interface SampleCategoryItem {
     [SampleCategoryItemKeys.Id]: string
-    [SampleCategoryItemKeys.Label]: {
-        [key in keyof Language]: string
-    }
+    [SampleCategoryItemKeys.Label]: I18nMap<string>
     [SampleCategoryItemKeys.SubCategories]?: Array<SampleCategoryItem>
 }
 
@@ -47,3 +43,5 @@ export enum SampleCategoriesKeys {
 export interface SampleCategories {
     [SampleCategoriesKeys.Categories]: Array<SampleCategoryItem>
 }
+
+export const ROOT_CATEGORY_ID = "ROOT_CATEGORY_ID"
