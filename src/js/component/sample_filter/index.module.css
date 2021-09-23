@@ -51,6 +51,11 @@
     background-color: #2196f3;
 }
 
+.toggleFilterButton > svg {
+    width: 100%;
+    height: 200%;
+}
+
 .categorySelector {
     display: flex;
     flex-wrap: wrap;
