@@ -1,0 +1,42 @@
+
+.categoryContainer {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 50px;
+    width: 100%;
+    max-width: 600px;
+    background-color: #113d60;
+    box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.5), 0 -3px 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.categoryContainerMenuBar {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.breadcrumb {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb > div > span {
+    margin: 0 3px;
+}
+
+.toggleFilterButton {
+    font-size: 1.25rem;
+    height: 40px;
+    width: 50px;
+    background-color: #00000000;
+    border: none;
+    border-radius: 3px;
+}
+
+.toggleFilterButton.active {
+    background-color: #2196f3;
+}
