@@ -10,8 +10,10 @@ import { systemLanguageState } from '@src/js/state/atom/system_language_state'
 import { selectedSampleListItemState } from '@src/js/state/atom/selected_sample_list_item_state'
 import { sampleListNameState } from '@src/js/state/atom/sample_list_name_state'
 import { sampleListSelector } from '@src/js/state/atom/sample_list_state'
+import { sampleCategoriesSelector, sampleCategoriesNameState } from '@src/js/state/atom/sample_category_state'
 import { SampleSelectorOption } from './sample_selector_option/sample_selector_option'
 import styles from "./index.module.css"
+import { useSharedState } from '@storybook/client-api'
 
 type Props = {
 
@@ -68,14 +70,15 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
 export const SampleListContainer: React.FC<Props> = ({ }) => {
     const { sample_list, category } = parseQueryParams(location.search)
     const setSampleListNameValue = useSetRecoilState(sampleListNameState)
+    const setSampleCategoriesNameValue = useSetRecoilState(sampleCategoriesNameState)
     useEffect(() => {
         setSampleListNameValue(sample_list)
-    }, [sample_list])
+        setSampleCategoriesNameValue(category)
+    }, [sample_list, category])
     const sampleList = useRecoilValue(sampleListSelector)
     const sampleListIsActive = useRecoilValue(sampleListAppearanceState)
     const currentLanguage = useRecoilValue(systemLanguageState)
-
-    const sampleCategories = { categories: [] }
+    const sampleCategories = useRecoilValue(sampleCategoriesSelector)
 
     return <div className={`${styles.sampleListContainer} ${sampleListIsActive ? '' : styles.inActive}`}>
         <SampleCategoryContainer {...sampleCategories} />
