@@ -45,6 +45,9 @@
     background-color: #00000000;
     border: none;
     border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .toggleFilterButton > img {
