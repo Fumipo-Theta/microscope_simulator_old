@@ -6,7 +6,7 @@ import { currentCategoryState } from "@src/js/state/atom/sample_category_state"
 import { SampleCategories, SampleCategoriesKeys, SampleCategoryItem, SampleCategoryItemKeys, ROOT_CATEGORY_ID } from "@src/js/type/sample"
 import styles from "./index.module.css"
 
-const MAX_DEPTH = 3
+const MAX_DEPTH = 2
 
 type BreadcrumbProps = {
     categorySetter: (node: CategoryNode) => MouseEventHandler,
@@ -21,11 +21,14 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ path, lang, nodeMap, categorySe
     const depth = path.length
     const shownPath = depth > MAX_DEPTH ? [ROOT_CATEGORY_ID, ...path.slice(depth - MAX_DEPTH, depth)] : path
     return <div className={styles.breadcrumb}>
-        {shownPath.length == 0 ? <></> : shownPath.map(
+        {shownPath.length == 0 ? <div></div> : shownPath.map(
             (directory) => {
                 const node = nodeMap[directory]
                 const label = node.getCategory().label[lang]
-                return (<div key={directory}><span>{">"}</span><span onClick={categorySetter(node)}>{label}</span></div>)
+                return (<div key={directory} className={styles.breadFragment}>
+                    <div onClick={categorySetter(node)} className={styles.breadLabel}>{label}</div>
+                    <div>{">"}</div>
+                </div>)
             }
         )}
     </div>
@@ -53,7 +56,7 @@ type CategoryButtonProps = {
 }
 
 const CategoryButton: React.FC<CategoryButtonProps> = ({ label, onClick }) => {
-    return <button onClick={onClick}>{label}</button>
+    return <button className={styles.categoryButton} onClick={onClick}>{label}</button>
 }
 
 type CategorySelectorProps = {
@@ -66,13 +69,13 @@ type CategorySelectorProps = {
 const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lang, node, nodeMap }) => {
     console.log(node)
     return (
-        <>
+        <div className={styles.categorySelector}>
             {node.getChildren().map(child => {
                 const category = nodeMap[child].getCategory()
                 return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
             }
             )}
-        </>
+        </div>
     )
 }
 
@@ -101,7 +104,7 @@ export const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCat
     </div>
 }
 
-class CategoryNode {
+export class CategoryNode {
     private path: string[]
     private children: string[] = []
     private category: SampleCategoryItem

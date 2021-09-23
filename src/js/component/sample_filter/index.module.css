@@ -4,9 +4,9 @@
     top: 0;
     display: flex;
     flex-direction: column;
-    min-height: 50px;
     width: 100%;
     max-width: 600px;
+    padding: 5px 0 0 0;
     background-color: #113d60;
     box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.5), 0 -3px 6px 10px rgba(0, 0, 0, 0.2);
 }
@@ -15,17 +15,27 @@
     display: flex;
     width: 100%;
     align-items: center;
-    padding: 0 5px;
+    padding: 0 10px;
 }
 
 .breadcrumb {
     flex: 1;
     display: flex;
     align-items: center;
+    overflow: hidden;
 }
 
-.breadcrumb > div > span {
+.breadFragment {
+    display: flex;
+    align-items: center;
     margin: 0 3px;
+    max-width: 10rem;
+}
+
+.breadLabel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 5px;
 }
 
 .toggleFilterButton {
@@ -39,4 +49,24 @@
 
 .toggleFilterButton.active {
     background-color: #2196f3;
+}
+
+.categorySelector {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0px 10px 0px 10px;
+    min-height: 1.5rem;
+    margin-top: 5px;
+    border-top: 1px solid #0a243a;
+}
+
+.categoryButton {
+    font-size: 1.0rem;
+    min-width: 4rem;
+    padding: 5px 10px;
+    background-color: #113d60;
+    border: 1px solid #9bdbfd;
+    border-radius: 3px;;
+    color: #efefef;
+    margin: 10px;
 }

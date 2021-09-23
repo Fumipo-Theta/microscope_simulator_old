@@ -1,7 +1,7 @@
 import { atom, selector } from "recoil";
 import { SampleCategories } from "@src/js/type/sample";
 import { staticSettings } from "@src/js/config/config";
-import { SampleCategoriesKeys } from "@src/js/type/sample";
+import { SampleCategoriesKeys, ROOT_CATEGORY_ID } from "@src/js/type/sample";
 
 export const sampleCategoriesSelector = selector<SampleCategories>({
     key: 'sampleCategoriesSelector',
@@ -14,7 +14,7 @@ export const sampleCategoriesSelector = selector<SampleCategories>({
 
 export const currentCategoryState = atom<string>({
     key: 'currentCategory',
-    default: ''
+    default: ROOT_CATEGORY_ID
 })
 
 export const sampleCategoriesNameState = atom<string>({
