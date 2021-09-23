@@ -43,3 +43,5 @@ export enum SampleCategoriesKeys {
 export interface SampleCategories {
     [SampleCategoriesKeys.Categories]: Array<SampleCategoryItem>
 }
+
+export const ROOT_CATEGORY_ID = "ROOT_CATEGORY_ID"

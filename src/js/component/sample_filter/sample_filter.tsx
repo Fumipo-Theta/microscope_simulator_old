@@ -1,29 +1,31 @@
 import React, { useState, useCallback, MouseEventHandler } from "react"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { I18nMap, Language } from "@src/js/type/entity"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
-import { SampleCategories, SampleCategoriesKeys, SampleCategoryItem, SampleCategoryItemKeys } from "@src/js/type/sample"
+import { currentCategoryState } from "@src/js/state/atom/sample_category_state"
+import { SampleCategories, SampleCategoriesKeys, SampleCategoryItem, SampleCategoryItemKeys, ROOT_CATEGORY_ID } from "@src/js/type/sample"
 import styles from "./index.module.css"
 
+const MAX_DEPTH = 3
+
 type BreadcrumbProps = {
-    setPath: React.Dispatch<React.SetStateAction<string[]>>,
+    categorySetter: (node: CategoryNode) => MouseEventHandler,
     path: Array<string>,
     lang: Language,
     nodeMap: { string: CategoryNode },
 }
 
-const MAX_DEPTH = 3
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ path, lang, nodeMap, setPath }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ path, lang, nodeMap, categorySetter }) => {
     // Show only some parents because of limitation of space
     const depth = path.length
-    const shownPath = depth > MAX_DEPTH ? path.slice(depth - MAX_DEPTH, depth) : path
+    const shownPath = depth > MAX_DEPTH ? [ROOT_CATEGORY_ID, ...path.slice(depth - MAX_DEPTH, depth)] : path
     return <div className={styles.breadcrumb}>
         {shownPath.length == 0 ? <></> : shownPath.map(
             (directory) => {
                 const node = nodeMap[directory]
                 const label = node.getCategory().label[lang]
-                return (<div key={directory}><span>{">"}</span><span onClick={() => { setPath(node.getPath()) }}>{label}</span></div>)
+                return (<div key={directory}><span>{">"}</span><span onClick={categorySetter(node)}>{label}</span></div>)
             }
         )}
     </div>
@@ -55,18 +57,13 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({ label, onClick }) => {
 }
 
 type CategorySelectorProps = {
-    setPath: React.Dispatch<React.SetStateAction<string[]>>,
+    categorySetter: (node: CategoryNode) => MouseEventHandler,
     lang: Language,
     node: CategoryNode,
     nodeMap: { string: CategoryNode },
 }
 
-const CategorySelector: React.FC<CategorySelectorProps> = ({ setPath, lang, node, nodeMap }) => {
-    const categorySetter = useCallback((current: CategoryNode) => {
-        return () => {
-            setPath(current.getPath())
-        }
-    }, [setPath])
+const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lang, node, nodeMap }) => {
     console.log(node)
     return (
         <>
@@ -80,7 +77,12 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ setPath, lang, node
 }
 
 export const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCategoriesKeys.Categories]: sampleCategoryItems }) => {
-    const [currentPath, setPath] = useState<string[]>(["root"])
+    const [currentPath, setPath] = useState<string[]>([ROOT_CATEGORY_ID])
+    const setCurrentCategoryValue = useSetRecoilState(currentCategoryState)
+    const categorySetter = useCallback((node: CategoryNode) => (_) => {
+        setPath(node.getPath())
+        setCurrentCategoryValue(node.getCategory()[SampleCategoryItemKeys.Id])
+    }, [setPath, setCurrentCategoryValue])
     const language = useRecoilValue(systemLanguageState)
     const [isActive, updateActive] = useState(false)
     const toggleCategorySelector = useCallback((_) => { updateActive(current => !current) }, [updateActive])
@@ -88,12 +90,12 @@ export const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCat
     const currentCategory = currentPath[currentPath.length - 1]
     return <div className={styles.categoryContainer}>
         <div className={styles.categoryContainerMenuBar}>
-            <Breadcrumb path={currentPath} lang={language} nodeMap={categoryMap} setPath={setPath} />
+            <Breadcrumb path={currentPath} lang={language} nodeMap={categoryMap} categorySetter={categorySetter} />
             <CategorySelectorToggler onClick={toggleCategorySelector} isActive={isActive} />
         </div>
         {
             isActive
-                ? <CategorySelector setPath={setPath} lang={language} node={categoryMap[currentCategory]} nodeMap={categoryMap} />
+                ? <CategorySelector categorySetter={categorySetter} lang={language} node={categoryMap[currentCategory]} nodeMap={categoryMap} />
                 : <></>
         }
     </div>
@@ -127,9 +129,9 @@ class CategoryNode {
     }
 
     static constructNodes(rawRootNodes: SampleCategoryItem[]): { string: CategoryNode } {
-        const label = { en: "Top", ja: "Top" } as I18nMap<string>
+        const label = { en: "All", ja: "全て" } as I18nMap<string>
         const root: SampleCategoryItem = {
-            id: "root",
+            id: ROOT_CATEGORY_ID,
             label: label,
             subcategories: rawRootNodes
         }

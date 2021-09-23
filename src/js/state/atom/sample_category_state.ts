@@ -12,6 +12,11 @@ export const sampleCategoriesSelector = selector<SampleCategories>({
     }
 })
 
+export const currentCategoryState = atom<string>({
+    key: 'currentCategory',
+    default: ''
+})
+
 export const sampleCategoriesNameState = atom<string>({
     key: 'sampleCategoriesName',
     default: ''
