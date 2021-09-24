@@ -22,12 +22,14 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ path, lang, nodeMap, categorySe
     const shownPath = depth > MAX_DEPTH ? [ROOT_CATEGORY_ID, ...path.slice(depth - MAX_DEPTH, depth)] : path
     return <div className={styles.breadcrumb}>
         {shownPath.length == 0 ? <div></div> : shownPath.map(
-            (directory) => {
+            (directory, i, all) => {
                 const node = nodeMap[directory]
                 const label = node.getCategory().label[lang]
+                const isCurrent = all.length - 1 == i
+                const onClick = isCurrent ? (_) => { } : categorySetter(node)
                 return (<div key={directory} className={styles.breadFragment}>
-                    <div onClick={categorySetter(node)} className={styles.breadLabel}>{label}</div>
-                    <div>{">"}</div>
+                    <div onClick={onClick} className={`${styles.breadLabel} ${isCurrent ? styles.current : ""}`}>{label}</div>
+                    {isCurrent ? <></> : <div>{">"}</div>}
                 </div>)
             }
         )}
@@ -40,11 +42,12 @@ type CategorySelectorTogglerProps = {
 }
 
 const CategorySelectorToggler: React.FC<CategorySelectorTogglerProps> = ({ onClick, isActive }) => {
+    const icon = <img src="/images/tune.svg" />
     return (
         <button
             className={`${styles.toggleFilterButton} ${isActive ? styles.active : ""}`}
             onClick={onClick}>
-            <img src="/images/tune.svg" />
+            {isActive ? <div className={styles.toggleButtonName}>Filter</div> : icon}
         </button>
 
     )
@@ -70,11 +73,14 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lan
     console.log(node)
     return (
         <div className={styles.categorySelector}>
-            {node.getChildren().map(child => {
-                const category = nodeMap[child].getCategory()
-                return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
+            {
+                node.getChildren().length > 0
+                    ? node.getChildren().map(child => {
+                        const category = nodeMap[child].getCategory()
+                        return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
+                    })
+                    : <div className={styles.info}>No subcategory</div>
             }
-            )}
         </div>
     )
 }

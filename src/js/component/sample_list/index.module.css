@@ -14,7 +14,7 @@
     z-index: 500;
     position: fixed;
     inset: 0;
-    top: 64px;
+    top: 47px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -34,8 +34,9 @@
     width: 100%;
     max-width: 600px;
     overflow-y: scroll;
-    background-color: #0c395e;
+    background-color: #0c395eee;
     border-radius: 0 0 3px 3px;
+    box-shadow: 0 3px 2px 0 #88888888;
 }
 
 .sampleSelectorWrapper {
