@@ -12,12 +12,12 @@
 }
 
 .optionContainer:hover {
-    background-color: #184c77;
+    background-color: #184c77ee;
 }
 
 
 .optionContainer.selected {
-    background-color: #1a75c0;
+    background-color: #17568a;
 }
 
 .optionWrapper{
