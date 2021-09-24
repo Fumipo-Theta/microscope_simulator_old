@@ -52,16 +52,13 @@
     height: 40px;
     width: 50px;
     background-color: #00000000;
-    box-shadow: 0 3px 1px 0px #2196f344,
-        0 3px 5px 0 #b4faff49 inset;
+    box-shadow: 1px 2px 0px 0px #1899ff88, 1px 1px 0px 0 #ffffff6b inset;
     border: none;
-    border-bottom: 0.5px solid #2196f388;
     border-radius: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: border-bottom 0.5s;
     transition: box-shadow 0.5s;
 }
 
@@ -76,10 +73,8 @@
 }
 
 .toggleFilterButton.active {
-    border-bottom: 0.5px solid #829c8644;
     box-shadow: 0 1px 3px 0 #4f500c44,
         0 1px 3px 0 #ffdfb436 inset;
-    transition: border-bottom 0.2s;
     transition: box-shadow 0.2s;
 }
 
@@ -101,8 +96,7 @@
     color: #efefef;
     margin: 5px 10px;
     cursor: pointer;
-    box-shadow: 0 1px 1px 0px #9bdbfd88,
-        0 1px 3px 0 #b4ffdc36 inset;
+    box-shadow: 1px 2px 0px 0px #1899ff88, 1px 1px 0px 0 #ffffff6b inset;
 }
 
 .categoryButton:active {

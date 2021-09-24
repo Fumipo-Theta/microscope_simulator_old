@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     color: #eeeeff;
-    background-color: #0c395e;
+    background-color: #092a44;
     font-size: 1.25rem;
 }
 
@@ -33,24 +33,22 @@
     width: 100%;
     height: 40px;
     border: none;
-    border-bottom: 0.5px solid #2196f388;
     border-radius: 3px;
     color: inherit;
     font-size: 1.2rem;
     line-height: 1;
-    background-color: inherit;
+    background-color: #efefef22;
     cursor: pointer;
-    box-shadow: 0 5px 2px 0px #2196f344, 
-        0 3px 5px 0 #b4e7ff6b inset;
+    box-shadow: 2px 5px 0px 0px #1899ff88, 1px 3px 0px 0 #ffffff6b inset;
     transition: border-bottom 0.5s;
     transition: box-shadow 0.5s;
 }
 
 .activeButton {
-    border-bottom: 0.5px solid #829c8644;
+    background-color: inherit;
     box-shadow: 0 1px 3px 0 #4f500c44,
-        0 1px 3px 0 #ffdfb436 inset;
-    transition: border-bottom 0.2s;
+        0 1px 3px 0 #fa61f256 inset;
+    transition: background-color 0.2s;
     transition: box-shadow 0.2s;
 }
 
@@ -69,13 +67,11 @@
     padding: 5px 0.5em;
     font-size: 1.2rem;
     line-height: 1;
-    border: 0.5px solid rgba(49, 49, 93, 0.10);
-    border-bottom: 1px solid #2196f3;
     border-radius: 3px;
     color: inherit;
-    background-color: inherit;
+    background-color: #efefef11;
     cursor: pointer;
-    box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.10), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
+    box-shadow: 2px 2px 0px 0px #189bff88, 1px 3px 0px 0 #ffffff6b inset;
 }
 
 .languageSelector option {
