@@ -23,7 +23,7 @@ const SampleListExpander: React.FC = () => {
 
     return (
         <div className={styles.sampleListExpanderContainer}>
-            <button className={styles.expandSampleListButton} onClick={onClick}>
+            <button className={`${styles.expandSampleListButton} ${listIsActive ? styles.activeButton : ""}`} onClick={onClick}>
                 {listIsActive ? ">> Close <<" : `${currentLitItemIndex} ${buttonWord}`}
             </button>
         </div>

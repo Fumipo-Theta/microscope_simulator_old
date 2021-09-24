@@ -42,11 +42,12 @@ type CategorySelectorTogglerProps = {
 }
 
 const CategorySelectorToggler: React.FC<CategorySelectorTogglerProps> = ({ onClick, isActive }) => {
+    const icon = <img src="/images/tune.svg" />
     return (
         <button
             className={`${styles.toggleFilterButton} ${isActive ? styles.active : ""}`}
             onClick={onClick}>
-            <img src="/images/tune.svg" />
+            {isActive ? <div className={styles.toggleButtonName}>Filter</div> : icon}
         </button>
 
     )
@@ -72,11 +73,14 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lan
     console.log(node)
     return (
         <div className={styles.categorySelector}>
-            {node.getChildren().map(child => {
-                const category = nodeMap[child].getCategory()
-                return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
+            {
+                node.getChildren().length > 0
+                    ? node.getChildren().map(child => {
+                        const category = nodeMap[child].getCategory()
+                        return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
+                    })
+                    : <div className={styles.info}>No subcategory</div>
             }
-            )}
         </div>
     )
 }
