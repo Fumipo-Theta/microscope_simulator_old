@@ -21,6 +21,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ path, lang, nodeMap, categorySe
     const depth = path.length
     const shownPath = depth > MAX_DEPTH ? [ROOT_CATEGORY_ID, ...path.slice(depth - MAX_DEPTH, depth)] : path
     return <div className={styles.breadcrumb}>
+        Show
         {shownPath.length == 0 ? <div></div> : shownPath.map(
             (directory, i, all) => {
                 const node = nodeMap[directory]
@@ -47,7 +48,7 @@ const CategorySelectorToggler: React.FC<CategorySelectorTogglerProps> = ({ onCli
         <button
             className={`${styles.toggleFilterButton} ${isActive ? styles.active : ""}`}
             onClick={onClick}>
-            {isActive ? <div className={styles.toggleButtonName}>Filter</div> : icon}
+            {isActive ? <div className={styles.toggleButtonName}>Close</div> : icon}
         </button>
 
     )
@@ -75,10 +76,10 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lan
         <div className={styles.categorySelector}>
             {
                 node.getChildren().length > 0
-                    ? node.getChildren().map(child => {
+                    ? <><div>Filter by</div> {node.getChildren().map(child => {
                         const category = nodeMap[child].getCategory()
                         return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
-                    })
+                    })}</>
                     : <div className={styles.info}>No subcategory</div>
             }
         </div>
