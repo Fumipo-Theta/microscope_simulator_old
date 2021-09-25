@@ -19,11 +19,11 @@ const SampleListExpander: React.FC = () => {
     const currentLang = useRecoilValue(systemLanguageState)
     const currentListItem = useRecoilValue(selectedSampleListItemState)
     const currentLitItemIndex = currentListItem?.[SampleListItemKeys.GlobalIndex] || ''
-    const buttonWord = currentListItem?.[SampleListItemKeys.ListName]?.[currentLang] || "<< Select sample >>"
+    const buttonWord = currentListItem?.[SampleListItemKeys.ListName]?.[currentLang] || "Select sample"
 
     return (
-        <div className={styles.sampleListExpanderContainer}>
-            <button className={`${styles.expandSampleListButton} ${listIsActive ? styles.activeButton : ""}`} onClick={onClick}>
+        <div className={`${styles.sampleListExpanderContainer}  ${listIsActive ? styles.activeButton : ""}`}>
+            <button className={`${styles.expandSampleListButton}`} onClick={onClick}>
                 {listIsActive ? ">> Close <<" : `${currentLitItemIndex} ${buttonWord}`}
             </button>
         </div>
