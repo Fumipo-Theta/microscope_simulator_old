@@ -1,4 +1,5 @@
 import { bufferToBase64 } from "./data_translaters.js"
+import { Zip } from "./zip.js"
 
 /**
  *

@@ -1,0 +1,130 @@
+
+.categoryContainer {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    background-color: #113d60;
+    box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.5), 0 -3px 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.categoryContainerMenuBar {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.breadcrumb {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.breadFragment {
+    display: flex;
+    align-items: center;
+    margin: 0 3px;
+    max-width: 10rem;
+}
+
+.breadLabel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 5px;
+    color: #9bdbfd;
+    border-bottom: 1px dashed #9bdbfd;
+    cursor: pointer;
+}
+
+.breadLabel.current {
+    color: #efefef;
+    border: none;
+    cursor: default;
+}
+
+.toggleFilterButton {
+    font-size: 1.25rem;
+    height: 40px;
+    width: 50px;
+    background-color: #00000000;
+    box-shadow: 1px 2px 0px 0px #1899ff88, 1px 1px 0px 0 #ffffff6b inset;
+    border: none;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: box-shadow 0.5s;
+    margin: 5px;
+}
+
+.toggleButtonName {
+    font-size: 1rem;
+    color: #efefef;
+}
+
+.toggleFilterButton > img {
+    width: 2rem;
+    height: 2rem;
+}
+
+.toggleFilterButton.active {
+    box-shadow: 0 1px 3px 0 #4f500c44,
+        0 1px 3px 0 #fa61f256 inset;
+    transition: box-shadow 0.2s;
+}
+
+.categorySelector {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border-top: 1px solid #0a243a;
+    overflow: auto;
+    max-height: 30vh;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.categorySelectorClosed {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.categoryButton {
+    font-size: 1.0rem;
+    min-width: 4rem;
+    padding: 5px 10px;
+    background-color: #113d60;
+    border: 1px solid #9bdbfd44;
+    border-radius: 3px;;
+    color: #efefef;
+    margin: 10px 10px;
+    cursor: pointer;
+    box-shadow: 1px 2px 0px 0px #1899ff88, 1px 1px 0px 0 #ffffff6b inset;
+}
+
+.categoryButton:active {
+    background-color: #2196f3
+}
+
+.info {
+    font-size: 1rem;
+    margin: 5px 10px;
+    color: #bbbbbb;
+}
+
+.rowTitle{
+    box-sizing: content-box;
+    font-size: 0.5rem;
+    width: 60px;
+    color: #bbbbbb;
+    border-right: 1px solid #6b6b6b;
+    padding: 7px 5px;
+    display: flex;
+    align-items: center;
+    border-radius: 0 60% 60% 0;
+}

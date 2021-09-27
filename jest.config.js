@@ -11,7 +11,9 @@ module.exports = {
     },
     "moduleFileExtensions": [
         "ts",
-        "js"
+        "js",
+        "tsx",
+        "jsx"
     ],
     "transform": {
         "^.+\\.jsx?$": "babel-jest",

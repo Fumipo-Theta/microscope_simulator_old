@@ -1,0 +1,48 @@
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.267);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(126, 148, 245, 0.267);
+  border-radius: 10px;
+}
+
+.sampleListContainer {
+    z-index: 500;
+    position: fixed;
+    inset: 0;
+    top: 47px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 65vh;
+    overflow-x: hidden;
+    color: #e4e4e4;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.sampleListContainer.inActive {
+    max-height: 0;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.sampleListSelector {
+    width: 100%;
+    max-width: 600px;
+    overflow-y: scroll;
+    background-color: #0c395eee;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 3px 2px 0 #88888888;
+}
+
+.sampleSelectorWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 10px auto;
+}
