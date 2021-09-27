@@ -19,9 +19,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-height: 50vh;
+    max-height: 65vh;
     overflow-x: hidden;
-    color: #eeeeff;
+    color: #e4e4e4;
     transition: max-height 0.2s ease-in-out;
 }
 

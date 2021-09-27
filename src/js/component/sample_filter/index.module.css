@@ -6,7 +6,6 @@
     flex-direction: column;
     width: 100%;
     max-width: 600px;
-    padding: 5px 0 0 0;
     background-color: #113d60;
     box-shadow: 0 7px 14px 0 rgba(0, 0, 0, 0.5), 0 -3px 6px 10px rgba(0, 0, 0, 0.2);
 }
@@ -15,11 +14,11 @@
     display: flex;
     width: 100%;
     align-items: center;
-    padding: 0px 10px 5px;
 }
 
 .breadcrumb {
     flex: 1;
+    height: 100%;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -37,7 +36,7 @@
     text-overflow: ellipsis;
     margin: 0 5px;
     color: #9bdbfd;
-    border-bottom: 1px solid #9bdbfd;
+    border-bottom: 1px dashed #9bdbfd;
     cursor: pointer;
 }
 
@@ -60,6 +59,7 @@
     align-items: center;
     cursor: pointer;
     transition: box-shadow 0.5s;
+    margin: 5px;
 }
 
 .toggleButtonName {
@@ -74,7 +74,7 @@
 
 .toggleFilterButton.active {
     box-shadow: 0 1px 3px 0 #4f500c44,
-        0 1px 3px 0 #ffdfb436 inset;
+        0 1px 3px 0 #fa61f256 inset;
     transition: box-shadow 0.2s;
 }
 
@@ -82,9 +82,16 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding: 0px 10px 0px 10px;
-    min-height: 1.5rem;
     border-top: 1px solid #0a243a;
+    overflow: auto;
+    max-height: 30vh;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.categorySelectorClosed {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
 }
 
 .categoryButton {
@@ -95,7 +102,7 @@
     border: 1px solid #9bdbfd44;
     border-radius: 3px;;
     color: #efefef;
-    margin: 5px 10px;
+    margin: 10px 10px;
     cursor: pointer;
     box-shadow: 1px 2px 0px 0px #1899ff88, 1px 1px 0px 0 #ffffff6b inset;
 }
@@ -107,5 +114,17 @@
 .info {
     font-size: 1rem;
     margin: 5px 10px;
-    color: #efefef;
+    color: #bbbbbb;
+}
+
+.rowTitle{
+    box-sizing: content-box;
+    font-size: 0.5rem;
+    width: 60px;
+    color: #bbbbbb;
+    border-right: 1px solid #6b6b6b;
+    padding: 7px 5px;
+    display: flex;
+    align-items: center;
+    border-radius: 0 60% 60% 0;
 }

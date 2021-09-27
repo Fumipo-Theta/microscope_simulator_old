@@ -29,6 +29,7 @@
     flex-grow: 1;
     background-color: #efefef22;
     cursor: pointer;
+    border-radius: 3px;
     box-shadow: 2px 5px 0px 0px #1899ff88, 1px 3px 0px 0 #ffffff6b inset;
     transition: box-shadow 0.5s;
     overflow-x: hidden;
@@ -39,7 +40,6 @@
     width: 100%;
     height: 40px;
     border: none;
-    border-radius: 3px;
     background-color: transparent;
     color: inherit;
     font-size: 1rem;
@@ -74,7 +74,7 @@
     color: inherit;
     background-color: #efefef11;
     cursor: pointer;
-    box-shadow: 2px 2px 0px 0px #189bff88, 1px 3px 0px 0 #ffffff6b inset;
+    box-shadow: 2px 5px 0px 0px #1899ff88, 1px 3px 0px 0 #ffffff6b inset;
 }
 
 .languageSelector option {
