@@ -21,7 +21,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ path, lang, nodeMap, categorySe
     const depth = path.length
     const shownPath = depth > MAX_DEPTH ? [ROOT_CATEGORY_ID, ...path.slice(depth - MAX_DEPTH, depth)] : path
     return <div className={styles.breadcrumb}>
-        Show
+        <div className={styles.rowTitle}>Show</div>
         {shownPath.length == 0 ? <div></div> : shownPath.map(
             (directory, i, all) => {
                 const node = nodeMap[directory]
@@ -68,18 +68,21 @@ type CategorySelectorProps = {
     lang: Language,
     node: CategoryNode,
     nodeMap: { string: CategoryNode },
+    isActive: boolean,
 }
 
-const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lang, node, nodeMap }) => {
+const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lang, node, nodeMap, isActive }) => {
     console.log(node)
     return (
-        <div className={styles.categorySelector}>
+        <div className={`${styles.categorySelector} ${isActive ? "" : styles.categorySelectorClosed}`}>
             {
                 node.getChildren().length > 0
-                    ? <><div>Filter by</div> {node.getChildren().map(child => {
-                        const category = nodeMap[child].getCategory()
-                        return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
-                    })}</>
+                    ? <><div className={styles.rowTitle}>Filter by</div>
+                        {node.getChildren().map(child => {
+                            const category = nodeMap[child].getCategory()
+                            return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
+                        })}
+                    </>
                     : <div className={styles.info}>No subcategory</div>
             }
         </div>
@@ -103,11 +106,7 @@ export const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCat
             <Breadcrumb path={currentPath} lang={language} nodeMap={categoryMap} categorySetter={categorySetter} />
             <CategorySelectorToggler onClick={toggleCategorySelector} isActive={isActive} />
         </div>
-        {
-            isActive
-                ? <CategorySelector categorySetter={categorySetter} lang={language} node={categoryMap[currentCategory]} nodeMap={categoryMap} />
-                : <></>
-        }
+        <CategorySelector isActive={isActive} categorySetter={categorySetter} lang={language} node={categoryMap[currentCategory]} nodeMap={categoryMap} />
     </div>
 }
 
