@@ -3,9 +3,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #222222;
-    border-radius: 3px;
+    border-radius: 40px;
     flex-direction: column;
+    box-shadow: 5px 5px 14px #afafaf, -5px -5px 14px #ffffff;
+    background: linear-gradient(
+        145deg, #d4d4d4, #fbfbfb);
 }
 
 .descriptionContainer{
@@ -14,11 +16,15 @@
   align-items: center;
   flex-direction: column;
   top: 64px;
+  margin: 20px 0;
   padding: 0 20px;
   width: 780px;
   max-width: 100%;
   background-color: #ebebeb;
-  border-radius: 5px;
+  border-radius: 40px;
+  box-shadow: 5px 5px 14px #afafaf, -5px -5px 14px #ffffff;
+  background: linear-gradient(
+        145deg, #f1f1f1, #fbfbfb);
 }
 
 .descriptionContainer ul {

@@ -17,8 +17,8 @@ export const SampleScale: React.FC<Props> = () => {
     return (
 
         <div className={styles.scale}>
-            <ScaleLabel label={currentLabel} />
             <ScaleBar width={currentLength} />
+            <ScaleLabel label={currentLabel} />
         </div>
     )
 }

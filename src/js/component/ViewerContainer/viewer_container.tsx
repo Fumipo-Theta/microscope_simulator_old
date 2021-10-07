@@ -66,12 +66,10 @@ export const ViewerContainer: React.FC = () => {
         <>
             {currentSample ?
                 <><div className={styles.viewerLayerContainer}>
-                    <div>
-                        <Canvas {...mainLayerProps} />
-                    </div>
+                    <Canvas {...mainLayerProps} />
                     <SampleScale />
-                </div>
                     <NicolToggler />
+                </div>
                     <DescriptionContainer sample={currentSample} />
                 </> :
                 <Welcome />
