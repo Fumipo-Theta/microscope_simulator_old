@@ -26,6 +26,12 @@ export type UiState = {
     imageCenterInfo: ImageCenterInfo,
 }
 
+const style = {
+    margin: "5px",
+    borderRadius: "50%",
+    boxShadow: "2px 1px 4px #a0a0a0, -2px -1px 4px #ffffff",
+}
+
 export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     const { rotate_clockwise, cycle_rotate_degree, rotate_by_degree } = sample.manifest
     const rotationManager = new RotationManager(rotate_clockwise, rotate_by_degree, cycle_rotate_degree)
@@ -180,7 +186,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
 
 
     return <>
-        <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ margin: "1px" }} />
+        <canvas ref={ref} width={viewerSize} height={viewerSize} style={style} />
     </>
 }
 
