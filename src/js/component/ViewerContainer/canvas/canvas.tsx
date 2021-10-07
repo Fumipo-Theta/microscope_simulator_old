@@ -180,7 +180,7 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
 
 
     return <>
-        <canvas ref={ref} width={viewerSize} height={viewerSize} />
+        <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ margin: "1px" }} />
     </>
 }
 

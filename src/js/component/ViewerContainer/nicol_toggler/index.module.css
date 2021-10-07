@@ -2,6 +2,8 @@
     margin: 10px 0;
     padding: 0 10px;
     max-width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .toggleButtonInput{
@@ -23,6 +25,7 @@
     border-radius: 24px;
     cursor: pointer;
     background-color: #444;
+    box-shadow: 7px 5px 5px #afafaf, -5px -3px 5px #ffffff, 2px 2px 2px #2c2c2c inset, -1px -1px 2px #ffffff inset;
 }
 
 .toggleButtonLabel::before{
@@ -52,6 +55,7 @@
 
 .toggleButtonInput:checked+.toggleButtonLabel{
     background-color: #efefef;
+    box-shadow: 5px 3px 5px #afafaf, -5px -3px 5px #ffffff, 2px 2px 2px #afafaf inset, -1px -1px 2px #ffffff inset;
 }
 
 .toggleButtonInput:checked+.toggleButtonLabel::before {
