@@ -25,7 +25,7 @@
     border-radius: 24px;
     cursor: pointer;
     background-color: #444;
-    box-shadow: 7px 5px 5px #afafaf, -5px -3px 5px #ffffff, 2px 2px 2px #2c2c2c inset, -1px -1px 2px #ffffff inset;
+    box-shadow: 5px 3px 5px #afafaf, -5px -3px 5px #ffffff, 2px 2px 2px #2c2c2c inset, -1px -1px 2px #ffffff inset;
 }
 
 .toggleButtonLabel::before{
@@ -35,7 +35,7 @@
     top: 14px;
     right: 7px;
     font-family: Arial, sans-serif;
-    font-size: 18px;
+    font-size: 1.8rem;
     color: #dfdfdf;
 }
 

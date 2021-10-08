@@ -48,6 +48,7 @@ const DescriptionContainer: React.FC<DescriptionProps> = ({ sample }) => {
         <div className={styles.descriptionContainer}>
             <p>
                 <RockType manifest={manifest} lang={lang} />
+                {" "}
                 <SampleLocation manifest={manifest} lang={lang} />
             </p>
             <p><Description manifest={manifest} lang={lang} /></p>
