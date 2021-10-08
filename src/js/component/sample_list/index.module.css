@@ -25,7 +25,10 @@
     overflow-x: hidden;
     color: #fdfdfd;
     transition: max-height 0.2s ease-in-out;
-    border-radius: 0 10px;
+    border-radius: 0 0 0px 20px;
+    max-width: 600px;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
 }
 
 .sampleListContainer.inActive {
@@ -35,13 +38,10 @@
 
 .sampleListSelector {
     width: 100%;
-    max-width: 600px;
     overflow-y: scroll;
-    background: rgba(124, 124, 124, 0.4);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 20px 20px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(124, 124, 124, 0.4);
 }
 
 .sampleSelectorWrapper {
