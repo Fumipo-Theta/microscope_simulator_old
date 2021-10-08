@@ -25,6 +25,7 @@
   box-shadow: 5px 5px 14px #afafaf, -5px -5px 14px #ffffff;
   background: linear-gradient(
         145deg, #f1f1f1, #fbfbfb);
+  font-size: 1.6rem;
 }
 
 .descriptionContainer ul {
