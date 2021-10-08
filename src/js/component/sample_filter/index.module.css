@@ -44,6 +44,7 @@
     box-shadow: 5px 5px 10px #092235,
         -5px -5px 10px #19588b;
     transition: box-shadow 0.3s;
+    white-space: nowrap;
 }
 
 .breadLabel.current {
