@@ -36,7 +36,7 @@
 }
 
 
-@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+@supports ((backdrop-filter: none)) {
     .sampleListContainer {
         -webkit-backdrop-filter: blur(8px);
         backdrop-filter: blur(8px);
