@@ -6,8 +6,6 @@
     min-height: 3rem;
     font-size: 2rem;
     padding: 5px 0;
-
-    box-shadow: -1px -1px 4px #78787e inset;
     cursor: pointer;
 }
 
@@ -18,7 +16,6 @@
 
 .optionContainer.selected {
     background: rgb(184 217 255 / 40%);
-    box-shadow: inset -5px 6px 10px 0px #3a4f6188
 }
 
 .optionWrapper {

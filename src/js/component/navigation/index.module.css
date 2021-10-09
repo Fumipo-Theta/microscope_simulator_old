@@ -29,7 +29,7 @@
     flex-grow: 1;
     cursor: pointer;
     border-radius: 10px;
-    background: linear-gradient(145deg, #0f3756, #124167);
+    background: linear-gradient(145deg, #0b2b44, #124167);
     box-shadow: 9px 9px 18px #051725, -9px -9px 18px #0d3d63;
     transition: background 0.5s;
     transition: box-shadow 0.5s;
@@ -74,7 +74,7 @@
     cursor: pointer;
     border-radius: 10px;
     border-bottom: none;
-    background: linear-gradient(145deg, #0f3756, #124167);
+    background: linear-gradient(145deg, #0b2b44, #124167);
     box-shadow: 5px 5px 10px #051725,
         -5px -5px 10px #0d3d63,
         0 -2px 0 -1px #0c4e85;
