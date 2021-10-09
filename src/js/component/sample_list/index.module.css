@@ -4,11 +4,11 @@
 
 ::-webkit-scrollbar-track {
     border-radius: 10px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.267);
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.856);
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(126, 148, 245, 0.267);
+    background-color: rgba(99, 99, 99, 0.829);
     border-radius: 10px;
 }
 
@@ -38,7 +38,7 @@
     width: 100%;
     overflow-y: scroll;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(124, 124, 124, 0.8);
+    background: rgba(55, 55, 55, 0.4);
 }
 
 
@@ -46,7 +46,6 @@
     .sampleListSelector {
         -webkit-backdrop-filter: blur(8px);
         backdrop-filter: blur(8px);
-        background: none;
     }
 }
 
