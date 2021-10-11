@@ -22,7 +22,7 @@ export const ViewerContainerSuspend: React.FC = () => {
         <div style={{ width: viewerSize, height: viewerSize, ...dummyCanvasStyle }}>
             <CircularProgress size={"5rem"} />
         </div>
-        <div className={scaleScaleStyles.scale} style={{ alignItems: "center", width: "50vw" }}>
+        <div className={scaleScaleStyles.scale} style={{ alignItems: "center", maxWidth: "50vw", width: "300px" }}>
             <div className={scaleScaleStyles.scaleBar} style={{ width: "100%" }}></div>
             <div className={scaleScaleStyles.scaleLabel}>Scale</div>
         </div>
