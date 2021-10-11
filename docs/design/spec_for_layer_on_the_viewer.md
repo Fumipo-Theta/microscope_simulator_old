@@ -66,7 +66,7 @@
       + x: 500 (number, required)
       + y: 450 (number, required)
     + `text`: 斜長石 (string, required) - ラベルのテキスト
-    + `color` (required) - オープン・クロスそれぞれで表示するラベルの文字色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す
+    + `color` (optional) - オープン・クロスそれぞれで表示するラベルの文字色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値が使用される
       + `in_open`: #000000ff (string, optional)
       + `in_crossed`: #ffffffff (string, optional)
 + `annotations` (array, optional) - 薄片画像上に表示する注釈アイコンと, 注釈メッセージの情報の配列
@@ -78,12 +78,12 @@
     + `position_from_left_top` (required) - 薄片画像の左上を基準とした注釈アイコンの座標
       + x: 100 (number, required)
       + y: 200 (number, required)
-    + `icon_color` (required) - オープン・クロスそれぞれで表示する注釈アイコンの塗りつぶし色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す
+    + `icon_color` (optional) - オープン・クロスそれぞれで表示する注釈アイコンの塗りつぶし色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値が使用される
       + `in_open`: #2196f3ff (string, optional)
       + `in_crossed`: #FF3100ff (string, optional)
-    + `message` (required) - オープン・クロスそれぞれで表示する注釈メッセージの内容。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。HTMLで表記可能
+    + `message` (required) - オープン・クロスそれぞれで表示する注釈メッセージの内容。片方しかなければ, もう片方も同じ内容が表示される。どちらか片方は必須。HTMLで表記可能
       + `in_open` `Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.` (string, optional)
-      + `in_crossed` `Another text to be shown in crossed Nicols mode.`
+      + `in_crossed` `Another text to be shown in crossed Nicols mode.` (string, optional)
 
 
 ## 複数のレイヤーを表すJSONの例
