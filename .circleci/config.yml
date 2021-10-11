@@ -71,8 +71,16 @@ version: 2.1
 workflows:
   deploy-to-dev:
     jobs:
-      - build-dev
-      - build-prod
+      - build-dev:
+          filters:
+            branches:
+              only:
+                - master
+      - build-prod:
+          filters:
+            branches:
+              only:
+                - release
       - deploy-to-dev:
           requires:
             - build-dev

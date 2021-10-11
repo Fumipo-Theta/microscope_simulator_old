@@ -1,26 +1,19 @@
-
 .optionContainer {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 3rem;
-    font-size: 1.2rem;
+    font-size: 2rem;
     padding: 5px 0;
-    border-bottom: 1px solid #114875;
     cursor: pointer;
 }
 
-.optionContainer:hover {
-    background-color: #184c77ee;
-}
-
-
 .optionContainer.selected {
-    background-color: #17568a;
+    background: linear-gradient(90deg, #eed3fd00, #66b7ff66, #c666ff66, #eed3fd00);
 }
 
-.optionWrapper{
+.optionWrapper {
     display: flex;
     width: 100%;
     align-items: center;

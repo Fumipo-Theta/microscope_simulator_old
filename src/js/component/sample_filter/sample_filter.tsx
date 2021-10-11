@@ -6,7 +6,7 @@ import { currentCategoryState } from "@src/js/state/atom/sample_category_state"
 import { SampleCategories, SampleCategoriesKeys, SampleCategoryItem, SampleCategoryItemKeys, ROOT_CATEGORY_ID } from "@src/js/type/sample"
 import styles from "./index.module.css"
 
-const MAX_DEPTH = 2
+const MAX_DEPTH = 3
 
 type BreadcrumbProps = {
     categorySetter: (node: CategoryNode) => MouseEventHandler,
@@ -97,14 +97,17 @@ export const SampleCategoryContainer: React.FC<SampleCategories> = ({ [SampleCat
         setCurrentCategoryValue(node.getCategory()[SampleCategoryItemKeys.Id])
     }, [setPath, setCurrentCategoryValue])
     const language = useRecoilValue(systemLanguageState)
-    const [isActive, updateActive] = useState(false)
-    const toggleCategorySelector = useCallback((_) => { updateActive(current => !current) }, [updateActive])
+    // const [isActive, updateActive] = useState(false)
+    const isActive = true
+    // const toggleCategorySelector = useCallback((_) => { updateActive(current => !current) }, [updateActive])
     const categoryMap = CategoryNode.constructNodes(sampleCategoryItems)
     const currentCategory = currentPath[currentPath.length - 1]
     return <div className={styles.categoryContainer}>
         <div className={styles.categoryContainerMenuBar}>
             <Breadcrumb path={currentPath} lang={language} nodeMap={categoryMap} categorySetter={categorySetter} />
-            <CategorySelectorToggler onClick={toggleCategorySelector} isActive={isActive} />
+            {
+                //<CategorySelectorToggler onClick={toggleCategorySelector} isActive={isActive} />
+            }
         </div>
         <CategorySelector isActive={isActive} categorySetter={categorySetter} lang={language} node={categoryMap[currentCategory]} nodeMap={categoryMap} />
     </div>
