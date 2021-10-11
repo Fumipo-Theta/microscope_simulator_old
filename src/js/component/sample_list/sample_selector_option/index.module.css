@@ -10,7 +10,7 @@
 }
 
 .optionContainer.selected {
-    background-color: #66b7ff66;
+    background: linear-gradient(90deg, #eed3fd00, #66b7ff66, #c666ff66, #eed3fd00);
 }
 
 .optionWrapper {
