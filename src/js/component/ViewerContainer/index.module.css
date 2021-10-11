@@ -1,6 +1,5 @@
 .viewerLayerContainer {
     display: flex;
-    justify-content: center;
     align-items: center;
     border-radius: 40px;
     flex-direction: column;
