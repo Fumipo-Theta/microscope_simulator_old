@@ -26,6 +26,7 @@
     transition: max-height 0.2s ease-in-out;
     border-radius: 0 0 20px 20px;
     max-width: 600px;
+    height: fit-content;
 }
 
 .sampleListContainer.inActive {

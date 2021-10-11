@@ -18,16 +18,20 @@ const dummyCanvasStyle = {
 export const ViewerContainerSuspend: React.FC = () => {
     const { width, height } = useRecoilValue(windowInnerSizeState)
     const viewerSize = getMaxViewerSize(width, height)
-    return <div className={styles.viewerLayerContainer} >
+    return <><div className={styles.viewerLayerContainer} >
         <div style={{ width: viewerSize, height: viewerSize, ...dummyCanvasStyle }}>
             <CircularProgress size={"5rem"} />
         </div>
         <div className={scaleScaleStyles.scale} style={{ alignItems: "center", width: "50vw" }}>
             <div className={scaleScaleStyles.scaleBar} style={{ width: "100%" }}></div>
-            <div className={scaleScaleStyles.scaleLabel}>Loading...</div>
+            <div className={scaleScaleStyles.scaleLabel}></div>
         </div>
         <NicolToggler />
     </div >
+        <div className={styles.descriptionContainer} style={{ height: "100px" }}>
+            Now loading...
+        </div>
+    </>
 }
 
 const getMaxViewerSize = (windowWidth, windowHeight) => {

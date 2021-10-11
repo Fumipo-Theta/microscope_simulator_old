@@ -10,12 +10,12 @@
 }
 
 .optionContainer:hover {
-    background: rgba(125, 191, 245, 0.4);
+    background: linear-gradient(90deg, #eed3fd00, #adbcc966, #ade5ff66, #eed3fd00);
 }
 
 
 .optionContainer.selected {
-    background: rgb(184 217 255 / 40%);
+    background: linear-gradient(90deg, #eed3fd00, #66b7ff66, #c666ff66, #eed3fd00);
 }
 
 .optionWrapper {
