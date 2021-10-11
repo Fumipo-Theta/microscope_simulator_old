@@ -9,13 +9,8 @@
     cursor: pointer;
 }
 
-.optionContainer:hover {
-    background: linear-gradient(90deg, #eed3fd00, #adbcc966, #ade5ff66, #eed3fd00);
-}
-
-
 .optionContainer.selected {
-    background: linear-gradient(90deg, #eed3fd00, #66b7ff66, #c666ff66, #eed3fd00);
+    background-color: #66b7ff66;
 }
 
 .optionWrapper {

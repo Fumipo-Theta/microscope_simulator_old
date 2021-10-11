@@ -24,7 +24,7 @@ export const ViewerContainerSuspend: React.FC = () => {
         </div>
         <div className={scaleScaleStyles.scale} style={{ alignItems: "center", width: "50vw" }}>
             <div className={scaleScaleStyles.scaleBar} style={{ width: "100%" }}></div>
-            <div className={scaleScaleStyles.scaleLabel}></div>
+            <div className={scaleScaleStyles.scaleLabel}>Scale</div>
         </div>
         <NicolToggler />
     </div >
