@@ -30,7 +30,13 @@ const style = {
     margin: "5px",
     borderRadius: "50%",
     boxShadow: "2px 1px 4px #a0a0a0, -2px -1px 4px #ffffff",
+    overflow: "hidden",
 }
+
+/**
+ * 
+ * canvas element にイベントハンドラを設定する必然性はない。
+ */
 
 export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     const { rotate_clockwise, cycle_rotate_degree, rotate_by_degree } = sample.manifest
@@ -185,9 +191,10 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     }, [context, imageSource, isOpenNicol, imageCenterInfo, rotate, viewerSize])
 
 
-    return <>
-        <canvas ref={ref} width={viewerSize} height={viewerSize} style={style} />
-    </>
+    return <div style={{ width: viewerSize, height: viewerSize, ...style }}>
+        <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
+        <div style={{ width: viewerSize, height: viewerSize, position: "relative", top: -viewerSize, borderRadius: "50%", }} ></div>
+    </div>
 }
 
 
