@@ -33,11 +33,6 @@ const style = {
     overflow: "hidden",
 }
 
-/**
- * 
- * canvas element にイベントハンドラを設定する必然性はない。
- */
-
 export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     const { rotate_clockwise, cycle_rotate_degree, rotate_by_degree } = sample.manifest
     const rotationManager = new RotationManager(rotate_clockwise, rotate_by_degree, cycle_rotate_degree)
@@ -50,6 +45,8 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     const [canvasRef, ref] = useCanvas()
     const [context, setContext] = useState<CanvasRenderingContext2D>(null)
     const [cvs, setCvs] = useState<HTMLCanvasElement>(null)
+    const handlerRef = useRef<HTMLDivElement>(null)
+    const [handler, setHandler] = useState<HTMLDivElement>(null)
     const [rotate, setRotate] = useState(0)
     const [imageCenterInfo, setImageCenterInfo] = useState(getImageCenterInfo(sample.manifest))
     const state = useRef<UiState>({
@@ -61,8 +58,8 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
     })
 
     useEffect(() => {
-        if (cvs) {
-            const coordinateOnCanvas = getCoordinateOnCanvas(cvs)
+        if (handler) {
+            const coordinateOnCanvas = getCoordinateOnCanvas(handler)
             const touchStartHandler = e => {
                 state.current.touching = true
                 state.current.dragEnd = coordinateOnCanvas(e)
@@ -118,31 +115,31 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
 
             const preventDefault = (e) => { e.preventDefault() }
 
-            cvs.addEventListener("mousedown", touchStartHandler, false)
-            cvs.addEventListener("mousemove", touchMoveHandler, false)
-            cvs.addEventListener("mouseup", touchEndHandler, false)
-            cvs.addEventListener("touchstart", touchStartHandler, false)
-            cvs.addEventListener("touchmove", touchMoveHandler, false)
-            cvs.addEventListener("touchend", touchEndHandler, false)
-            cvs.addEventListener("dragstart", preventDefault, false)
-            cvs.addEventListener("drag", preventDefault, false)
-            cvs.addEventListener("dragend", preventDefault, false)
-            cvs.addEventListener("wheel", wheelHandler, false)
+            handler.addEventListener("mousedown", touchStartHandler, false)
+            handler.addEventListener("mousemove", touchMoveHandler, false)
+            handler.addEventListener("mouseup", touchEndHandler, false)
+            handler.addEventListener("touchstart", touchStartHandler, false)
+            handler.addEventListener("touchmove", touchMoveHandler, false)
+            handler.addEventListener("touchend", touchEndHandler, false)
+            handler.addEventListener("dragstart", preventDefault, false)
+            handler.addEventListener("drag", preventDefault, false)
+            handler.addEventListener("dragend", preventDefault, false)
+            handler.addEventListener("wheel", wheelHandler, false)
 
             return () => {
-                cvs.removeEventListener("mousedown", touchStartHandler)
-                cvs.removeEventListener("mousemove", touchMoveHandler)
-                cvs.removeEventListener("mouseup", touchEndHandler)
-                cvs.removeEventListener("touchstart", touchStartHandler)
-                cvs.removeEventListener("touchmove", touchMoveHandler)
-                cvs.removeEventListener("touchend", touchEndHandler)
-                cvs.removeEventListener("dragstart", preventDefault)
-                cvs.removeEventListener("drag", preventDefault)
-                cvs.removeEventListener("dragend", preventDefault)
-                cvs.removeEventListener("wheel", wheelHandler)
+                handler.removeEventListener("mousedown", touchStartHandler)
+                handler.removeEventListener("mousemove", touchMoveHandler)
+                handler.removeEventListener("mouseup", touchEndHandler)
+                handler.removeEventListener("touchstart", touchStartHandler)
+                handler.removeEventListener("touchmove", touchMoveHandler)
+                handler.removeEventListener("touchend", touchEndHandler)
+                handler.removeEventListener("dragstart", preventDefault)
+                handler.removeEventListener("drag", preventDefault)
+                handler.removeEventListener("dragend", preventDefault)
+                handler.removeEventListener("wheel", wheelHandler)
             }
         }
-    }, [cvs, sample])
+    }, [handler, sample])
 
     useEffect(() => {
         console.log(sample)
@@ -174,8 +171,14 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
         const ctx = canvas.getContext("2d")
         setCvs(canvas)
         setContext(ctx)
+        const handler = handlerRef.current
+        setHandler(handler)
     }, [])
 
+
+    /**
+     * Render part
+     */
     useEffect(() => {
         if (context) {
             renderOnCanvas(context)({
@@ -193,7 +196,10 @@ export const Canvas: React.FC<CanvasProps> = ({ width, height, sample }) => {
 
     return <div style={{ width: viewerSize, height: viewerSize, ...style }}>
         <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
-        <div style={{ width: viewerSize, height: viewerSize, position: "relative", top: -viewerSize, borderRadius: "50%", }} ></div>
+        {
+            // TODO: Fix the event handler layer is shifted downward by a few pixels
+        }
+        <div ref={handlerRef} style={{ width: viewerSize, height: viewerSize, position: "relative", top: -viewerSize, borderRadius: "50%", }} ></div>
     </div>
 }
 
@@ -296,7 +302,7 @@ function loadImageSrc(src) {
     })
 }
 
-function getCoordinateOnCanvas(canvas: HTMLCanvasElement) {
+function getCoordinateOnCanvas(canvas: HTMLElement) {
     return (e: MouseEvent | TouchEvent, finger = 0): Coordinate => {
         if (e instanceof MouseEvent) {
             return (e instanceof WheelEvent)
