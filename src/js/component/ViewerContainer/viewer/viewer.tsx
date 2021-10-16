@@ -6,6 +6,8 @@ import { supportedImageTypeState } from "@src/js/state/atom/supported_image_type
 import { isOpenNicolState } from "@src/js/state/atom/nicol_state"
 import { scaleState } from "@src/js/state/atom/scale_state"
 import RotationManager from "./util/rotation_manager_for_stepwise_photos"
+import { Layer } from "./layer"
+import { InteractionHandler } from "./interaction_handler"
 import { renderOnCanvas } from "./util/sample_viewer"
 import {
     UiState, getMaxViewerSize, getImageCenterInfo, updateImageSrc, getCoordinateOnCanvas,
@@ -23,6 +25,7 @@ const style = {
     borderRadius: "50%",
     boxShadow: "2px 1px 4px #a0a0a0, -2px -1px 4px #ffffff",
     overflow: "hidden",
+    display: "grid"
 }
 
 export const Viewer: React.FC<ViewerProps> = ({ width, height, sample }) => {
@@ -38,6 +41,7 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample }) => {
     const [context, setContext] = useState<CanvasRenderingContext2D>(null)
     const [_cvs, setCvs] = useState<HTMLCanvasElement>(null)
     const handlerRef = useRef<HTMLDivElement>(null)
+    const layerRef = useRef<HTMLDivElement>(null)
     const [handler, setHandler] = useState<HTMLDivElement>(null)
     const [rotate, setRotate] = useState(0)
     const [imageCenterInfo, setImageCenterInfo] = useState(getImageCenterInfo(sample.manifest))
@@ -110,10 +114,8 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample }) => {
 
     return <div style={{ width: viewerSize, height: viewerSize, ...style }}>
         <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
-        {
-            // TODO: Fix the event handler layer is shifted downward by a few pixels
-        }
-        <div ref={handlerRef} style={{ width: viewerSize, height: viewerSize, position: "relative", top: -viewerSize, borderRadius: "50%", }} ></div>
+        <Layer _ref={layerRef} viewerSize={viewerSize} />
+        <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} />
     </div>
 }
 
