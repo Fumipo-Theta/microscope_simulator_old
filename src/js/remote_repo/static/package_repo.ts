@@ -1,6 +1,7 @@
 import { blobToBase64 } from "@src/js/data_translaters"
 import { staticSettings } from "@src/js/config/config"
 import { PackageId, SampleImageType, SamplePackageZipped } from "@src/js/type/entity"
+import { RetrieveLayers, RetrieveSample, QueryLastModified } from "@src/js/type/repo"
 import unzipper from "@src/js/unzipper"
 import extractFile from "@src/js/extractFile"
 
@@ -13,7 +14,7 @@ import extractFile from "@src/js/extractFile"
  * @returns {Promise}
  *     zip: Object<String, Image Blob>
  */
-export const retrieve = async (packageId: PackageId, desiredFormat: SampleImageType): Promise<SamplePackageZipped> => {
+export const retrieve: RetrieveSample = async (packageId: PackageId, desiredFormat: SampleImageType) => {
     const manifestUrl = staticSettings.getImageDataPath(packageId) + "manifest.json";
     const open_thumbnailUrl = staticSettings.getImageDataPath(packageId) + "o1.jpg";
     const cross_thumbnailUrl = staticSettings.getImageDataPath(packageId) + "c1.jpg";
@@ -42,12 +43,18 @@ export const retrieve = async (packageId: PackageId, desiredFormat: SampleImageT
     return response
 }
 
-export const getImagesLastModified = async (packageId, desiredImageFormat): Promise<[string, boolean]> => {
+export const getImagesLastModified: QueryLastModified = async (packageId, desiredImageFormat) => {
     const manifestUrl = staticSettings.getImageDataPath(packageId) + "manifest.json";
     const manifest = await fetch(manifestUrl, { mode: 'cors' }).then(response => response.json())
     const [zipUrl, _] = resolveImagePackage(packageId, desiredImageFormat, manifest)
     const [lastModified, networkDisconnected] = await queryLastModified(zipUrl)
     return [lastModified, networkDisconnected]
+}
+
+export const retrieveSampleLayersJson: RetrieveLayers = async (packageId) => {
+    const jsonUrl = staticSettings.getImageDataPath(packageId) + "layers.json"
+    const layers = await fetch(jsonUrl).then(response => response.json())
+    return JSON.parse(layers)
 }
 
 const resolveImagePackage = (packageId: PackageId, desiredFormat: SampleImageType, manifest): [string, SampleImageType] => {
