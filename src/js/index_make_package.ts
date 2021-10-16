@@ -9,7 +9,7 @@ import { canvasCoordinate } from "./coordinate_updators"
 import { touchStartHandler, touchEndHandler, touchMoveHandler } from "./touchEventHandlers"
 import { wheelHandler } from "./wheelEventHandler"
 import { viewer_ctx } from "./viewer_canvas"
-import { renderCurrentStateOnCanvas } from "@src/js/component/ViewerContainer/viewer/sample_viewer"
+import { renderCurrentStateOnCanvas } from "@src/js/component/ViewerContainer/viewer/util/sample_viewer"
 const JSZip = require('@src/js/lib/jszip.min')
 
 type Base64String = string;

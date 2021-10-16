@@ -1,4 +1,4 @@
-import RotationManagerForStepwisePhotos from "@src/js/component/ViewerContainer/viewer/rotation_manager_for_stepwise_photos";
+import RotationManagerForStepwisePhotos from "@src/js/component/ViewerContainer/viewer/util/rotation_manager_for_stepwise_photos";
 
 describe("RotationManagerForStepwisePhotos", () => {
     describe.each([

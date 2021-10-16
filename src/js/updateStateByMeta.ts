@@ -1,6 +1,6 @@
 import { Manifest, PackageId, RootState, SampleMeta } from "@src/js/type/entity";
 import sanitizeID from "./sanitizeID"
-import RotationHandler from '@src/js/component/ViewerContainer/viewer/rotation_manager_for_stepwise_photos'
+import RotationHandler from '@src/js/component/ViewerContainer/viewer/util/rotation_manager_for_stepwise_photos'
 
 function getRotationCenter(meta: Manifest) {
     return (meta.hasOwnProperty("rotate_center"))

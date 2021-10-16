@@ -1,7 +1,7 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
 import { NicolToggler } from "./nicol_toggler/nicol_toggler"
-import { Canvas } from "./canvas/canvas"
+import { Viewer } from "./viewer/viewer"
 import { SampleScale } from "./sample_scale/sample_scale"
 import { Welcome } from "@src/js/component/welcome/welcome"
 import { windowInnerSizeState } from "@src/js/state/atom/window_inner_size_state"
@@ -67,7 +67,7 @@ export const ViewerContainer: React.FC = () => {
         <>
             {currentSample ?
                 <><div className={styles.viewerLayerContainer}>
-                    <Canvas {...mainLayerProps} />
+                    <Viewer {...mainLayerProps} />
                     <SampleScale />
                     <NicolToggler />
                 </div>
