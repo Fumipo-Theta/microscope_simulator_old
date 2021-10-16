@@ -53,8 +53,9 @@ export const getImagesLastModified: QueryLastModified = async (packageId, desire
 
 export const retrieveSampleLayersJson: RetrieveLayers = async (packageId) => {
     const jsonUrl = staticSettings.getImageDataPath(packageId) + "layers.json"
-    const layers = await fetch(jsonUrl).then(response => response.json())
-    return JSON.parse(layers)
+    const layers = await fetch(jsonUrl).then(response => response.json()).catch(_ => null)
+
+    return layers ? JSON.parse(layers) : null
 }
 
 const resolveImagePackage = (packageId: PackageId, desiredFormat: SampleImageType, manifest): [string, SampleImageType] => {
