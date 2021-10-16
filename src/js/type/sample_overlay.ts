@@ -1,4 +1,5 @@
 export enum SampleOverlayKey {
+    Layers = "layers",
     ReferenceRotationDegree = "reference_rotation_degree",
     AppearsDuring = "appears_during",
     Overlay = "overlay",
@@ -22,6 +23,10 @@ export enum SampleOverlayKey {
     X = "x",
     Y = "y",
 
+}
+
+export interface SampleLayers {
+    [SampleOverlayKey.Layers]: Array<SampleOverlay>
 }
 
 export interface SampleOverlay {
