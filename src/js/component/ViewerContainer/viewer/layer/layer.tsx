@@ -18,10 +18,10 @@ const CROSS_TEXT_COLOR = "#efefef"
 
 export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, imageCenterInfo }) => {
 
-    const labels = getLabels(layers)
-    const annotations = getAnnotations(layers)
+    const labels = getLabels(layers, rotate)
+    const annotations = getAnnotations(layers, rotate)
 
-    return <div style={{position: "absolute"}}>
+    return <>
         {
             ...labels.map((label, i) => {
                 const pos = calcRelativePosition(label[SampleOverlayKey.LabelPositionFromLeftTop], imageCenterInfo, viewerSize)
@@ -55,5 +55,5 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
                 />
             })
         }
-    </div>
+    </>
 }

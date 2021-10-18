@@ -9,7 +9,7 @@ type Props = {
     color: string,
 }
 
-export const Annotation: React.FC<Props> = ({ text, top, left, rotate, toBeShown, color }) => {
+export const Annotation: React.FC<Props> = ({ text, top, left, rotate, toBeShown, color}) => {
     const dynamicStyle = {
         top: top,
         left: left,

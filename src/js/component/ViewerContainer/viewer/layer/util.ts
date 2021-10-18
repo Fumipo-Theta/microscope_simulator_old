@@ -20,20 +20,24 @@ export function calcToBeShown(isCrossed, appearsIn) {
         (appearsIn === "open" && !isCrossed)
 }
 
+export function toBeAppear(rotate: number, appearsIn: Array<[number, number]>): boolean {
+    return appearsIn.filter(([ini, fin]) => ini < rotate && rotate < fin).length > 0
+}
+
 export function selectByMode<T>(withMode: WithMode<T>, isCrossed: boolean, fallbackOpen: T, fallbackCross: T): T {
     return isCrossed
         ? withMode?.[SampleOverlayKey.InCross] || fallbackCross
         : withMode?.[SampleOverlayKey.InOpen] || fallbackOpen
 }
 
-export function getLabels(layers: SampleLayers): OverlayLabel[] {
+export function getLabels(layers: SampleLayers, rotate: number): OverlayLabel[] {
     if (!layers) return []
     return layers[SampleOverlayKey.Layers]
-        .flatMap(layer => layer[SampleOverlayKey.Labels] || [])
+        .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ?layer[SampleOverlayKey.Labels] || [] : [])
 }
 
-export function getAnnotations(layers: SampleLayers): OverlayAnnotation[] {
+export function getAnnotations(layers: SampleLayers, rotate: number): OverlayAnnotation[] {
     if (!layers) return []
     return layers[SampleOverlayKey.Layers]
-        .flatMap(layer => layer[SampleOverlayKey.Annotations] || [])
+        .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Annotations] || [] : [])
 }
