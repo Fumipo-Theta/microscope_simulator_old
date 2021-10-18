@@ -6,18 +6,20 @@ import { supportedImageTypeState } from "@src/js/state/atom/supported_image_type
 import { isOpenNicolState } from "@src/js/state/atom/nicol_state"
 import { scaleState } from "@src/js/state/atom/scale_state"
 import RotationManager from "./util/rotation_manager_for_stepwise_photos"
-import { Layer } from "./layer"
+import { Layer } from "./layer/layer"
 import { InteractionHandler } from "./interaction_handler"
 import { renderOnCanvas } from "./util/sample_viewer"
 import {
     UiState, getMaxViewerSize, getImageCenterInfo, updateImageSrc, getCoordinateOnCanvas,
     updateRotate, updateCoordinate, updateMagnifyByPinch
 } from "./util/event_handler_util"
+import { SampleLayers } from "@src/js/type/sample_overlay"
 
 export type ViewerProps = {
     width: number,
     height: number,
-    sample: SamplePackage
+    sample: SamplePackage,
+    layers: SampleLayers,
 }
 
 const style = {
@@ -28,7 +30,7 @@ const style = {
     display: "grid"
 }
 
-export const Viewer: React.FC<ViewerProps> = ({ width, height, sample }) => {
+export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers }) => {
     const { rotate_clockwise, cycle_rotate_degree, rotate_by_degree } = sample.manifest
     const rotationManager = new RotationManager(rotate_clockwise, rotate_by_degree, cycle_rotate_degree)
     const supportedImage = useRecoilValue(supportedImageTypeState)
@@ -111,10 +113,11 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample }) => {
         }
     }, [context, imageSource, isOpenNicol, imageCenterInfo, rotate, viewerSize])
 
-
     return <div style={{ width: viewerSize, height: viewerSize, ...style }}>
         <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
-        <Layer _ref={layerRef} viewerSize={viewerSize} />
+        <Layer
+            _ref={layerRef} viewerSize={viewerSize} sample={sample} layers={layers}
+            rotate={state.current.rotate} isCrossed={!isOpenNicol} imageCenterInfo={state.current.imageCenterInfo} />
         <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} />
     </div>
 }

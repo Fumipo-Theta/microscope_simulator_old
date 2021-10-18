@@ -37,31 +37,31 @@ export interface SampleOverlay {
     [SampleOverlayKey.Annotations]?: OverlayAnnotation[]
 }
 
-type ItemLocation = {
+export type ItemLocation = {
     [SampleOverlayKey.X]: number,
     [SampleOverlayKey.Y]: number,
 }
 
-type WithMode<T> = {
+export type WithMode<T> = {
     [SampleOverlayKey.InOpen]?: T,
     [SampleOverlayKey.InCross]?: T,
 }
 
 
-type OverlayImage = {
+export type OverlayImage = {
     [SampleOverlayKey.OverlayImageType]: OverlayImageType
     [SampleOverlayKey.OverlayImageSourceUrl]: WithMode<string>
 }
 export type OverlayImageType = "png" | "svg"
 
-type OverlayLabel = {
+export type OverlayLabel = {
     [SampleOverlayKey.LabelAppearsIn]: "open" | "crossed" | "both"
     [SampleOverlayKey.LabelPositionFromLeftTop]: ItemLocation
     [SampleOverlayKey.LabelText]: string
     [SampleOverlayKey.LabelColor]?: WithMode<string>
 }
 
-type OverlayAnnotation = {
+export type OverlayAnnotation = {
     [SampleOverlayKey.AnnotationAppearsIn]: "open" | "crossed" | "both"
     [SampleOverlayKey.AnnotationPositionFromLeftTop]: ItemLocation
     [SampleOverlayKey.AnnotationIconColor]?: WithMode<string>

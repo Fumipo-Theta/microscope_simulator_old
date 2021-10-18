@@ -6,24 +6,14 @@ import { SampleScale } from "./sample_scale/sample_scale"
 import { Welcome } from "@src/js/component/welcome/welcome"
 import { windowInnerSizeState } from "@src/js/state/atom/window_inner_size_state"
 import { samplePackageState } from "@src/js/state/atom/sample_package_state"
+import { sampleLayersState } from "@src/js/state/atom/sample_layers_state"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
 import { SamplePackage, Manifest, Language } from "@src/js/type/entity"
+import { withFallbackLanguage } from "@src/js/util/language_util"
 import styles from "./index.module.css"
 
 type DescriptionProps = {
     sample: SamplePackage
-}
-
-const withFallbackLanguage = (obj, lang, fallbackLang) => {
-    return obj.hasOwnProperty(lang)
-        ? obj[lang] !== ""
-            ? obj[lang]
-            : obj.hasOwnProperty(fallbackLang)
-                ? obj[fallbackLang]
-                : ""
-        : obj.hasOwnProperty(fallbackLang)
-            ? obj[fallbackLang]
-            : ""
 }
 
 const RockType: React.FC<{ manifest: Manifest, lang: Language }> = ({ manifest, lang }) => {
@@ -59,9 +49,11 @@ const DescriptionContainer: React.FC<DescriptionProps> = ({ sample }) => {
 
 export const ViewerContainer: React.FC = () => {
     const currentSample = useRecoilValue(samplePackageState)
+    const currentLayers = useRecoilValue(sampleLayersState)
     const mainLayerProps = {
         ...useRecoilValue(windowInnerSizeState),
-        sample: currentSample
+        sample: currentSample,
+        layers: currentLayers,
     }
     return (
         <>
