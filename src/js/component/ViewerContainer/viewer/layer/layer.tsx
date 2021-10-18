@@ -43,12 +43,7 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
                     key={`sample-overlay-annotation-${i}`}
                     left={pos.left}
                     top={pos.top}
-                    text={selectByMode(
-                        annotation[SampleOverlayKey.AnnotationMessage],
-                        isCrossed,
-                        "",
-                        ""
-                    )}
+                    text={annotation[SampleOverlayKey.AnnotationMessage]}
                     rotate={rotate}
                     toBeShown={calcToBeShown(isCrossed, annotation[SampleOverlayKey.AnnotationAppearsIn])}
                     color={selectByMode(annotation[SampleOverlayKey.AnnotationIconColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
