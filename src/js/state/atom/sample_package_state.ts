@@ -10,15 +10,15 @@ export const samplePackageSelector = selector<SamplePackage>({
     get: async ({ get }) => {
         const currentSampleListItem = get(selectedSampleListItemState)
         const currentSampleId = currentSampleListItem?.[SampleListItemKeys.PackageName] || ''
-        console.log("selector", currentSampleId)
+        console.log("[samplePackageSelector] currentSampleId", currentSampleId)
         if (currentSampleId != '') {
             const imageType = get(supportedImageTypeState)
-            console.log("selector image-type", imageType)
+            console.log("[samplePackageSelector] imageType", imageType)
             try {
                 const currentSample = await retrieve(currentSampleId, imageType)
                 return { ...currentSample, manifest: JSON.parse(currentSample.manifest) }
             } catch {
-                console.log(`Failed to fetch sample by id: ${currentSampleId}`)
+                console.log(`[samplePackageSelector] Failed to fetch sample by id: ${currentSampleId}`)
                 return null
             }
 
@@ -32,6 +32,3 @@ export const samplePackageState = atom<SamplePackage>({
     key: 'samplePackage',
     default: samplePackageSelector
 })
-
-
-
