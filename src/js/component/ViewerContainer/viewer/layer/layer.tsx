@@ -1,13 +1,12 @@
 import React from "react"
 import { SampleLayers, SampleOverlayKey } from "@src/js/type/sample_overlay"
 import { ImageCenterInfo, SamplePackage } from "@src/js/type/entity"
-import { calcRelativePosition, genLabels, calcToBeShown, selectByMode } from "./util"
+import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, selectByMode } from "./util"
 import { Label } from "./label/label"
+import { Annotation } from "./annotation/annotation"
 
 type Props = {
-    sample: SamplePackage,
     viewerSize: number,
-    _ref: React.MutableRefObject<HTMLDivElement>,
     layers: SampleLayers,
     rotate: number,
     isCrossed: boolean,
@@ -17,30 +16,44 @@ type Props = {
 const OPEN_TEXT_COLOR = "#111"
 const CROSS_TEXT_COLOR = "#efefef"
 
-export const Layer: React.FC<Props> = ({ sample, viewerSize, _ref, layers, rotate, isCrossed, imageCenterInfo }) => {
-    const style = {
-        width: viewerSize,
-        height: viewerSize,
-        gridRow: "1 / 1",
-        gridColumn: "1 / 1",
-        borderRadius: "50%",
-        transform: `rotate(${-rotate}deg)`,
-        overflow: "hidden",
-    }
-    const labels = genLabels(layers)
+export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, imageCenterInfo }) => {
 
-    return <div ref={_ref} style={{ position: "absolute", ...style }}>
-        {...labels.map(label => {
-            const pos = calcRelativePosition(label[SampleOverlayKey.LabelPositionFromLeftTop], imageCenterInfo, viewerSize)
-            return <Label
-                left={pos.left}
-                top={pos.left}
-                text={label[SampleOverlayKey.LabelText]}
-                rotate={rotate}
-                toBeShown={calcToBeShown(isCrossed, label[SampleOverlayKey.LabelAppearsIn])}
-                color={selectByMode(label[SampleOverlayKey.LabelColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
-            />
-        })
+    const labels = getLabels(layers)
+    const annotations = getAnnotations(layers)
+
+    return <div style={{position: "absolute"}}>
+        {
+            ...labels.map((label, i) => {
+                const pos = calcRelativePosition(label[SampleOverlayKey.LabelPositionFromLeftTop], imageCenterInfo, viewerSize)
+                return <Label
+                    key={`sample-overlay-label-${i}`}
+                    left={pos.left}
+                    top={pos.top}
+                    text={label[SampleOverlayKey.LabelText]}
+                    rotate={rotate}
+                    toBeShown={calcToBeShown(isCrossed, label[SampleOverlayKey.LabelAppearsIn])}
+                    color={selectByMode(label[SampleOverlayKey.LabelColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
+                />
+            })
+        }
+        {
+            ...annotations.map((annotation, i) => {
+                const pos = calcRelativePosition(annotation[SampleOverlayKey.AnnotationPositionFromLeftTop], imageCenterInfo, viewerSize)
+                return <Annotation
+                    key={`sample-overlay-annotation-${i}`}
+                    left={pos.left}
+                    top={pos.top}
+                    text={selectByMode(
+                        annotation[SampleOverlayKey.AnnotationMessage],
+                        isCrossed,
+                        "",
+                        ""
+                    )}
+                    rotate={rotate}
+                    toBeShown={calcToBeShown(isCrossed, annotation[SampleOverlayKey.AnnotationAppearsIn])}
+                    color={selectByMode(annotation[SampleOverlayKey.AnnotationIconColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
+                />
+            })
         }
     </div>
 }

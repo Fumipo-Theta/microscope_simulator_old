@@ -22,5 +22,5 @@ export const Label: React.FC<LabelProps> = ({ text, top, left, rotate, toBeShown
         fontSize: "1.25rem",
         width: "fit-content",
     }
-    return <div style={{ position: "relative", ...dynamicStyle, ...style }}>{text}</div>
+    return <div style={{ position: "absolute", ...dynamicStyle, ...style }}>{text}</div>
 }

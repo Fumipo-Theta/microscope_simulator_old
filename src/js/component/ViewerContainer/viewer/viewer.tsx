@@ -43,7 +43,6 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
     const [context, setContext] = useState<CanvasRenderingContext2D>(null)
     const [_cvs, setCvs] = useState<HTMLCanvasElement>(null)
     const handlerRef = useRef<HTMLDivElement>(null)
-    const layerRef = useRef<HTMLDivElement>(null)
     const [handler, setHandler] = useState<HTMLDivElement>(null)
     const [rotate, setRotate] = useState(0)
     const [imageCenterInfo, setImageCenterInfo] = useState(getImageCenterInfo(sample.manifest))
@@ -115,10 +114,9 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
 
     return <div style={{ width: viewerSize, height: viewerSize, ...style }}>
         <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
-        <Layer
-            _ref={layerRef} viewerSize={viewerSize} sample={sample} layers={layers}
-            rotate={state.current.rotate} isCrossed={!isOpenNicol} imageCenterInfo={state.current.imageCenterInfo} />
-        <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} />
+        <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} layers={layers}
+            rotate={state.current.rotate} imageCenterInfo={state.current.imageCenterInfo} isCrossed={!isOpenNicol}
+        />
     </div>
 }
 
