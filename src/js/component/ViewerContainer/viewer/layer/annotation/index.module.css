@@ -7,43 +7,55 @@
 
 .annotationContentContainer {
     display: flex;
-    max-height: 0px;
+    max-height: 0;
 
-    flex-direction: column;
+    /*flex-direction: column;*/
     align-items: center;
     overflow: hidden;
     margin: none;
-    padding: 0 20px;
+    padding: 0 0 0 2rem;
 
     width: 780px;
     max-width: 100%;
-    background-color: #ebebeb;
     border-radius: 40px;
     box-shadow: none;
-    background: #efefef;
     font-size: 1.6rem;
 
-    transition: max-height 0.5s, box-shadow 0.5s;
+    transition: max-height 0.25s, box-shadow 0.25s, padding 0.25s;
 }
 
 .active {
-    margin: 10px 0;
-    max-height: 200px;
+    margin: 1rem 0;
+    padding: 0.5rem 0 0.5rem 2rem;
+    max-height: 20rem;
+    height: 20rem;
     box-shadow: 5px 5px 14px #afafaf, -5px -5px 14px #ffffff;
     background: linear-gradient(145deg, #d4d4d4, #fbfbfb);
-    transition: max-height 0.5s, box-shadow 0.5s;
+    transition: max-height 0.25s, box-shadow 0.25s, padding 0.25s;
 }
 
-.annotationContent {
-    margin: 5px 10px 5px 10px;
-    height: 100%;
+.annotationContentWrapper {
+    margin: 0.5rem 0 0.5rem 2rem;
+    width: 100%;
+    height: fit-content;
+    max-height: 100%;
     overflow-y: scroll;
     flex-grow: 1;
 }
 
+.annotationContent {}
+
 .closeAnnotationContentButton {
-    margin: 5px;
+    width: 4rem;
+    height: 4rem;
+    margin: 0.5rem;
     background: none;
     border: none;
     filter: drop-shadow(3px 3px 5px #000) drop-shadow(-3px -3px 5px #fff);
+    transition: filter 1s;
+}
+
+.closeAnnotationContentButton:active {
+    filter: none;
+    transition: filter 0.1s;
 }

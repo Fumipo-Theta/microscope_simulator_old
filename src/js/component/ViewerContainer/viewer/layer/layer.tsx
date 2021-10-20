@@ -40,6 +40,7 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
             ...annotations.map((annotation, i) => {
                 const pos = calcRelativePosition(annotation[SampleOverlayKey.AnnotationPositionFromLeftTop], imageCenterInfo, viewerSize)
                 return <Annotation
+                    myKey={`sample-overlay-annotation-${i}`}
                     key={`sample-overlay-annotation-${i}`}
                     left={pos.left}
                     top={pos.top}
