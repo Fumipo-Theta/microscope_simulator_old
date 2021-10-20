@@ -4,9 +4,8 @@ jobs:
       - image: "cimg/node:16.11.1"
     steps:
       - checkout
-      - node/install:
-          install-yarn: true
       - run: node --version
+      - run: npm install -g yarn
       - run:
           name: install node modules by yarn
           command: yarn install
@@ -23,9 +22,8 @@ jobs:
       - image: "cimg/node:16.11.1"
     steps:
       - checkout
-      - node/install:
-          install-yarn: true
       - run: node --version
+      - run: npm install -g yarn
       - run:
           name: install node modules by yarn
           command: yarn install
