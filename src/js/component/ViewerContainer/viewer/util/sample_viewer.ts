@@ -1,5 +1,5 @@
-import { ImageCenterInfo, ImageSource, RootState, SampleMeta, ViewerState } from '../../../type/entity'
-import { IRotationManager } from '../../../type/sample_viewer'
+import { ImageCenterInfo, ImageSource, RootState, SampleMeta, ViewerState } from '../../../../type/entity'
+import { IRotationManager } from '../../../../type/sample_viewer'
 
 function clipGeometryFromImageCenter({ rotateCenterToRight, rotateCenterToBottom, imageRadius }: ImageCenterInfo): [number, number, number, number] {
     return [

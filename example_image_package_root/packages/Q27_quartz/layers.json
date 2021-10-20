@@ -1,0 +1,148 @@
+{
+    "layers": [
+        {
+            "reference_rotation_degree": 0,
+            "appears_during": [
+                [
+                    0,
+                    90
+                ],
+                [
+                    180,
+                    270
+                ]
+            ],
+            "labels": [
+                {
+                    "appears_in": "open",
+                    "position_from_left_top": {
+                        "x": 200,
+                        "y": 200
+                    },
+                    "text": "石英 (open)"
+                },
+                {
+                    "appears_in": "crossed",
+                    "position_from_left_top": {
+                        "x": 300,
+                        "y": 300
+                    },
+                    "text": "石英 (crossed)"
+                },
+                {
+                    "appears_in": "both",
+                    "position_from_left_top": {
+                        "x": 400,
+                        "y": 400
+                    },
+                    "text": "石英 (open & crossed)"
+                }
+            ]
+        },
+        {
+            "reference_rotation_degree": 0,
+            "appears_during": [
+                [
+                    45,
+                    90
+                ],
+                [
+                    90,
+                    135
+                ]
+            ],
+            "annotations": [
+                {
+                    "appears_in": "open",
+                    "position_from_left_top": {
+                        "x": 440,
+                        "y": 440
+                    },
+                    "icon_color": {
+                        "in_open": "#000000ff",
+                        "in_crossed": "#FF3100ff"
+                    },
+                    "message": {
+                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
+                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                    }
+                },
+                {
+                    "appears_in": "both",
+                    "position_from_left_top": {
+                        "x": 540,
+                        "y": 540
+                    },
+                    "icon_color": {
+                        "in_open": "#FF0000ff",
+                        "in_crossed": "#FF3100ff"
+                    },
+                    "message": {
+                        "in_open": "<h1>タイトル</h1> Description of the point. Details are available <a href=\"https://path.to/details\">here</a>. <b>太字</b> <br> <i>斜体</i><br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>",
+                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                    }
+                },
+                {
+                    "appears_in": "crossed",
+                    "position_from_left_top": {
+                        "x": 640,
+                        "y": 640
+                    },
+                    "icon_color": {
+                        "in_open": "#00FF00ff",
+                        "in_crossed": "#FF3100ff"
+                    },
+                    "message": {
+                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
+                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                    }
+                },
+                {
+                    "appears_in": "both",
+                    "position_from_left_top": {
+                        "x": 740,
+                        "y": 740
+                    },
+                    "icon_color": {
+                        "in_open": "#0000FFff",
+                        "in_crossed": "#FF3100ff"
+                    },
+                    "message": {
+                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
+                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                    }
+                },
+                {
+                    "appears_in": "both",
+                    "position_from_left_top": {
+                        "x": 740,
+                        "y": 540
+                    },
+                    "icon_color": {
+                        "in_open": "#0000FFff",
+                        "in_crossed": "#FF3100ff"
+                    },
+                    "message": {
+                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
+                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                    }
+                },
+                {
+                    "appears_in": "both",
+                    "position_from_left_top": {
+                        "x": 540,
+                        "y": 740
+                    },
+                    "icon_color": {
+                        "in_open": "#0000FFff",
+                        "in_crossed": "#FF3100ff"
+                    },
+                    "message": {
+                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
+                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                    }
+                }
+            ]
+        }
+    ]
+}
