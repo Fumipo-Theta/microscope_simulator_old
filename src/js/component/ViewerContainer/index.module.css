@@ -1,6 +1,7 @@
 .viewerLayerContainer {
     display: flex;
     align-items: center;
+    margin: 10px 0;
     border-radius: 40px;
     flex-direction: column;
     box-shadow: 5px 5px 14px #afafaf, -5px -5px 14px #ffffff;
@@ -13,7 +14,7 @@
     align-items: center;
     flex-direction: column;
     top: 64px;
-    margin: 20px 0;
+    margin: 10px 0;
     padding: 0 20px;
     width: 780px;
     max-width: 100%;

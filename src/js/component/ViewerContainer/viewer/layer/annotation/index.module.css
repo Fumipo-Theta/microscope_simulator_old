@@ -6,24 +6,36 @@
 }
 
 .annotationContentContainer {
-    background-color: #d1d1d188;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    border-radius: 20px;
-    /*flex-direction: column;*/
+    display: flex;
+    max-height: 0px;
+
+    flex-direction: column;
     align-items: center;
     overflow: hidden;
-    padding: 5px 0;
+    margin: none;
+    padding: 0 20px;
+
+    width: 780px;
+    max-width: 100%;
+    background-color: #ebebeb;
+    border-radius: 40px;
+    box-shadow: none;
+    background: #efefef;
+    font-size: 1.6rem;
+
+    transition: max-height 0.5s, box-shadow 0.5s;
 }
 
-@supports (-webkit-backdrop-filter: none) {
-    .annotationContentContainer {
-        background-color: #64646491;
-    }
+.active {
+    margin: 10px 0;
+    max-height: 200px;
+    box-shadow: 5px 5px 14px #afafaf, -5px -5px 14px #ffffff;
+    background: linear-gradient(145deg, #d4d4d4, #fbfbfb);
+    transition: max-height 0.5s, box-shadow 0.5s;
 }
 
 .annotationContent {
-    margin: 5px 0px 5px 10px;
+    margin: 5px 10px 5px 10px;
     height: 100%;
     overflow-y: scroll;
     flex-grow: 1;

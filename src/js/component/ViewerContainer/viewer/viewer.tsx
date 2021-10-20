@@ -13,7 +13,6 @@ import {
     updateRotate, updateCoordinate, updateMagnifyByPinch
 } from "./util/event_handler_util"
 import { SampleLayers } from "@src/js/type/sample_overlay"
-import { AnnotationContent } from "./layer/annotation/annotation"
 
 export type ViewerProps = {
     width: number,
@@ -121,7 +120,6 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
                 rotate={state.current.rotate} imageCenterInfo={state.current.imageCenterInfo} isCrossed={!isOpenNicol}
             />
         </div>
-        <AnnotationContent />
     </div>
 }
 

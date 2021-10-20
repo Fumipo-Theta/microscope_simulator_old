@@ -10,6 +10,7 @@ import { sampleLayersState } from "@src/js/state/atom/sample_layers_state"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
 import { SamplePackage, Manifest, Language } from "@src/js/type/entity"
 import { withFallbackLanguage } from "@src/js/util/language_util"
+import { AnnotationContent } from "@src/js/component/ViewerContainer/viewer/layer/annotation/annotation"
 import styles from "./index.module.css"
 
 type DescriptionProps = {
@@ -63,6 +64,7 @@ export const ViewerContainer: React.FC = () => {
                     <SampleScale />
                     <NicolToggler />
                 </div>
+                    <AnnotationContent />
                     <DescriptionContainer sample={currentSample} />
                 </> :
                 <Welcome />
