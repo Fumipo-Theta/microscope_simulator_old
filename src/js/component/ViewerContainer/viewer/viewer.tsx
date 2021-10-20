@@ -6,7 +6,6 @@ import { supportedImageTypeState } from "@src/js/state/atom/supported_image_type
 import { isOpenNicolState } from "@src/js/state/atom/nicol_state"
 import { scaleState } from "@src/js/state/atom/scale_state"
 import RotationManager from "./util/rotation_manager_for_stepwise_photos"
-import { Layer } from "./layer/layer"
 import { InteractionHandler } from "./interaction_handler"
 import { renderOnCanvas } from "./util/sample_viewer"
 import {
@@ -15,7 +14,6 @@ import {
 } from "./util/event_handler_util"
 import { SampleLayers } from "@src/js/type/sample_overlay"
 import { AnnotationContent } from "./layer/annotation/annotation"
-import { green } from "@material-ui/core/colors"
 
 export type ViewerProps = {
     width: number,
@@ -116,8 +114,8 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
         }
     }, [context, imageSource, isOpenNicol, imageCenterInfo, rotate, viewerSize])
 
-    return <div style={{ display: "grid", gridTemplateRows: "20px 1fr 1fr minmax(200px, 1fr) 20px", gridTemplateColumns: "20px 1fr 1fr 1fr 20px", width: viewerSize + 10, height: viewerSize + 10 }}>
-        <div style={{ width: viewerSize, height: viewerSize, ...style }}>
+    return <div style={{ display: "grid", gridTemplateRows: "20px 1fr 1fr minmax(150px, 1fr)", gridTemplateColumns: "20px 1fr max(300px, 35vw) 1fr 20px", width: viewerSize + 10, height: viewerSize + 10 }}>
+        <div style={{ position: "relative", width: viewerSize, height: viewerSize, ...style }}>
             <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
             <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} layers={layers}
                 rotate={state.current.rotate} imageCenterInfo={state.current.imageCenterInfo} isCrossed={!isOpenNicol}
@@ -144,7 +142,7 @@ function setViewerStateUpdateEventHandler(
     const touchStartHandler = e => {
         state.current.touching = true
         state.current.dragEnd = coordinateOnCanvas(e)
-        e.preventDefault()
+        //e.preventDefault()
     }
     const touchMoveHandler = e => {
         if (!state.current.touching) return
@@ -170,7 +168,7 @@ function setViewerStateUpdateEventHandler(
     const touchEndHandler = e => {
         const { dragEnd, pinchEnd, ...rest } = state.current
         state.current = { ...rest, touching: false }
-        e.preventDefault()
+        //e.preventDefault()
     }
 
     const wheelHandler = e => {
