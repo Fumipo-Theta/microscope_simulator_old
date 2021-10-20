@@ -1,6 +1,5 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
-import { AnnotationContent } from "./viewer/layer/annotation/annotation"
 import { NicolToggler } from "./nicol_toggler/nicol_toggler"
 import { Viewer } from "./viewer/viewer"
 import { SampleScale } from "./sample_scale/sample_scale"
@@ -61,7 +60,6 @@ export const ViewerContainer: React.FC = () => {
             {currentSample ?
                 <><div className={styles.viewerLayerContainer}>
                     <Viewer {...mainLayerProps} />
-                    <AnnotationContent />
                     <SampleScale />
                     <NicolToggler />
                 </div>

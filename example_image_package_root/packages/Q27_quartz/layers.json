@@ -78,7 +78,7 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
+                        "in_open": "<h1>タイトル</h1> Description of the point. Details are available <a href=\"https://path.to/details\">here</a>. <b>太字</b> <br> <i>斜体</i><br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>",
                         "in_crossed": "Another text to be shown in crossed Nicols mode."
                     }
                 },

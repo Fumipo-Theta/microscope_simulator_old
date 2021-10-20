@@ -14,6 +14,8 @@ import {
     updateRotate, updateCoordinate, updateMagnifyByPinch
 } from "./util/event_handler_util"
 import { SampleLayers } from "@src/js/type/sample_overlay"
+import { AnnotationContent } from "./layer/annotation/annotation"
+import { green } from "@material-ui/core/colors"
 
 export type ViewerProps = {
     width: number,
@@ -27,7 +29,9 @@ const style = {
     borderRadius: "50%",
     boxShadow: "2px 1px 4px #a0a0a0, -2px -1px 4px #ffffff",
     overflow: "hidden",
-    display: "grid"
+    display: "grid",
+    gridRow: "1 / -1",
+    gridColumn: "1 / -1"
 }
 
 export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers }) => {
@@ -112,11 +116,14 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
         }
     }, [context, imageSource, isOpenNicol, imageCenterInfo, rotate, viewerSize])
 
-    return <div style={{ width: viewerSize, height: viewerSize, ...style }}>
-        <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
-        <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} layers={layers}
-            rotate={state.current.rotate} imageCenterInfo={state.current.imageCenterInfo} isCrossed={!isOpenNicol}
-        />
+    return <div style={{ display: "grid", gridTemplateRows: "20px 1fr 1fr minmax(200px, 1fr) 20px", gridTemplateColumns: "20px 1fr 1fr 1fr 20px", width: viewerSize + 10, height: viewerSize + 10 }}>
+        <div style={{ width: viewerSize, height: viewerSize, ...style }}>
+            <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
+            <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} layers={layers}
+                rotate={state.current.rotate} imageCenterInfo={state.current.imageCenterInfo} isCrossed={!isOpenNicol}
+            />
+        </div>
+        <AnnotationContent />
     </div>
 }
 
