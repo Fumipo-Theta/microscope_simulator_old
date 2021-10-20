@@ -5,10 +5,9 @@ jobs:
     steps:
       - checkout
       - run: node --version
-      - run: npm install -g yarn
       - run:
-          name: install node modules by yarn
-          command: yarn install
+          name: install node modules
+          command: npm ci
       - run:
           name: build for production
           command: CONFIG_JSON=$CONFIG_JSON_PROD yarn build
@@ -23,10 +22,9 @@ jobs:
     steps:
       - checkout
       - run: node --version
-      - run: npm install -g yarn
       - run:
-          name: install node modules by yarn
-          command: yarn install
+          name: install node modules
+          command: npm ci
       - run:
           name: build for production
           command: CONFIG_JSON=$CONFIG_JSON_PROD yarn build:prod
