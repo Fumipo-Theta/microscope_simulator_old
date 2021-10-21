@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from "react"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { I18nMap } from "@src/js/type/entity"
 import { WithMode } from "@src/js/type/sample_overlay"
 import { AnnotationContentState, AnnotationActiveKeyState } from "@src/js/state/atom/annotation_content_state"
 import { isOpenNicolState } from "@src/js/state/atom/nicol_state"
-import { selectByMode } from "../util"
+import { systemLanguageState } from "@src/js/state/atom/system_language_state"
+import { selectByMode, selectByModeAndLang } from "../util"
 import styles from "./index.module.css"
 
 type Props = {
-    text: WithMode<string>,
+    text: WithMode<I18nMap<string>>,
     top: number,
     left: number,
     rotate: number,
@@ -57,8 +59,9 @@ const Icon: React.FC<{ color: string, isActive: boolean }> = ({ color, isActive 
 export const AnnotationContent: React.FC = () => {
     const ref = useRef<HTMLDivElement>(null)
     const isOpen = useRecoilValue(isOpenNicolState)
+    const lang = useRecoilValue(systemLanguageState)
     const content = useRecoilValue(AnnotationContentState)
-    const html = selectByMode(content, !isOpen, "", "")
+    const html = selectByModeAndLang(content, !isOpen, lang, "en")
     const setAnnotationContent = useSetRecoilState(AnnotationContentState)
     const [_, setActiveAnnotation] = useRecoilState(AnnotationActiveKeyState)
     const close = (e) => {

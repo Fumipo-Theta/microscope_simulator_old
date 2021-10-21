@@ -19,7 +19,10 @@
                         "x": 200,
                         "y": 200
                     },
-                    "text": "石英 (open)"
+                    "text": {
+                        "ja": "石英 (open)",
+                        "en": "Quartz"
+                    }
                 },
                 {
                     "appears_in": "crossed",
@@ -27,7 +30,10 @@
                         "x": 300,
                         "y": 300
                     },
-                    "text": "石英 (crossed)"
+                    "text": {
+                        "ja": "石英 (crossed)",
+                        "en": "Quartz"
+                    }
                 },
                 {
                     "appears_in": "both",
@@ -35,7 +41,10 @@
                         "x": 400,
                         "y": 400
                     },
-                    "text": "石英 (open & crossed)"
+                    "text": {
+                        "ja": "石英 (open & crossed)",
+                        "en": "Quartz"
+                    }
                 }
             ]
         },
@@ -63,8 +72,12 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
-                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                        "in_open": {
+                            "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
+                        },
+                        "in_crossed": {
+                            "en": "Another text to be shown in crossed Nicols mode."
+                        }
                     }
                 },
                 {
@@ -78,8 +91,12 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "<h1>タイトル</h1> Description of the point. Details are available <a href=\"https://path.to/details\">here</a>. <b>太字</b> <br> <i>斜体</i><br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>",
-                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                        "in_open": {
+                            "ja": "<h1>タイトル</h1> Description of the point. Details are available <a href=\"https://path.to/details\">here</a>. <b>太字</b> <br> <i>斜体</i><br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>"
+                        },
+                        "in_crossed": {
+                            "en": "Another text to be shown in crossed Nicols mode."
+                        }
                     }
                 },
                 {
@@ -93,8 +110,12 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
-                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                        "in_open": {
+                            "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
+                        },
+                        "in_crossed": {
+                            "en": "Another text to be shown in crossed Nicols mode."
+                        }
                     }
                 },
                 {
@@ -108,8 +129,12 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
-                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                        "in_open": {
+                            "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
+                        },
+                        "in_crossed": {
+                            "en": "Another text to be shown in crossed Nicols mode."
+                        }
                     }
                 },
                 {
@@ -123,8 +148,12 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
-                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                        "in_open": {
+                            "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
+                        },
+                        "in_crossed": {
+                            "en": "Another text to be shown in crossed Nicols mode."
+                        }
                     }
                 },
                 {
@@ -138,8 +167,12 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
-                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                        "in_open": {
+                            "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
+                        },
+                        "in_crossed": {
+                            "en": "Another text to be shown in crossed Nicols mode."
+                        }
                     }
                 }
             ]

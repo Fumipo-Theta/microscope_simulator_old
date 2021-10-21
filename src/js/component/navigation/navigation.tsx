@@ -38,7 +38,7 @@ const SystemLanguageSelector: React.FC = () => {
             const selectedOptionIndex = event.target.options.selectedIndex
             setSystemLanguageValue(event.target.options[selectedOptionIndex].value as Language)
         },
-        []
+        [setSystemLanguageValue]
     )
     return (
         <div className={styles.languageSelectorContainer}>
@@ -50,8 +50,8 @@ const SystemLanguageSelector: React.FC = () => {
                             <option value='en'>ENG</option>
                         </>
                         : <>
-                            <option defaultValue='en' value='en'>ENG</option>
                             <option value='ja'>日本</option>
+                            <option defaultValue='en' value='en'>ENG</option>
                         </>
                 }
             </select>

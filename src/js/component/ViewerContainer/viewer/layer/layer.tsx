@@ -1,9 +1,11 @@
 import React from "react"
 import { SampleLayers, SampleOverlayKey } from "@src/js/type/sample_overlay"
 import { ImageCenterInfo, SamplePackage } from "@src/js/type/entity"
-import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, selectByMode } from "./util"
+import { systemLanguageState } from "@src/js/state/atom/system_language_state"
+import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, selectByMode, selectByLang } from "./util"
 import { Label } from "./label/label"
 import { Annotation } from "./annotation/annotation"
+import { useRecoilValue } from "recoil"
 
 type Props = {
     viewerSize: number,
@@ -17,7 +19,7 @@ const OPEN_TEXT_COLOR = "#111"
 const CROSS_TEXT_COLOR = "#efefef"
 
 export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, imageCenterInfo }) => {
-
+    const lang = useRecoilValue(systemLanguageState)
     const labels = getLabels(layers, rotate)
     const annotations = getAnnotations(layers, rotate)
 
@@ -29,7 +31,7 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
                     key={`sample-overlay-label-${i}`}
                     left={pos.left}
                     top={pos.top}
-                    text={label[SampleOverlayKey.LabelText]}
+                    text={selectByLang(label[SampleOverlayKey.LabelText], lang, "en")}
                     rotate={rotate}
                     toBeShown={calcToBeShown(isCrossed, label[SampleOverlayKey.LabelAppearsIn])}
                     color={selectByMode(label[SampleOverlayKey.LabelColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}

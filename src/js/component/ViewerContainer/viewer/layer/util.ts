@@ -1,5 +1,5 @@
 import { OverlayLabel, SampleLayers, SampleOverlayKey, ItemLocation, WithMode, OverlayAnnotation } from "@src/js/type/sample_overlay"
-import { ImageCenterInfo } from "@src/js/type/entity"
+import { I18nMap, ImageCenterInfo, Language } from "@src/js/type/entity"
 
 export function calcRelativePosition(pos: ItemLocation, imageCenterInfo: ImageCenterInfo, viewerSize) {
     const radius = imageCenterInfo.imageRadius
@@ -30,10 +30,22 @@ export function selectByMode<T>(withMode: WithMode<T>, isCrossed: boolean, fallb
         : withMode?.[SampleOverlayKey.InOpen] || fallbackOpen
 }
 
+export function selectByModeAndLang<T>(withMode: WithMode<I18nMap<T>>, isCrossed: boolean, lang: Language, fallbackLang: Language): T | null {
+    const content = isCrossed
+        ? withMode?.[SampleOverlayKey.InCross]
+        : withMode?.[SampleOverlayKey.InOpen]
+
+    return content?.[lang] || content?.[fallbackLang]
+}
+
+export function selectByLang<T>(content: I18nMap<T>, lang: Language, fallbackLang: Language): T | null {
+    return content?.[lang] || content?.[fallbackLang]
+}
+
 export function getLabels(layers: SampleLayers, rotate: number): OverlayLabel[] {
     if (!layers) return []
     return layers[SampleOverlayKey.Layers]
-        .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ?layer[SampleOverlayKey.Labels] || [] : [])
+        .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Labels] || [] : [])
 }
 
 export function getAnnotations(layers: SampleLayers, rotate: number): OverlayAnnotation[] {

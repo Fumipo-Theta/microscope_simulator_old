@@ -1,3 +1,5 @@
+import { I18nMap } from "./entity"
+
 export enum SampleOverlayKey {
     Layers = "layers",
     ReferenceRotationDegree = "reference_rotation_degree",
@@ -57,7 +59,7 @@ export type OverlayImageType = "png" | "svg"
 export type OverlayLabel = {
     [SampleOverlayKey.LabelAppearsIn]: "open" | "crossed" | "both"
     [SampleOverlayKey.LabelPositionFromLeftTop]: ItemLocation
-    [SampleOverlayKey.LabelText]: string
+    [SampleOverlayKey.LabelText]: I18nMap<string>
     [SampleOverlayKey.LabelColor]?: WithMode<string>
 }
 
@@ -65,5 +67,5 @@ export type OverlayAnnotation = {
     [SampleOverlayKey.AnnotationAppearsIn]: "open" | "crossed" | "both"
     [SampleOverlayKey.AnnotationPositionFromLeftTop]: ItemLocation
     [SampleOverlayKey.AnnotationIconColor]?: WithMode<string>
-    [SampleOverlayKey.AnnotationMessage]: WithMode<string>
+    [SampleOverlayKey.AnnotationMessage]: WithMode<I18nMap<string>>
 }
