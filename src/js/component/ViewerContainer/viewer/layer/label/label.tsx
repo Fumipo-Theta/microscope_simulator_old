@@ -10,12 +10,13 @@ type LabelProps = {
 }
 
 export const Label: React.FC<LabelProps> = ({ text, top, left, rotate, toBeShown, color }) => {
+    if (!toBeShown) return <></>
+
     const dynamicStyle = {
         top: top,
         left: left,
         transform: `rotate(${rotate}deg)`,
         transformOrigin: "top left",
-        opacity: toBeShown ? 100 : 0,
         color: color,
     }
     const style = {

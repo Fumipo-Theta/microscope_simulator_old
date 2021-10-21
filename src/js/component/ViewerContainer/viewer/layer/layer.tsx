@@ -2,7 +2,7 @@ import React from "react"
 import { SampleLayers, SampleOverlayKey } from "@src/js/type/sample_overlay"
 import { ImageCenterInfo, SamplePackage } from "@src/js/type/entity"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
-import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, selectByMode, selectByLang } from "./util"
+import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, calcToBeShownWhenMessageExists, selectByMode, selectByLang } from "./util"
 import { Label } from "./label/label"
 import { Annotation } from "./annotation/annotation"
 import { useRecoilValue } from "recoil"
@@ -41,14 +41,16 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
         {
             ...annotations.map((annotation, i) => {
                 const pos = calcRelativePosition(annotation[SampleOverlayKey.AnnotationPositionFromLeftTop], imageCenterInfo, viewerSize)
+                const text = annotation[SampleOverlayKey.AnnotationMessage]
+                const appearsIn = annotation[SampleOverlayKey.AnnotationAppearsIn]
                 return <Annotation
                     myKey={`sample-overlay-annotation-${i}`}
                     key={`sample-overlay-annotation-${i}`}
                     left={pos.left}
                     top={pos.top}
-                    text={annotation[SampleOverlayKey.AnnotationMessage]}
+                    text={text}
                     rotate={rotate}
-                    toBeShown={calcToBeShown(isCrossed, annotation[SampleOverlayKey.AnnotationAppearsIn])}
+                    toBeShown={calcToBeShownWhenMessageExists(isCrossed, lang, appearsIn, text)}
                     color={selectByMode(annotation[SampleOverlayKey.AnnotationIconColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
                 />
             })

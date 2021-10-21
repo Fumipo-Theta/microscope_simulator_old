@@ -19,6 +19,8 @@ type Props = {
 }
 
 export const Annotation: React.FC<Props> = ({ myKey, text, top, left, rotate, toBeShown, color }) => {
+    if (!toBeShown) return <></>
+
     const setAnnotationContent = useSetRecoilState(AnnotationContentState)
     const [activeAnnotation, setActiveAnnotation] = useRecoilState(AnnotationActiveKeyState)
     const isActive = myKey === activeAnnotation
@@ -30,7 +32,6 @@ export const Annotation: React.FC<Props> = ({ myKey, text, top, left, rotate, to
         top: top,
         left: left,
         transform: `rotate(${rotate}deg)`,
-        opacity: toBeShown ? 100 : 0,
         color: color,
     }
     return <div className={styles.annotation} onClick={setContent} style={{ position: "absolute", ...dynamicStyle }}>
@@ -61,7 +62,7 @@ export const AnnotationContent: React.FC = () => {
     const isOpen = useRecoilValue(isOpenNicolState)
     const lang = useRecoilValue(systemLanguageState)
     const content = useRecoilValue(AnnotationContentState)
-    const html = selectByModeAndLang(content, !isOpen, lang, "en")
+    const html = selectByModeAndLang(content, !isOpen, lang)
     const setAnnotationContent = useSetRecoilState(AnnotationContentState)
     const [_, setActiveAnnotation] = useRecoilState(AnnotationActiveKeyState)
     const close = (e) => {
@@ -74,7 +75,7 @@ export const AnnotationContent: React.FC = () => {
             ref.current.innerHTML = html || ""
         }
     }, [html, isOpen])
-    const className = content ? styles.annotationContentContainer + " " + styles.active : styles.annotationContentContainer
+    const className = html ? styles.annotationContentContainer + " " + styles.active : styles.annotationContentContainer
     const buttonColor = content ? "#efefef" : "#bbbbbb"
 
     return <div className={className}>
