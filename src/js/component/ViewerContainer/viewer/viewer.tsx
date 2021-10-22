@@ -136,7 +136,8 @@ function setViewerStateUpdateEventHandler(
     }>>,
     setScaleValue: SetterOrUpdater<Scale>
 ) {
-    const coordinateOnCanvas = getCoordinateOnCanvas(handler)
+    const offset = cumulativeOffset(handler)
+    const coordinateOnCanvas = getCoordinateOnCanvas(offset)
     const touchStartHandler = e => {
         state.current.touching = true
         state.current.dragEnd = coordinateOnCanvas(e)
@@ -216,3 +217,17 @@ function setViewerStateUpdateEventHandler(
         handler.removeEventListener("wheel", wheelHandler)
     }
 }
+
+const cumulativeOffset = function (element): { top: number, left: number } {
+    var top = 0, left = 0;
+    do {
+        top += element.offsetTop || 0;
+        left += element.offsetLeft || 0;
+        element = element.offsetParent;
+    } while (element);
+
+    return {
+        top: top,
+        left: left
+    };
+};

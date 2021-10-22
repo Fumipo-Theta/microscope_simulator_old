@@ -59,7 +59,7 @@ export async function updateImageSrc(imageNumber, imagesMap, ext: SampleImageTyp
         })
 }
 
-export function getCoordinateOnCanvas(canvas: HTMLElement) {
+export function getCoordinateOnCanvas(offset) {
     return (e: MouseEvent | TouchEvent, finger = 0): Coordinate => {
         if (e instanceof MouseEvent) {
             return (e instanceof WheelEvent)
@@ -68,13 +68,13 @@ export function getCoordinateOnCanvas(canvas: HTMLElement) {
                     e.deltaY
                 ]
                 : [
-                    e.pageX - canvas.offsetLeft,
-                    e.pageY - canvas.offsetTop
+                    e.pageX - offset.left,
+                    e.pageY - offset.top
                 ]
         } else if (e instanceof TouchEvent && e.touches.length > finger) {
             return [
-                e.touches[finger].pageX - canvas.offsetLeft,
-                e.touches[finger].pageY - canvas.offsetTop
+                e.touches[finger].pageX - offset.left,
+                e.touches[finger].pageY - offset.top
             ]
         }
     }
