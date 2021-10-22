@@ -48,7 +48,7 @@
 ### Layer
 
 + `reference_rotation_degree`: 0 (number, required) - description: レイヤーの座標の基準となる薄片画像の回転角
-+ `appears_during`: [[0, 90], [180, 270]] (array, required) - description: レイヤーを表示する薄片画像の回転角の範囲の配列
++ `appears_during`: [[0, 90], [180, 270]] (array, required) - description: レイヤーを表示する薄片画像の回転角の範囲の配列。角度は反時計回りに数える
 + `overlay` (optional) - オーバーレイ画像に関する情報
     + `image_type`: png (enum, required) - 画像フォーマット
       + png (string)
@@ -65,8 +65,10 @@
     + `position_from_left_top` (required) - 薄片画像の左上を基準とした文字列の座標。文字列を包含する長方形の中心の座標
       + x: 500 (number, required)
       + y: 450 (number, required)
-    + `text`: 斜長石 (string, required) - ラベルのテキスト
-    + `color` (required) - オープン・クロスそれぞれで表示するラベルの文字色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す
+    + `text`: (object, required) - ラベルのテキスト
+      + ja: 斜長石 (string, optional)
+      + en: Plagioclase (string, optional)
+    + `color` (optional) - オープン・クロスそれぞれで表示するラベルの文字色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値が使用される
       + `in_open`: #000000ff (string, optional)
       + `in_crossed`: #ffffffff (string, optional)
 + `annotations` (array, optional) - 薄片画像上に表示する注釈アイコンと, 注釈メッセージの情報の配列
@@ -78,17 +80,22 @@
     + `position_from_left_top` (required) - 薄片画像の左上を基準とした注釈アイコンの座標
       + x: 100 (number, required)
       + y: 200 (number, required)
-    + `icon_color` (required) - オープン・クロスそれぞれで表示する注釈アイコンの塗りつぶし色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す
+    + `icon_color` (string, optional) - オープン・クロスそれぞれで表示する注釈アイコンの塗りつぶし色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値が使用される
       + `in_open`: #2196f3ff (string, optional)
       + `in_crossed`: #FF3100ff (string, optional)
-    + `message` (required) - オープン・クロスそれぞれで表示する注釈メッセージの内容。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。HTMLで表記可能
-      + `in_open` `Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.` (string, optional)
-      + `in_crossed` `Another text to be shown in crossed Nicols mode.`
+    + `message` (object, required) - オープン・クロスそれぞれで表示する注釈メッセージの内容。片方しかなければ, もう片方も同じ内容が表示される。どちらか片方は必須。HTMLで表記可能
+      + `in_open`: (object, optional)
+        + ja: `画像上の注釈の説明。HTML文字列を使用可能` (string, optional)
+        + en: `Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.` (string, optional)
+      + `in_crossed`: (object, optional)
+        + ja: `画像上の注釈の説明。HTML文字列を使用可能` (string, optional)
+        + en: `Another text to be shown in crossed Nicols mode.` (string, optional)
 
 
 ## 複数のレイヤーを表すJSONの例
 
 [上のLayer](#Layer)オブジェクトの配列として表す。
+[例を参照のこと](/example_image_package_root/packages/Q27_quartz/layers.json)。
 
 ```json
 {
@@ -113,7 +120,10 @@
                         "x": 500,
                         "y": 450
                     },
-                    "text": "斜長石",
+                    "text": {
+                      "ja": "斜長石",
+                      "en": "Plagioclase"
+                    },
                     "color": {
                         "in_open": "#000000ff"
                     }
@@ -131,8 +141,12 @@
                         "in_crossed": "#FF3100ff"
                     },
                     "message": {
-                        "in_open": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.",
-                        "in_crossed": "Another text to be shown in crossed Nicols mode."
+                        "in_open": {
+                          "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
+                        },
+                        "in_crossed": {
+                          "en": "Another text to be shown in crossed Nicols mode."
+                        }
                     }
                 }
             ]
@@ -140,3 +154,5 @@
     ]
 }
 ```
+
+### Layerを定義したJSONファイルの配置場所

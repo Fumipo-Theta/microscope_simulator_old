@@ -31,19 +31,29 @@ const SampleListExpander: React.FC = () => {
 }
 
 const SystemLanguageSelector: React.FC = () => {
+    const currentLang = useRecoilValue(systemLanguageState)
     const setSystemLanguageValue = useSetRecoilState(systemLanguageState)
     const onChange = useCallback(
         (event: React.ChangeEvent<HTMLSelectElement>) => {
             const selectedOptionIndex = event.target.options.selectedIndex
             setSystemLanguageValue(event.target.options[selectedOptionIndex].value as Language)
         },
-        []
+        [setSystemLanguageValue]
     )
     return (
         <div className={styles.languageSelectorContainer}>
             <select onChange={onChange} className={styles.languageSelector}>
-                <option defaultValue='ja' value='ja'>日本</option>
-                <option value='en'>ENG</option>
+                {
+                    currentLang == 'ja'
+                        ? <>
+                            <option defaultValue='ja' value='ja'>日本</option>
+                            <option value='en'>ENG</option>
+                        </>
+                        : <>
+                            <option value='ja'>日本</option>
+                            <option defaultValue='en' value='en'>ENG</option>
+                        </>
+                }
             </select>
         </div>
     )
