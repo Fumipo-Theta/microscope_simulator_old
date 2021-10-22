@@ -6,6 +6,7 @@ import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, calcToB
 import { Label } from "./label/label"
 import { Annotation } from "./annotation/annotation"
 import { useRecoilValue } from "recoil"
+import { useShowLayersFlag } from "@src/js/hooks/location_hooks"
 
 type Props = {
     viewerSize: number,
@@ -19,6 +20,10 @@ const OPEN_TEXT_COLOR = "#111"
 const CROSS_TEXT_COLOR = "#efefef"
 
 export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, imageCenterInfo }) => {
+    // TODO: remove this check after toggle layers button is implemented
+    const layersToBeShown = useShowLayersFlag()
+    if (!layersToBeShown) return <></>
+
     const lang = useRecoilValue(systemLanguageState)
     const labels = getLabels(layers, rotate)
     const annotations = getAnnotations(layers, rotate)
