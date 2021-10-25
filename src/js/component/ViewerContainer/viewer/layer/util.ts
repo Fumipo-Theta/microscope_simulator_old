@@ -21,7 +21,7 @@ export function calcToBeShown(isCrossed, appearsIn, rotate, appearsDuring) {
         (appearsIn === "open" && !isCrossed)
     if (!appear) return false
 
-    const inRange = appearsDuring.filter(([ini, fin]) => ini <= rotate && rotate < fin).length > 0
+    const inRange = appearsDuringInRange(rotate, appearsDuring)
     return inRange
 }
 
@@ -34,12 +34,12 @@ export function calcToBeShownWhenMessageExists(isCrossed, lang, appearsIn, messa
         ? message?.[SampleLayerKey.InCross]?.[lang]
         : message?.[SampleLayerKey.InOpen]?.[lang]
     if (!exists) return false
-    const inRange = appearsDuring.filter(([ini, fin]) => ini <= rotate && rotate < fin).length > 0
+    const inRange = appearsDuringInRange(rotate, appearsDuring)
     return inRange
 }
 
-export function toBeAppear(rotate: number, appearsIn: Array<[number, number]>): boolean {
-    return appearsIn.filter(([ini, fin]) => ini <= rotate && rotate < fin).length > 0
+function appearsDuringInRange(rotate, appearsDuring) {
+    return appearsDuring.filter(([ini, fin]) => ini <= rotate && rotate <= fin).length > 0
 }
 
 export function selectByMode<T>(withMode: WithMode<T>, isCrossed: boolean, fallbackOpen: T, fallbackCross: T): T {
