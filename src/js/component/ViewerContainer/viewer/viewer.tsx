@@ -47,6 +47,7 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
     const [handler, setHandler] = useState<HTMLDivElement>(null)
     const [rotate, setRotate] = useState(0)
     const [imageCenterInfo, setImageCenterInfo] = useState(getImageCenterInfo(sample.manifest))
+    const originalRadius = getImageCenterInfo(sample.manifest).imageRadius
     const state = useRef<UiState>({
         touching: false,
         isRotateClockwise: true,
@@ -118,6 +119,7 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
             <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
             <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} layers={layers}
                 rotate={state.current.rotate} imageCenterInfo={state.current.imageCenterInfo} isCrossed={!isOpenNicol}
+                originalRadius={originalRadius}
             />
         </div>
     </div>

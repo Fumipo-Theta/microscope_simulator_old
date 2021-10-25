@@ -25,6 +25,7 @@ export const Annotation: React.FC<Props> = ({ myKey, text, top, left, rotate, to
     const [activeAnnotation, setActiveAnnotation] = useRecoilState(AnnotationActiveKeyState)
     const isActive = myKey === activeAnnotation
     const setContent = (_) => {
+        if (!toBeShown) return
         setAnnotationContent(text)
         setActiveAnnotation(myKey)
     }
@@ -33,6 +34,7 @@ export const Annotation: React.FC<Props> = ({ myKey, text, top, left, rotate, to
         left: left,
         transform: `rotate(${rotate}deg)`,
         color: color,
+        opacity: toBeShown ? 1 : 0
     }
     return <div className={styles.annotation} onClick={setContent} style={{ position: "absolute", ...dynamicStyle }}>
         <Icon color={color} isActive={isActive} />
