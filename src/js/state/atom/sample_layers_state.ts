@@ -2,12 +2,15 @@ import { atom, selector } from "recoil"
 import { retrieveSampleLayersJson } from "@src/js/remote_repo/static/package_repo"
 import { SampleListItemKeys } from "@src/js/type/sample"
 import { SampleLayers } from "@src/js/type/sample_overlay"
+import { useShowLayersFlag } from "@src/js/hooks/location_hooks"
 
 import { selectedSampleListItemState } from "./selected_sample_list_item_state"
 
 export const sampleLayersSelector = selector<SampleLayers>({
     key: 'sampleLayersSelector',
     get: async ({ get }) => {
+        if (!useShowLayersFlag()) return null
+
         const currentSampleListItem = get(selectedSampleListItemState)
         const currentSampleId = currentSampleListItem?.[SampleListItemKeys.PackageName] || ''
         if (currentSampleId != '') {

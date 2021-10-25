@@ -18,6 +18,7 @@ export const Label: React.FC<LabelProps> = ({ text, top, left, rotate, toBeShown
         transform: `rotate(${rotate}deg)`,
         transformOrigin: "top left",
         color: color,
+        opacity: toBeShown ? 1 : 0
     }
     const style = {
         fontSize: "1.25rem",

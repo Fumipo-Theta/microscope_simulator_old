@@ -1,53 +1,53 @@
 import React from "react"
-import { SampleLayers, SampleOverlayKey } from "@src/js/type/sample_overlay"
-import { ImageCenterInfo, SamplePackage } from "@src/js/type/entity"
+import { SampleLayers, SampleLayerKey } from "@src/js/type/sample_overlay"
+import { ImageCenterInfo } from "@src/js/type/entity"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
-import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, calcToBeShownWhenMessageExists, selectByMode, selectByLang } from "./util"
+import { calcRelativePosition, getOverlays, getLabels, getAnnotations, calcToBeShown, calcToBeShownWhenMessageExists, selectByMode, selectByLang } from "./util"
+import { Overlay } from "./overlay/overlay"
 import { Label } from "./label/label"
 import { Annotation } from "./annotation/annotation"
 import { useRecoilValue } from "recoil"
-import { useShowLayersFlag } from "@src/js/hooks/location_hooks"
 
 type Props = {
     viewerSize: number,
-    layers: SampleLayers,
+    layers: SampleLayers | null,
     rotate: number,
     isCrossed: boolean,
     imageCenterInfo: ImageCenterInfo,
+    originalRadius: number,
+    originalImageSize: { width: number, height: number },
 }
 
 const OPEN_TEXT_COLOR = "#111"
 const CROSS_TEXT_COLOR = "#efefef"
 
-export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, imageCenterInfo }) => {
-    // TODO: remove this check after toggle layers button is implemented
-    const layersToBeShown = useShowLayersFlag()
-    if (!layersToBeShown) return <></>
+export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, imageCenterInfo, originalRadius, originalImageSize }) => {
+    if (!layers) return <></>
 
     const lang = useRecoilValue(systemLanguageState)
-    const labels = getLabels(layers, rotate)
-    const annotations = getAnnotations(layers, rotate)
+    const overlays = getOverlays(layers)
+    const labels = getLabels(layers)
+    const annotations = getAnnotations(layers)
 
     return <>
         {
-            ...labels.map((label, i) => {
-                const pos = calcRelativePosition(label[SampleOverlayKey.LabelPositionFromLeftTop], imageCenterInfo, viewerSize)
-                return <Label
-                    key={`sample-overlay-label-${i}`}
+            ...overlays.map((overlay, i) => {
+                const pos = calcRelativePosition({ x: 0, y: 0 }, imageCenterInfo, viewerSize, Math.min(originalImageSize.width, originalImageSize.height) / 2)
+                return <Overlay
+                    key={`sample-overlay-image-${i}`}
+                    toBeShown={calcToBeShown(isCrossed, overlay[SampleLayerKey.AppearsIn], rotate, overlay[SampleLayerKey.AppearsDuring])}
+                    srcKey={overlay[SampleLayerKey.OverlayImageSource]}
                     left={pos.left}
                     top={pos.top}
-                    text={selectByLang(label[SampleOverlayKey.LabelText], lang, "en")}
-                    rotate={rotate}
-                    toBeShown={calcToBeShown(isCrossed, label[SampleOverlayKey.LabelAppearsIn])}
-                    color={selectByMode(label[SampleOverlayKey.LabelColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
+                    magnify={pos.magnify}
                 />
             })
         }
         {
             ...annotations.map((annotation, i) => {
-                const pos = calcRelativePosition(annotation[SampleOverlayKey.AnnotationPositionFromLeftTop], imageCenterInfo, viewerSize)
-                const text = annotation[SampleOverlayKey.AnnotationMessage]
-                const appearsIn = annotation[SampleOverlayKey.AnnotationAppearsIn]
+                const pos = calcRelativePosition(annotation[SampleLayerKey.AnnotationPositionFromLeftTop], imageCenterInfo, viewerSize, originalRadius)
+                const text = annotation[SampleLayerKey.AnnotationMessage]
+                const appearsIn = annotation[SampleLayerKey.AppearsIn]
                 return <Annotation
                     myKey={`sample-overlay-annotation-${i}`}
                     key={`sample-overlay-annotation-${i}`}
@@ -55,8 +55,22 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
                     top={pos.top}
                     text={text}
                     rotate={rotate}
-                    toBeShown={calcToBeShownWhenMessageExists(isCrossed, lang, appearsIn, text)}
-                    color={selectByMode(annotation[SampleOverlayKey.AnnotationIconColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
+                    toBeShown={calcToBeShownWhenMessageExists(isCrossed, lang, appearsIn, text, rotate, annotation[SampleLayerKey.AppearsDuring])}
+                    color={selectByMode(annotation[SampleLayerKey.AnnotationIconColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
+                />
+            })
+        }
+        {
+            ...labels.map((label, i) => {
+                const pos = calcRelativePosition(label[SampleLayerKey.LabelPositionFromLeftTop], imageCenterInfo, viewerSize, originalRadius)
+                return <Label
+                    key={`sample-overlay-label-${i}`}
+                    left={pos.left}
+                    top={pos.top}
+                    text={selectByLang(label[SampleLayerKey.LabelText], lang, "en")}
+                    rotate={rotate}
+                    toBeShown={calcToBeShown(isCrossed, label[SampleLayerKey.AppearsIn], rotate, label[SampleLayerKey.AppearsDuring])}
+                    color={selectByMode(label[SampleLayerKey.LabelColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
                 />
             })
         }

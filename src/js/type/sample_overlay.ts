@@ -1,23 +1,22 @@
 import { I18nMap } from "./entity"
 
-export enum SampleOverlayKey {
+export enum SampleLayerKey {
     Layers = "layers",
     ReferenceRotationDegree = "reference_rotation_degree",
     AppearsDuring = "appears_during",
-    Overlay = "overlay",
+    Overlays = "overlays",
     OverlayImageType = "image_type",
-    OverlayImageSourceUrl = "image_source_url",
+    OverlayImageSource = "image_source",
     InOpen = "in_open",
     InCross = "in_crossed",
 
     Labels = "labels",
-    LabelAppearsIn = "appears_in",
+    AppearsIn = "appears_in",
     LabelPositionFromLeftTop = "position_from_left_top",
     LabelText = "text",
     LabelColor = "color",
 
     Annotations = "annotations",
-    AnnotationAppearsIn = "appears_in",
     AnnotationPositionFromLeftTop = "position_from_left_top",
     AnnotationIconColor = "icon_color",
     AnnotationMessage = "message",
@@ -28,44 +27,53 @@ export enum SampleOverlayKey {
 }
 
 export interface SampleLayers {
-    [SampleOverlayKey.Layers]: Array<SampleOverlay>
+    [SampleLayerKey.Layers]: Array<SampleOverlay>
 }
 
+
 export interface SampleOverlay {
-    [SampleOverlayKey.ReferenceRotationDegree]: number
-    [SampleOverlayKey.AppearsDuring]: Array<[number, number]>
-    [SampleOverlayKey.Overlay]?: OverlayImage
-    [SampleOverlayKey.Labels]?: OverlayLabel[]
-    [SampleOverlayKey.Annotations]?: OverlayAnnotation[]
+    [SampleLayerKey.ReferenceRotationDegree]: number
+    [SampleLayerKey.Overlays]?: OverlayImage[]
+    [SampleLayerKey.Labels]?: OverlayLabel[]
+    [SampleLayerKey.Annotations]?: OverlayAnnotation[]
 }
 
 export type ItemLocation = {
-    [SampleOverlayKey.X]: number,
-    [SampleOverlayKey.Y]: number,
+    [SampleLayerKey.X]: number,
+    [SampleLayerKey.Y]: number,
 }
 
 export type WithMode<T> = {
-    [SampleOverlayKey.InOpen]?: T,
-    [SampleOverlayKey.InCross]?: T,
+    [SampleLayerKey.InOpen]?: T,
+    [SampleLayerKey.InCross]?: T,
 }
 
 
 export type OverlayImage = {
-    [SampleOverlayKey.OverlayImageType]: OverlayImageType
-    [SampleOverlayKey.OverlayImageSourceUrl]: WithMode<string>
+    [SampleLayerKey.AppearsIn]: "open" | "crossed" | "both"
+    [SampleLayerKey.AppearsDuring]: Array<[number, number]>
+    [SampleLayerKey.OverlayImageType]: OverlayImageType
+    [SampleLayerKey.OverlayImageSource]: SampleOverlayPath
 }
 export type OverlayImageType = "png" | "svg"
+export type SampleOverlayPath = string
+type DataURL = string
+export type SampleOverlayMap = {
+    [key: SampleOverlayPath]: DataURL
+}
 
 export type OverlayLabel = {
-    [SampleOverlayKey.LabelAppearsIn]: "open" | "crossed" | "both"
-    [SampleOverlayKey.LabelPositionFromLeftTop]: ItemLocation
-    [SampleOverlayKey.LabelText]: I18nMap<string>
-    [SampleOverlayKey.LabelColor]?: WithMode<string>
+    [SampleLayerKey.AppearsIn]: "open" | "crossed" | "both"
+    [SampleLayerKey.LabelPositionFromLeftTop]: ItemLocation
+    [SampleLayerKey.AppearsDuring]: Array<[number, number]>
+    [SampleLayerKey.LabelText]: I18nMap<string>
+    [SampleLayerKey.LabelColor]?: WithMode<string>
 }
 
 export type OverlayAnnotation = {
-    [SampleOverlayKey.AnnotationAppearsIn]: "open" | "crossed" | "both"
-    [SampleOverlayKey.AnnotationPositionFromLeftTop]: ItemLocation
-    [SampleOverlayKey.AnnotationIconColor]?: WithMode<string>
-    [SampleOverlayKey.AnnotationMessage]: WithMode<I18nMap<string>>
+    [SampleLayerKey.AppearsIn]: "open" | "crossed" | "both"
+    [SampleLayerKey.AnnotationPositionFromLeftTop]: ItemLocation
+    [SampleLayerKey.AppearsDuring]: Array<[number, number]>
+    [SampleLayerKey.AnnotationIconColor]?: WithMode<string>
+    [SampleLayerKey.AnnotationMessage]: WithMode<I18nMap<string>>
 }
