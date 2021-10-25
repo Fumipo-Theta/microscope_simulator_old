@@ -195,8 +195,7 @@
                         ]
                     ],
                     "icon_color": {
-                        "in_open": "#00FF00ff",
-                        "in_crossed": "#FF3100ff"
+                        "in_open": "#00FF00ff"
                     },
                     "message": {
                         "in_open": {
