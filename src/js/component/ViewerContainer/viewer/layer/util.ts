@@ -54,12 +54,24 @@ export function selectByLang<T>(content: I18nMap<T>, lang: Language, fallbackLan
 
 export function getLabels(layers: SampleLayers, rotate: number): OverlayLabel[] {
     if (!layers) return []
-    return layers[SampleOverlayKey.Layers]
-        .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Labels] || [] : [])
+
+    try {
+        return layers[SampleOverlayKey.Layers]
+            .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Labels] || [] : [])
+    } catch {
+        console.error("Failed to parse layers.json")
+        return []
+    }
 }
 
 export function getAnnotations(layers: SampleLayers, rotate: number): OverlayAnnotation[] {
     if (!layers) return []
-    return layers[SampleOverlayKey.Layers]
-        .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Annotations] || [] : [])
+
+    try {
+        return layers[SampleOverlayKey.Layers]
+            .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Annotations] || [] : [])
+    } catch {
+        console.error("Failed to parse layers.json")
+        return []
+    }
 }

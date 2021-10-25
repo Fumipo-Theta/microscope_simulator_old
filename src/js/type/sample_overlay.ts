@@ -6,7 +6,7 @@ export enum SampleOverlayKey {
     AppearsDuring = "appears_during",
     Overlay = "overlay",
     OverlayImageType = "image_type",
-    OverlayImageSourceUrl = "image_source_url",
+    OverlayImageSource = "image_source",
     InOpen = "in_open",
     InCross = "in_crossed",
 
@@ -52,7 +52,7 @@ export type WithMode<T> = {
 
 export type OverlayImage = {
     [SampleOverlayKey.OverlayImageType]: OverlayImageType
-    [SampleOverlayKey.OverlayImageSourceUrl]: WithMode<string>
+    [SampleOverlayKey.OverlayImageSource]: WithMode<string>
 }
 export type OverlayImageType = "png" | "svg"
 

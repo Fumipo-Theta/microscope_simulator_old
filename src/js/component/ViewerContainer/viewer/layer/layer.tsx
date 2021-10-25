@@ -1,16 +1,15 @@
 import React from "react"
 import { SampleLayers, SampleOverlayKey } from "@src/js/type/sample_overlay"
-import { ImageCenterInfo, SamplePackage } from "@src/js/type/entity"
+import { ImageCenterInfo } from "@src/js/type/entity"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
 import { calcRelativePosition, getLabels, getAnnotations, calcToBeShown, calcToBeShownWhenMessageExists, selectByMode, selectByLang } from "./util"
 import { Label } from "./label/label"
 import { Annotation } from "./annotation/annotation"
 import { useRecoilValue } from "recoil"
-import { useShowLayersFlag } from "@src/js/hooks/location_hooks"
 
 type Props = {
     viewerSize: number,
-    layers: SampleLayers,
+    layers: SampleLayers | null,
     rotate: number,
     isCrossed: boolean,
     imageCenterInfo: ImageCenterInfo,
@@ -20,9 +19,7 @@ const OPEN_TEXT_COLOR = "#111"
 const CROSS_TEXT_COLOR = "#efefef"
 
 export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, imageCenterInfo }) => {
-    // TODO: remove this check after toggle layers button is implemented
-    const layersToBeShown = useShowLayersFlag()
-    if (!layersToBeShown) return <></>
+    if (!layers) return <></>
 
     const lang = useRecoilValue(systemLanguageState)
     const labels = getLabels(layers, rotate)
