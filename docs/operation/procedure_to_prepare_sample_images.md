@@ -68,10 +68,12 @@ id_of_package
     |   |- c19.webp
     |
     |- jp2.zip
-        |- o1.jp2
-        |- o19.jp2
-        |- c1.jp2
-        |- c19.jp2
+    |   |- o1.jp2
+    |   |- o19.jp2
+    |   |- c1.jp2
+    |   |- c19.jp2
+    |
+    |- layers.json
 ```
 
 ## 薄片写真の撮影
@@ -228,3 +230,7 @@ Rhyoliteサンプルの定義として以下は `category.json` と整合的で�
 ## 画像データの変換
 
 必要であれば、画像変換ツール([python script (準備中)](../../cli/make_package.md))を使用し、画像フォーマットを変換したり、ファイルサイズを縮小したりする。
+
+## サンプル画像上にレイヤー表示する追加情報
+
+`layers.json`として定義する。詳細は[このドキュメント](/docs/design/spec_for_layer_on_the_viewer.md)を参照。

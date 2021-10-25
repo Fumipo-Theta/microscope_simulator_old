@@ -1,49 +1,57 @@
-import { OverlayLabel, SampleLayers, SampleOverlayKey, ItemLocation, WithMode, OverlayAnnotation } from "@src/js/type/sample_overlay"
+import { OverlayLabel, SampleLayers, SampleLayerKey, ItemLocation, WithMode, OverlayAnnotation, OverlayImage } from "@src/js/type/sample_overlay"
 import { I18nMap, ImageCenterInfo, Language } from "@src/js/type/entity"
 
-export function calcRelativePosition(pos: ItemLocation, imageCenterInfo: ImageCenterInfo, viewerSize) {
+export function calcRelativePosition(pos: ItemLocation, imageCenterInfo: ImageCenterInfo, viewerSize, originalRadius) {
     const radius = imageCenterInfo.imageRadius
     const posFromCenter = [
-        (pos[SampleOverlayKey.X] - imageCenterInfo.rotateCenterToRight) / radius,
-        (pos[SampleOverlayKey.Y] - imageCenterInfo.rotateCenterToBottom) / radius
+        (pos[SampleLayerKey.X] - imageCenterInfo.rotateCenterToRight) / radius,
+        (pos[SampleLayerKey.Y] - imageCenterInfo.rotateCenterToBottom) / radius
     ]
 
     return {
         left: (posFromCenter[0] / 2 + 0.5) * viewerSize,
-        top: (posFromCenter[1] / 2 + 0.5) * viewerSize
+        top: (posFromCenter[1] / 2 + 0.5) * viewerSize,
+        magnify: originalRadius / radius
     }
 }
 
-export function calcToBeShown(isCrossed, appearsIn) {
-    return (appearsIn === "both") ||
-        (appearsIn === "crossed" && isCrossed) ||
-        (appearsIn === "open" && !isCrossed)
-}
-
-export function calcToBeShownWhenMessageExists(isCrossed, lang, appearsIn, message: WithMode<any>) {
+export function calcToBeShown(isCrossed, appearsIn, rotate, appearsDuring) {
     const appear = (appearsIn === "both") ||
         (appearsIn === "crossed" && isCrossed) ||
         (appearsIn === "open" && !isCrossed)
-    const exists = isCrossed
-        ? message?.[SampleOverlayKey.InCross]?.[lang]
-        : message?.[SampleOverlayKey.InOpen]?.[lang]
-    return appear && exists
+    if (!appear) return false
+
+    const inRange = appearsDuringInRange(rotate, appearsDuring)
+    return inRange
 }
 
-export function toBeAppear(rotate: number, appearsIn: Array<[number, number]>): boolean {
-    return appearsIn.filter(([ini, fin]) => ini < rotate && rotate < fin).length > 0
+export function calcToBeShownWhenMessageExists(isCrossed, lang, appearsIn, message: WithMode<any>, rotate, appearsDuring) {
+    const appear = (appearsIn === "both") ||
+        (appearsIn === "crossed" && isCrossed) ||
+        (appearsIn === "open" && !isCrossed)
+    if (!appear) false
+    const exists = isCrossed
+        ? message?.[SampleLayerKey.InCross]?.[lang]
+        : message?.[SampleLayerKey.InOpen]?.[lang]
+    if (!exists) return false
+    const inRange = appearsDuringInRange(rotate, appearsDuring)
+    return inRange
+}
+
+function appearsDuringInRange(rotate, appearsDuring) {
+    return appearsDuring.filter(([ini, fin]) => ini <= rotate && rotate <= fin).length > 0
 }
 
 export function selectByMode<T>(withMode: WithMode<T>, isCrossed: boolean, fallbackOpen: T, fallbackCross: T): T {
     return isCrossed
-        ? withMode?.[SampleOverlayKey.InCross] || fallbackCross
-        : withMode?.[SampleOverlayKey.InOpen] || fallbackOpen
+        ? withMode?.[SampleLayerKey.InCross] || fallbackCross
+        : withMode?.[SampleLayerKey.InOpen] || fallbackOpen
 }
 
 export function selectByModeAndLang<T>(withMode: WithMode<I18nMap<T>>, isCrossed: boolean, lang: Language): T | null {
     const content = isCrossed
-        ? withMode?.[SampleOverlayKey.InCross]
-        : withMode?.[SampleOverlayKey.InOpen]
+        ? withMode?.[SampleLayerKey.InCross]
+        : withMode?.[SampleLayerKey.InOpen]
 
     return content?.[lang]
 }
@@ -52,24 +60,34 @@ export function selectByLang<T>(content: I18nMap<T>, lang: Language, fallbackLan
     return content?.[lang] || content?.[fallbackLang]
 }
 
-export function getLabels(layers: SampleLayers, rotate: number): OverlayLabel[] {
-    if (!layers) return []
-
+export function getOverlays(layers: SampleLayers): OverlayImage[] {
     try {
-        return layers[SampleOverlayKey.Layers]
-            .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Labels] || [] : [])
+        return layers[SampleLayerKey.Layers]
+            .flatMap(layer => layer[SampleLayerKey.Overlays] || [])
     } catch {
         console.error("Failed to parse layers.json")
         return []
     }
 }
 
-export function getAnnotations(layers: SampleLayers, rotate: number): OverlayAnnotation[] {
+export function getLabels(layers: SampleLayers): OverlayLabel[] {
     if (!layers) return []
 
     try {
-        return layers[SampleOverlayKey.Layers]
-            .flatMap(layer => toBeAppear(rotate, layer[SampleOverlayKey.AppearsDuring]) ? layer[SampleOverlayKey.Annotations] || [] : [])
+        return layers[SampleLayerKey.Layers]
+            .flatMap(layer => layer[SampleLayerKey.Labels] || [])
+    } catch {
+        console.error("Failed to parse layers.json")
+        return []
+    }
+}
+
+export function getAnnotations(layers: SampleLayers): OverlayAnnotation[] {
+    if (!layers) return []
+
+    try {
+        return layers[SampleLayerKey.Layers]
+            .flatMap(layer => layer[SampleLayerKey.Annotations] || [])
     } catch {
         console.error("Failed to parse layers.json")
         return []

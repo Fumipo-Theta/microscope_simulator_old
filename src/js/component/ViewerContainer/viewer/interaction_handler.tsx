@@ -10,9 +10,11 @@ type Props = {
     isCrossed: boolean,
     rotate: number,
     imageCenterInfo: ImageCenterInfo,
+    originalRadius: number,
+    originalImageSize: { width: number, height: number },
 }
 
-export const InteractionHandler: React.FC<Props> = ({ viewerSize, _ref, layers, isCrossed, rotate, imageCenterInfo }) => {
+export const InteractionHandler: React.FC<Props> = ({ viewerSize, _ref, rotate, ...childProps }) => {
     const style = {
         width: viewerSize,
         height: viewerSize,
@@ -22,8 +24,8 @@ export const InteractionHandler: React.FC<Props> = ({ viewerSize, _ref, layers, 
         transform: `rotate(${-rotate}deg)`,
         overflow: "hidden",
     }
-    
+
     return <div ref={_ref} style={{ position: "absolute", ...style }}>
-        <Layer layers={layers} viewerSize={viewerSize} rotate={rotate} isCrossed={isCrossed} imageCenterInfo={imageCenterInfo} />
+        <Layer viewerSize={viewerSize} rotate={rotate} {...childProps} />
     </div>
 }

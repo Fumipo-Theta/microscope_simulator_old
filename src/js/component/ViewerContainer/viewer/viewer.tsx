@@ -47,6 +47,8 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
     const [handler, setHandler] = useState<HTMLDivElement>(null)
     const [rotate, setRotate] = useState(0)
     const [imageCenterInfo, setImageCenterInfo] = useState(getImageCenterInfo(sample.manifest))
+    const originalRadius = getImageCenterInfo(sample.manifest).imageRadius
+    const originalImageSize = { width: sample.manifest.image_width, height: sample.manifest.image_height }
     const state = useRef<UiState>({
         touching: false,
         isRotateClockwise: true,
@@ -73,7 +75,12 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
             .then(imageMap => updateImageSrc(rotationManager.getRequiredImageNumber(), imageMap, supportedImage))
             .then(setImageSource)
             .then(() => {
+                // Necessary to reduce flicker
                 state.current.rotate = 359.9
+            })
+            .then(() => {
+                setRotate(0)
+                state.current.rotate = 0
                 state.current.canRotate = true
             })
             .catch(console.log)
@@ -118,6 +125,7 @@ export const Viewer: React.FC<ViewerProps> = ({ width, height, sample, layers })
             <canvas ref={ref} width={viewerSize} height={viewerSize} style={{ borderRadius: "50%", }} />
             <InteractionHandler _ref={handlerRef} viewerSize={viewerSize} layers={layers}
                 rotate={state.current.rotate} imageCenterInfo={state.current.imageCenterInfo} isCrossed={!isOpenNicol}
+                originalRadius={originalRadius} originalImageSize={originalImageSize}
             />
         </div>
     </div>

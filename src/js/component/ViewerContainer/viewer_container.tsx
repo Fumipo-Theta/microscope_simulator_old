@@ -8,6 +8,7 @@ import { windowInnerSizeState } from "@src/js/state/atom/window_inner_size_state
 import { samplePackageState } from "@src/js/state/atom/sample_package_state"
 import { sampleLayersState } from "@src/js/state/atom/sample_layers_state"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
+import { sampleOverLayMapState } from "@src/js/state/atom/sample_overlay_map_state"
 import { SamplePackage, Manifest, Language } from "@src/js/type/entity"
 import { withFallbackLanguage } from "@src/js/util/language_util"
 import { AnnotationContent } from "@src/js/component/ViewerContainer/viewer/layer/annotation/annotation"
@@ -51,6 +52,7 @@ const DescriptionContainer: React.FC<DescriptionProps> = ({ sample }) => {
 export const ViewerContainer: React.FC = () => {
     const currentSample = useRecoilValue(samplePackageState)
     const currentLayers = useRecoilValue(sampleLayersState)
+    useRecoilValue(sampleOverLayMapState)
     const mainLayerProps = {
         ...useRecoilValue(windowInnerSizeState),
         sample: currentSample,

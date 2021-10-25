@@ -23,12 +23,11 @@
 - レイヤーはJSON形式で表現する
 - オーバーレイ画像は透過に対応する必要がある
   - ラスター形式(PNG)とベクター形式(SVG)に対応することとする
-- レイヤーの中でオーバーレイ画像は, 画像へのURL(または相対パス)で指定する
+- レイヤーの中でオーバーレイ画像は, 画像へのパス(サンプル画像パッケージ内の相対パス)で指定する
 - 前提として, オーバーレイ画像は薄片写真と同じピクセルサイズで, 回転中心の座標も一致しているものとする
 - ラベルテキストと注釈の表示位置は, 回転角0°の薄片画像上の座標で指定する
-  - 画像の左上を基準としたx・y座標で指定する
-- 注釈のメッセージは, 薄片画像の説明を上書きして表示する
-  - テキストボックスを増やすと画面が煩雑になるため
+  - 画像の左上を基準とした右方向・下方向を正とする, x・y座標で指定する
+- 注釈のメッセージは, 薄片画像の外部に表示する
 - 注釈のメッセージはHTMLとする
   - ハイパーリンクを含められるようにするため
   - 文書のスタイリングを可能にする余地を残すため
@@ -47,49 +46,54 @@
 
 ### Layer
 
-+ `reference_rotation_degree`: 0 (number, required) - description: レイヤーの座標の基準となる薄片画像の回転角
-+ `appears_during`: [[0, 90], [180, 270]] (array, required) - description: レイヤーを表示する薄片画像の回転角の範囲の配列。角度は反時計回りに数える
-+ `overlay` (optional) - オーバーレイ画像に関する情報
-    + `image_type`: png (enum, required) - 画像フォーマット
-      + png (string)
-      + svg (string)
-    + `image_source_url` (required) - オープン・クロスそれぞれで表示する画像のURLまたはパス。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須
-      + `in_open`: `path/to/overlay_for_open_nicols.png` (string, optional)
-      + `in_crossed`: `https://path.to/overlay_for_crossed_nicols.png` (string, optional)
++ `reference_rotation_degree`: `0` (number, required) - レイヤーの座標の基準となる薄片画像の回転角
++ `overlays` (array, optional) - オーバーレイ画像に関する情報
+  + object
+    + `appears_during`:`[[0, 90], [180, 270]]` (array, required) - レイヤーを表示する薄片画像の回転角の範囲の配列。角度は反時計回りに数える
+    + `appears_in`: `open` (enum, required) - オープン・クロス・両方のいずれのモードで表示するか
+      + `open`
+      + `crossed`
+      + `both`
+    + `image_type`: `png` (enum, required) - 画像フォーマット
+      + `png`
+      + `svg`
+    + `image_source`: `overlay_for_open_nicols.png` (string, required) - 画像のパス。
 + `labels` (array, optional) - 薄片画像上に表示する文字列に関する情報の配列
   + object
-    + `appears_in`: open (enum, required) - オープン・クロス・両方のいずれのモードで表示するか
-      + open (string)
-      + crossed (string)
-      + both (string)
-    + `position_from_left_top` (required) - 薄片画像の左上を基準とした文字列の座標。文字列を包含する長方形の中心の座標
-      + x: 500 (number, required)
-      + y: 450 (number, required)
-    + `text`: (object, required) - ラベルのテキスト
-      + ja: 斜長石 (string, optional)
-      + en: Plagioclase (string, optional)
-    + `color` (optional) - オープン・クロスそれぞれで表示するラベルの文字色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値が使用される
-      + `in_open`: #000000ff (string, optional)
-      + `in_crossed`: #ffffffff (string, optional)
+    + `appears_during`:`[[0, 90], [180, 270]]` (array, required) - レイヤーを表示する薄片画像の回転角の範囲の配列。角度は反時計回りに数える
+    + `appears_in`: `open` (enum, required) - オープン・クロス・両方のいずれのモードで表示するか
+      + `open`
+      + `crossed`
+      + `both`
+    + `position_from_left_top` (object, required) - 薄片画像の左上を基準とした文字列の座標。文字列を包含する長方形の中心の座標
+      + `x`: `500` (number, required)
+      + `y`: `450` (number, required)
+    + `text`: (object, required) - ラベルのテキスト。アプリの言語モードに対応する文言が設定されていない場合はラベルが表示されない
+      + `ja`: `斜長石` (string, optional)
+      + `en`: `Plagioclase` (string, optional)
+    + `color` (object, optional) - ラベルのオープン・クロスそれぞれにおける文字色。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値(in_open: `#000000ff`, in_crossed: `#ffffffff`)が使用される
+      + `in_open`: `#000000ff` (string, optional)
+      + `in_crossed`: `#ffffffff` (string, optional)
 + `annotations` (array, optional) - 薄片画像上に表示する注釈アイコンと, 注釈メッセージの情報の配列
   + object
-    + `appears_in`: both (enum, required) - オープン・クロス・両方のいずれのモードで表示するか
-      + open (string)
-      + crossed (string)
-      + both (string)
-    + `position_from_left_top` (required) - 薄片画像の左上を基準とした注釈アイコンの座標
-      + x: 100 (number, required)
-      + y: 200 (number, required)
-    + `icon_color` (string, optional) - オープン・クロスそれぞれで表示する注釈アイコンの塗りつぶし色。片方しかなければ, もう片方も同じ画像が使用される。どちらか片方は必須。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値が使用される
-      + `in_open`: #2196f3ff (string, optional)
-      + `in_crossed`: #FF3100ff (string, optional)
-    + `message` (object, required) - オープン・クロスそれぞれで表示する注釈メッセージの内容。片方しかなければ, もう片方も同じ内容が表示される。どちらか片方は必須。HTMLで表記可能
+    + `appears_during`:`[[0, 90], [180, 270]]` (array, required) - レイヤーを表示する薄片画像の回転角の範囲の配列。角度は反時計回りに数える
+    + `appears_in`: `open` (enum, required) - オープン・クロス・両方のいずれのモードで表示するか
+      + `open`
+      + `crossed`
+      + `both`
+    + `position_from_left_top` (object, required) - 薄片画像の左上を基準とした注釈アイコンの座標
+      + `x`: `100` (number, required)
+      + `y`: `200` (number, required)
+    + `icon_color` (object, optional) - 注釈アイコンのオープン・クロスそれぞれにおける塗りつぶし色。16進数のRGBA形式で表す。指定されなければアプリのデフォルト値(in_open: `#000000ff`, in_crossed: `#ffffffff`)が使用される
+      + `in_open`: `#2196f3ff` (string, optional)
+      + `in_crossed`: `#FF3100ff` (string, optional)
+    + `message` (object, required) - オープン・クロスそれぞれで表示する注釈メッセージの内容。アプリの言語モードに対応する文言が設定されていない場合は注釈アイコンが表示されない。HTMLで表記可能
       + `in_open`: (object, optional)
-        + ja: `画像上の注釈の説明。HTML文字列を使用可能` (string, optional)
-        + en: `Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.` (string, optional)
+        + `ja`: `画像上の注釈の説明。HTML文字列を使用可能` (string, optional)
+        + `en`: `Description of the point. Details are available <a href=\"https://path.to/details\">here</a>.` (string, optional)
       + `in_crossed`: (object, optional)
-        + ja: `画像上の注釈の説明。HTML文字列を使用可能` (string, optional)
-        + en: `Another text to be shown in crossed Nicols mode.` (string, optional)
+        + `ja`: `画像上の注釈の説明。HTML文字列を使用可能` (string, optional)
+        + `en`: `Another text to be shown in crossed Nicols mode.` (string, optional)
 
 
 ## 複数のレイヤーを表すJSONの例
@@ -99,59 +103,66 @@
 
 ```json
 {
-    "layers":[
+  "layers":[
+    {
+      "reference_rotation_degree": 0,
+      "overlay": [
         {
-            "reference_rotation_degree": 0,
-            "appears_during": [
-                [0, 90],
-                [180, 270]
-            ],
-            "overlay": {
-                "image_type": "png",
-                "image_source_url": {
-                    "in_open": "path/to/overlay_for_open_nicols.png",
-                    "in_crossed": "https://path.to/overlay_for_crossed_nicols.png"
-                }
-            },
-            "labels": [
-                {
-                    "appears_in": "open",
-                    "position_from_left_top": {
-                        "x": 500,
-                        "y": 450
-                    },
-                    "text": {
-                      "ja": "斜長石",
-                      "en": "Plagioclase"
-                    },
-                    "color": {
-                        "in_open": "#000000ff"
-                    }
-                }
-            ],
-            "annotations": [
-                {
-                    "appears_in": "both",
-                    "position_from_left_top": {
-                        "x": 100,
-                        "y": 200
-                    },
-                    "icon_color": {
-                        "in_open": "#2196f3ff",
-                        "in_crossed": "#FF3100ff"
-                    },
-                    "message": {
-                        "in_open": {
-                          "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
-                        },
-                        "in_crossed": {
-                          "en": "Another text to be shown in crossed Nicols mode."
-                        }
-                    }
-                }
-            ]
+          "appears_during": [
+            [0, 90],
+            [180, 270]
+          ],
+          "image_type": "png",
+          "appears_in": "open",
+          "image_source": "path/to/overlay_for_open_nicols.png"
         }
-    ]
+      ],
+      "labels": [
+        {
+          "appears_during": [
+            [0, 180]
+          ],
+          "appears_in": "open",
+          "position_from_left_top": {
+              "x": 500,
+              "y": 450
+          },
+          "text": {
+            "ja": "斜長石",
+            "en": "Plagioclase"
+          },
+          "color": {
+              "in_open": "#000000ff"
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "appears_during": [
+            [0, 180]
+          ],
+          "appears_in": "both",
+          "position_from_left_top": {
+              "x": 100,
+              "y": 200
+          },
+          "icon_color": {
+              "in_open": "#2196f3ff",
+              "in_crossed": "#FF3100ff"
+          },
+          "message": {
+              "in_open": {
+                "ja": "画像上の注釈の説明。HTML文字列を使用可能",
+                "en": "Description of the point. Details are available <a href=\"https://pathtodetails\">here<a>."
+              },
+              "in_crossed": {
+                "en": "Another text to be shown in crossed Nicols mode."
+              }
+          }
+        }
+      ]
+    }
+  ]
 }
 ```
 
