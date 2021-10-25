@@ -9,8 +9,12 @@
                     "image_source": "overlay-1.png",
                     "appears_during": [
                         [
+                            315,
+                            360
+                        ],
+                        [
                             0,
-                            90
+                            45
                         ]
                     ]
                 },
@@ -22,6 +26,25 @@
                         [
                             0,
                             180
+                        ]
+                    ]
+                },
+                {
+                    "image_type": "png",
+                    "appears_in": "crossed",
+                    "image_source": "overlay/overlay-3.png",
+                    "appears_during": [
+                        [
+                            0,
+                            45
+                        ],
+                        [
+                            90,
+                            135
+                        ],
+                        [
+                            180,
+                            225
                         ]
                     ]
                 }
@@ -46,7 +69,10 @@
                             180,
                             270
                         ]
-                    ]
+                    ],
+                    "color": {
+                        "in_open": "#ff00ff"
+                    }
                 },
                 {
                     "appears_in": "crossed",
@@ -66,7 +92,10 @@
                             180,
                             270
                         ]
-                    ]
+                    ],
+                    "color": {
+                        "in_crossed": "#00ffff"
+                    }
                 },
                 {
                     "appears_in": "both",
