@@ -1,23 +1,21 @@
 .nicolToggler {
-    margin: 10px 0;
-    padding: 0 10px;
     max-width: 100%;
     display: flex;
     justify-content: center;
 }
 
-.toggleButtonInput{
-  display: none;
+.toggleButtonInput {
+    display: none;
 }
 
 .toggleButtonLabel,
 .toggleButtonLabel::before,
-.toggleButtonLabel::after{
-     -webkit-transition: all .2s;
+.toggleButtonLabel::after {
+    -webkit-transition: all .2s;
     transition: all .2s;
 }
 
-.toggleButtonLabel{
+.toggleButtonLabel {
     display: inline-block;
     position: relative;
     width: 120px;
@@ -28,7 +26,7 @@
     box-shadow: 5px 3px 5px #afafaf, -5px -3px 5px #ffffff, 2px 2px 2px #2c2c2c inset, -1px -1px 2px #ffffff inset;
 }
 
-.toggleButtonLabel::before{
+.toggleButtonLabel::before {
     display: block;
     content: attr(data-off-label);
     position: absolute;
@@ -39,7 +37,7 @@
     color: #dfdfdf;
 }
 
-.toggleButtonLabel::after{
+.toggleButtonLabel::after {
     content: "";
     position: absolute;
     top: 1px;
@@ -53,7 +51,7 @@
     transform: rotate(-360deg);
 }
 
-.toggleButtonInput:checked+.toggleButtonLabel{
+.toggleButtonInput:checked+.toggleButtonLabel {
     background-color: #efefef;
     box-shadow: 5px 3px 5px #afafaf, -5px -3px 5px #ffffff, 2px 2px 2px #afafaf inset, -1px -1px 2px #ffffff inset;
 }

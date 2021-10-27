@@ -13,7 +13,7 @@ export const useHash = (): PackageId => {
 }
 
 export const useShowLayersFlag = (): boolean => {
-    return (parseQueryParams(location.search).annotation || "false") === "true"
+    return (parseQueryParams(location.search).annotation || "true") !== "false"
 }
 
 const parseQueryParams = (queryString): QueryParams => {

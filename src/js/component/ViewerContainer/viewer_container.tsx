@@ -13,6 +13,8 @@ import { SamplePackage, Manifest, Language } from "@src/js/type/entity"
 import { withFallbackLanguage } from "@src/js/util/language_util"
 import { AnnotationContent } from "@src/js/component/ViewerContainer/viewer/layer/annotation/annotation"
 import styles from "./index.module.css"
+import { LayersTogglerButton } from "@src/js/component/ViewerContainer/layers_toggler/layers_toggler_button"
+import { sampleLayersStatusState } from "@src/js/state/atom/sample_layers_status_state"
 
 type DescriptionProps = {
     sample: SamplePackage
@@ -56,17 +58,22 @@ export const ViewerContainer: React.FC = () => {
     const mainLayerProps = {
         ...useRecoilValue(windowInnerSizeState),
         sample: currentSample,
-        layers: currentLayers,
+        layers: useRecoilValue(sampleLayersStatusState) ? currentLayers : null,
     }
     return (
         <>
             {currentSample ?
-                <><div className={styles.viewerLayerContainer}>
-                    <Viewer {...mainLayerProps} />
-                    <SampleScale />
-                    <NicolToggler />
-                </div>
+                <>
                     <AnnotationContent />
+                    <div className={styles.viewerLayerContainer}>
+                        <Viewer {...mainLayerProps} />
+                        <SampleScale />
+                        <div className={styles.buttonsWrapper}>
+                            <div></div>
+                            <NicolToggler />
+                            <LayersTogglerButton />
+                        </div>
+                    </div>
                     <DescriptionContainer sample={currentSample} />
                 </> :
                 <Welcome />
