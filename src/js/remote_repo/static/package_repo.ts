@@ -4,6 +4,7 @@ import { PackageId, SampleImageType, SamplePackageZipped } from "@src/js/type/en
 import { RetrieveLayers, RetrieveSample, QueryLastModified } from "@src/js/type/repo"
 import unzipper from "@src/js/unzipper"
 import extractFile from "@src/js/extractFile"
+import { isValid as layersIsValid } from "@src/js/type/sample_overlay"
 
 
 /**
@@ -53,9 +54,9 @@ export const getImagesLastModified: QueryLastModified = async (packageId, desire
 
 export const retrieveSampleLayersJson: RetrieveLayers = async (packageId) => {
     const jsonUrl = staticSettings.getImageDataPath(packageId) + "layers.json"
-    const layers = await fetch(jsonUrl).then(response => response.json())
+    const layers = await fetch(jsonUrl).then(response => response.json()).catch(parseError => { })
 
-    return layers
+    return layersIsValid(layers) ? layers : null
 }
 
 const resolveImagePackage = (packageId: PackageId, desiredFormat: SampleImageType, manifest): [string, SampleImageType] => {

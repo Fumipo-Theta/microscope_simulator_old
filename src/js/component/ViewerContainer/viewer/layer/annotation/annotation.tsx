@@ -5,6 +5,7 @@ import { WithMode } from "@src/js/type/sample_overlay"
 import { AnnotationContentState, AnnotationActiveKeyState } from "@src/js/state/atom/annotation_content_state"
 import { isOpenNicolState } from "@src/js/state/atom/nicol_state"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
+import { sampleLayersState } from "@src/js/state/atom/sample_layers_state";
 import { selectByMode, selectByModeAndLang } from "../util"
 import styles from "./index.module.css"
 
@@ -65,6 +66,7 @@ export const AnnotationContent: React.FC = () => {
     const lang = useRecoilValue(systemLanguageState)
     const content = useRecoilValue(AnnotationContentState)
     const html = selectByModeAndLang(content, !isOpen, lang)
+    const currentLayer = useRecoilValue(sampleLayersState)
     const setAnnotationContent = useSetRecoilState(AnnotationContentState)
     const [_, setActiveAnnotation] = useRecoilState(AnnotationActiveKeyState)
     const close = (e) => {
@@ -76,8 +78,8 @@ export const AnnotationContent: React.FC = () => {
         if (ref) {
             ref.current.innerHTML = html || ""
         }
-    }, [html, isOpen])
-    const className = html ? styles.annotationContentContainer + " " + styles.active : styles.annotationContentContainer
+    }, [html])
+    const className = (html && currentLayer) ? styles.annotationContentContainer + " " + styles.active : styles.annotationContentContainer
     const buttonColor = content ? "#efefef" : "#bbbbbb"
 
     return <div className={className}>
