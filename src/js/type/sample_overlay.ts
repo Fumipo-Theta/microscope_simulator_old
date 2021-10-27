@@ -77,3 +77,7 @@ export type OverlayAnnotation = {
     [SampleLayerKey.AnnotationIconColor]?: WithMode<string>
     [SampleLayerKey.AnnotationMessage]: WithMode<I18nMap<string>>
 }
+
+export function isValid(json: any): boolean {
+    return json?.[SampleLayerKey.Layers]?.length > 0 || false
+}

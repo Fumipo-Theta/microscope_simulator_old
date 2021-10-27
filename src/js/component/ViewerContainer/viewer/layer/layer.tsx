@@ -1,4 +1,5 @@
 import React from "react"
+import { useRecoilValue } from "recoil"
 import { SampleLayers, SampleLayerKey } from "@src/js/type/sample_overlay"
 import { ImageCenterInfo } from "@src/js/type/entity"
 import { systemLanguageState } from "@src/js/state/atom/system_language_state"
@@ -6,7 +7,6 @@ import { calcRelativePosition, getOverlays, getLabels, getAnnotations, calcToBeS
 import { Overlay } from "./overlay/overlay"
 import { Label } from "./label/label"
 import { Annotation } from "./annotation/annotation"
-import { useRecoilValue } from "recoil"
 
 type Props = {
     viewerSize: number,
@@ -44,6 +44,20 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
             })
         }
         {
+            ...labels.map((label, i) => {
+                const pos = calcRelativePosition(label[SampleLayerKey.LabelPositionFromLeftTop], imageCenterInfo, viewerSize, originalRadius)
+                return <Label
+                    key={`sample-overlay-label-${i}`}
+                    left={pos.left}
+                    top={pos.top}
+                    text={selectByLang(label[SampleLayerKey.LabelText], lang, "en")}
+                    rotate={rotate}
+                    toBeShown={calcToBeShown(isCrossed, label[SampleLayerKey.AppearsIn], rotate, label[SampleLayerKey.AppearsDuring])}
+                    color={selectByMode(label[SampleLayerKey.LabelColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
+                />
+            })
+        }
+        {
             ...annotations.map((annotation, i) => {
                 const pos = calcRelativePosition(annotation[SampleLayerKey.AnnotationPositionFromLeftTop], imageCenterInfo, viewerSize, originalRadius)
                 const text = annotation[SampleLayerKey.AnnotationMessage]
@@ -57,20 +71,6 @@ export const Layer: React.FC<Props> = ({ viewerSize, layers, rotate, isCrossed, 
                     rotate={rotate}
                     toBeShown={calcToBeShownWhenMessageExists(isCrossed, lang, appearsIn, text, rotate, annotation[SampleLayerKey.AppearsDuring])}
                     color={selectByMode(annotation[SampleLayerKey.AnnotationIconColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
-                />
-            })
-        }
-        {
-            ...labels.map((label, i) => {
-                const pos = calcRelativePosition(label[SampleLayerKey.LabelPositionFromLeftTop], imageCenterInfo, viewerSize, originalRadius)
-                return <Label
-                    key={`sample-overlay-label-${i}`}
-                    left={pos.left}
-                    top={pos.top}
-                    text={selectByLang(label[SampleLayerKey.LabelText], lang, "en")}
-                    rotate={rotate}
-                    toBeShown={calcToBeShown(isCrossed, label[SampleLayerKey.AppearsIn], rotate, label[SampleLayerKey.AppearsDuring])}
-                    color={selectByMode(label[SampleLayerKey.LabelColor], isCrossed, OPEN_TEXT_COLOR, CROSS_TEXT_COLOR)}
                 />
             })
         }
