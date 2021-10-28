@@ -4,6 +4,7 @@
             "reference_rotation_degree": 0,
             "overlays": [
                 {
+                    "_note": "Polygon filled by light blue",
                     "image_type": "png",
                     "appears_in": "open",
                     "image_source": "overlay-1.png",
@@ -19,6 +20,7 @@
                     ]
                 },
                 {
+                    "_note": "Polygon surrounded by red line",
                     "image_type": "png",
                     "appears_in": "both",
                     "image_source": "overlay/overlay-2.png",
@@ -30,6 +32,7 @@
                     ]
                 },
                 {
+                    "_note": "Green arrow",
                     "image_type": "png",
                     "appears_in": "crossed",
                     "image_source": "overlay/overlay-3.png",
@@ -121,7 +124,7 @@
             ],
             "annotations": [
                 {
-                    "appears_in": "open",
+                    "appears_in": "both",
                     "position_from_left_top": {
                         "x": 440,
                         "y": 440
@@ -142,14 +145,17 @@
                     },
                     "message": {
                         "in_open": {
-                            "en": "Description of the point. Details are available <a href=\"https://path.to/details\">here</a>."
+                            "ja": "アノテーションメッセージ (オープンニコル用)",
+                            "en": "Description of the point in open Nicol mode."
                         },
                         "in_crossed": {
+                            "ja": "アノテーションメッセージ (クロスニコル用)",
                             "en": "Another text to be shown in crossed Nicols mode."
                         }
                     }
                 },
                 {
+                    "_note": "Example of showing a long message with using HTML tags",
                     "appears_in": "both",
                     "position_from_left_top": {
                         "x": 540,
@@ -171,10 +177,12 @@
                     },
                     "message": {
                         "in_open": {
-                            "ja": "<h1>タイトル</h1> Description of the point. Details are available <a href=\"https://path.to/details\">here</a>. <b>太字</b> <br> <i>斜体</i><br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>"
+                            "ja": "<h1>タイトル</h1> アノテーションメッセージ。HTMLタグを使用できるので<a href=\"./\">ハイパーリンク(ホームへ戻る)</a>も使用可能。 <b>太字</b> <br> <i>斜体</i><br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>",
+                            "en": "<h1>Title</h1> Message of the annotation。We can use HTML tags, so we can put a <a href=\"./\">hyperlink (back to the home)</a>. <b>bold</b> <br> <i>italic</i><br><br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>"
                         },
                         "in_crossed": {
-                            "en": "Another text to be shown in crossed Nicols mode."
+                            "ja": "<h1>タイトル</h1> アノテーションメッセージ。HTMLタグを使用できるので<a href=\"./\">ハイパーリンク(ホームへ戻る)</a>も使用可能。 <b>太字</b> <br> <i>斜体</i><br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>なにか長い文章<br>",
+                            "en": "<h1>Title</h1> Message of the annotation。We can use HTML tags, so we can put a <a href=\"./\">hyperlink (back to the home)</a>. <b>bold</b> <br> <i>italic</i><br><br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>Long contents<br>"
                         }
                     }
                 },

@@ -1,4 +1,5 @@
 import React from "react"
+import styles from "./index.module.css"
 
 type LabelProps = {
     text: string,
@@ -10,19 +11,14 @@ type LabelProps = {
 }
 
 export const Label: React.FC<LabelProps> = ({ text, top, left, rotate, toBeShown, color }) => {
-    if (!toBeShown) return <></>
-
     const dynamicStyle = {
         top: top,
         left: left,
         transform: `rotate(${rotate}deg)`,
         transformOrigin: "top left",
         color: color,
-        opacity: toBeShown ? 1 : 0
     }
-    const style = {
-        fontSize: "1.25rem",
-        width: "fit-content",
-    }
-    return <div style={{ position: "absolute", ...dynamicStyle, ...style }}>{text}</div>
+    const className = `${styles.label} ${toBeShown ? styles.active : ""}`
+
+    return <div className={className} style={{ position: "absolute", ...dynamicStyle }}>{text}</div>
 }

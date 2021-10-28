@@ -64,7 +64,6 @@ export const ViewerContainer: React.FC = () => {
         <>
             {currentSample ?
                 <>
-                    <AnnotationContent />
                     <div className={styles.viewerLayerContainer}>
                         <Viewer {...mainLayerProps} />
                         <SampleScale />
@@ -74,6 +73,7 @@ export const ViewerContainer: React.FC = () => {
                             <LayersTogglerButton />
                         </div>
                     </div>
+                    <AnnotationContent />
                     <DescriptionContainer sample={currentSample} />
                 </> :
                 <Welcome />
