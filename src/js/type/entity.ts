@@ -157,5 +157,5 @@ type Bool = "true" | "false"
 export interface QueryParams {
     sample_list?: string,
     category?: string,
-    annotation?: Bool
+    layers?: Bool
 }

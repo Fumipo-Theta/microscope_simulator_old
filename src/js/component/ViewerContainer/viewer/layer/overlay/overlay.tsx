@@ -1,6 +1,7 @@
 import { sampleOverLayMapState } from "@src/js/state/atom/sample_overlay_map_state"
 import React from "react"
 import { useRecoilValue } from "recoil"
+import styles from "./index.module.css"
 
 type OverlayProps = {
     toBeShown: boolean,
@@ -21,10 +22,9 @@ export const Overlay: React.FC<OverlayProps> = ({ toBeShown, srcKey, top, left, 
     const dynamicStyle = {
         top: top,
         left: left,
-        borderRadius: "50%",
         width: `${magnify * 100}%`,
-        opacity: toBeShown ? 1 : 0
     }
+    const className = `${styles.overlay} ${toBeShown ? styles.active : ""}`
 
-    return <img src={dataUrl} style={{ position: "absolute", ...dynamicStyle }} onClick={preventDefault} onMouseMove={preventDefault} />
+    return <img className={className} src={dataUrl} style={{ position: "absolute", ...dynamicStyle }} onClick={preventDefault} onMouseMove={preventDefault} />
 }

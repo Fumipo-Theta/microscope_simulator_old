@@ -1,0 +1,12 @@
+.label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: fit-content;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.active {
+    opacity: 1;
+    transition: opacity 0.25s;
+}
