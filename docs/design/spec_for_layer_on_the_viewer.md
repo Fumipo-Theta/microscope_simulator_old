@@ -109,7 +109,7 @@
   "layers":[
     {
       "reference_rotation_degree": 0,
-      "overlay": [
+      "overlays": [
         {
           "_note": "message for management",
           "appears_during": [
