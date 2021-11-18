@@ -87,6 +87,18 @@ export const ContactFormCard: React.FC<ContactFormProps> = (_props) => {
                     <div className={styles.submitButton} onClick={sendContactMessage}>Submit</div>
                 </form>
             </div>
+
+            <script type="text/javascript" defer src="js/lib/axios/dist/axios.standalone.js"></script>
+            <script type="text/javascript" defer src="js/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+            <script type="text/javascript" defer src="js/lib/CryptoJS/rollups/sha256.js"></script>
+            <script type="text/javascript" defer src="js/lib/CryptoJS/components/hmac.js"></script>
+            <script type="text/javascript" defer src="js/lib/CryptoJS/components/enc-base64.js"></script>
+            <script type="text/javascript" defer src="js/lib/url-template/url-template.js"></script>
+            <script type="text/javascript" defer src="js/lib/apiGatewayCore/sigV4Client.js"></script>
+            <script type="text/javascript" defer src="js/lib/apiGatewayCore/apiGatewayClient.js"></script>
+            <script type="text/javascript" defer src="js/lib/apiGatewayCore/simpleHttpClient.js"></script>
+            <script type="text/javascript" defer src="js/lib/apiGatewayCore/utils.js"></script>
+            <script type="text/javascript" defer src="js/lib/apigClient.js"></script>
         </>
     )
 }
