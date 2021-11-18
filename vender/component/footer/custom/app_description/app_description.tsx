@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AppLogo } from '../../misc/app_logo/app_logo'
+import { AppLogo } from '@src/js/component/misc/app_logo/app_logo'
 import styles from "./index.module.css"
 
 type AppDescriptionProps = {
