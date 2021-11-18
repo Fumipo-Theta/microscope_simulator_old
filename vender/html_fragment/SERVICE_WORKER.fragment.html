@@ -1,0 +1,79 @@
+<div id="update_notification" class="align-center inactive">
+    <div class="align-center">
+        <a id="reload" class="align-center">
+            <div>
+                <img src="./images/SCOPin_image_home_logo.png" width="50px" height="50px">
+            </div>
+            <div>
+                New version is found. <br>
+                <u>Click</u> to complete update !
+            </div>
+        </a>
+    </div>
+</div>
+
+<script>
+    let newWorker
+    let refeshing
+    document.querySelector("#reload").addEventListener(
+        "click",
+        () => {
+            if (newWorker) {
+                newWorker.postMessage({ "action": "skipWaiting" })
+            }
+        }
+    )
+    window.addEventListener('load', function () {
+
+        if (navigator.serviceWorker) {
+            navigator.serviceWorker.addEventListener(
+                "controllerchange",
+                () => {
+                    //if (refreshing) return;
+                    window.location.reload()
+                    refreshing = true
+                }
+            )
+
+            navigator.serviceWorker.register(
+                './service_worker.js',
+                //{ scope: '.', updateViaCache: "none" }
+            )
+                .then(function (registration) {
+                    if (registration.waiting && registration.waiting.state == "installed") {
+                        newWorker = registration.waiting
+                        let notification = document.querySelector("#update_notification")
+                        notification.classList.remove("inactive")
+                    }
+
+                    registration.onupdatefound = () => {
+                        console.log("update found")
+                        newWorker = registration.installing
+                        newWorker.addEventListener(
+                            "statechange", () => {
+                                switch (newWorker.state) {
+                                    case "installed":
+                                        console.log("new worker installed ")
+                                        if (navigator.serviceWorker.controller) {
+                                            let notification = document.querySelector("#update_notification")
+                                            notification.classList.remove("inactive")
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        )
+                    }
+
+                    registration.update();
+                })
+                .then(function (registration) {
+                    console.log("serviceWorker registed.");
+                })
+                .catch(function (error) {
+                    console.warn("serviceWorker error.", error);
+                });
+        }
+    });
+</script>

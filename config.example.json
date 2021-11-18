@@ -1,3 +1,5 @@
 {
-    "package_endpoint": "/example_image_package_root"
+    "package_endpoint": "/image_package_root",
+    "additional_meta": "",
+    "tracking_script": ""
 }

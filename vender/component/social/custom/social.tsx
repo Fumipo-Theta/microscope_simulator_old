@@ -24,7 +24,7 @@ const snsMap = {
         generateHref: (hash, desc) => `http://line.me/R/msg/text/?${encodeURIComponent("SCOPin rock" + " " + myUrl(hash))}`
     }
 }
-export const Sharing: React.FC = () => {
+export const Social: React.FC = () => {
     return <div className={styles.wrapper}>
         {Object.values(snsMap).map(props => {
             return <SocialButton {...props} key={props.title} />

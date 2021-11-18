@@ -5,9 +5,10 @@ import { Window } from "./window/window"
 import { Navigation } from "./navigation/navigation"
 import { SampleListContainer } from "./sample_list/sample_list_container"
 import { AppWrapper } from "./app_wrapper/app_wrapper"
-import { Sharing } from "./sharing/sharing"
-import { Footer } from "./footer/footer"
+import AppConfig from "@vender/app.config"
 import styles from "./index.module.css"
+
+const { Social, Footer } = AppConfig
 
 type Props = {
 }
@@ -26,7 +27,7 @@ export const App: React.FC<Props> = (arg) => {
                                 </React.Suspense>
                                 <div className={styles.appWrapper}>
                                     <AppWrapper />
-                                    <Sharing />
+                                    <Social />
                                 </div>
                             </Route>
                         </Switch>
