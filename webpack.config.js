@@ -4,11 +4,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const webpack = require('webpack');
+const { config } = require('process');
 const version = process.env.npm_package_version;
 
 module.exports = (process_env, argv) => {
     const compileMode = argv.env.COMPILE_ENV == "prod" ? "production" : "development"
     const configJson = process.env.CONFIG_JSON ?? fs.readFileSync(`${__dirname}/config.example.json`, "utf-8")
+    const config = JSON.parse(configJson)
 
     console.log("compile mode: ", compileMode)
     console.log("config", configJson)
@@ -36,8 +38,28 @@ module.exports = (process_env, argv) => {
             }),
 
             new HtmlReplaceWebpackPlugin({
-                pattern: '@SERVICE_WORKER@',
+                pattern: '@ADDITIONAL_META@',
+                replacement: config?.additional_meta || "",
+            }),
+
+            new HtmlReplaceWebpackPlugin({
+                pattern: '@PRE_HOOKS_FRAGMENT@',
+                replacement: fs.readFileSync(`${__dirname}/vender/html_fragment/PRE_HOOKS.fragment.html`, "utf-8"),
+            }),
+
+            new HtmlReplaceWebpackPlugin({
+                pattern: '@POST_HOOKS_FRAGMENT@',
+                replacement: fs.readFileSync(`${__dirname}/vender/html_fragment/POST_HOOKS.fragment.html`, "utf-8"),
+            }),
+
+            new HtmlReplaceWebpackPlugin({
+                pattern: '@SERVICE_WORKER_FRAGMENT@',
                 replacement: fs.readFileSync(`${__dirname}/vender/html_fragment/SERVICE_WORKER.fragment.html`, "utf-8"),
+            }),
+
+            new HtmlReplaceWebpackPlugin({
+                pattern: '@TRACKING_SCRIPT@',
+                replacement: config?.tracking_script || "",
             }),
 
             new CopyPlugin({

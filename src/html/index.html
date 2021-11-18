@@ -14,16 +14,7 @@
 
     <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
     <title>SCOPin rock: polarizing microscope simulator</title>
-    <!--
-    <PageMap>
-        <DataObject type="thumbnail">
-            <Attribute name="src"
-                value="https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png" />
-            <Attribute name="width" value="130">
-                <Attribute name="height" value="130">
-        </DataObject>
-    </PageMap>
-    -->
+
     <meta name="thumbnail"
         content="https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png" />
     <meta name="description"
@@ -37,23 +28,11 @@
     <!--meta name="twitter:site" content="@xxxxxxxxx" /-->
     <meta name="twitter:card" content="summary" />
     <!--meta property="fb:admins" content="xxxxxxxx" /-->
-    <meta name="google-site-verification" content="-1sJ5n_gZ92tSdHs7KCPexogyau4A8MKl6WW3qe4gBk" />
+    @ADDITIONAL_META@
 </head>
 
 <body id="top" ontouchstart="">
-    <!-- TODO: should be removed from open source -->
-    <div id="fb-root"></div>
-    <script>
-        (function (d, s, id) {
-            if (location.hostname == 'localhost') return;
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = 'https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.2';
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
-
+    @PRE_HOOKS_FRAGMENT@
     <!-- Inline style for performance -->
     <style>
         :root {}
@@ -140,13 +119,10 @@
     </style>
 
     <div id="app"></div>
-
-    @SERVICE_WORKER@
+    @POST_HOOKS_FRAGMENT@
+    @SERVICE_WORKER_FRAGMENT@
 </body>
 
-<!-- TODO: should be removed from open source -->
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script defer src="https://www.googletagmanager.com/gtag/js?id=UA-134075472-1"></script>
-<!--script defer src="./js/lib/app_social_connection.js"></script -->
+@TRACKING_SCRIPT@
 
 </html>
