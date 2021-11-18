@@ -35,6 +35,11 @@ module.exports = (process_env, argv) => {
                 replacement: version,
             }),
 
+            new HtmlReplaceWebpackPlugin({
+                pattern: '@SERVICE_WORKER@',
+                replacement: fs.readFileSync(`${__dirname}/vender/html_fragment/SERVICE_WORKER.fragment.html`, "utf-8"),
+            }),
+
             new CopyPlugin({
                 patterns: [
                     { from: `${__dirname}/src/root`, to: outputPath + "/" },
@@ -74,7 +79,7 @@ module.exports = (process_env, argv) => {
                         search: "'@CONFIG_JSON@'",
                         replace: JSON.stringify(configJson),
                     }
-                }
+                },
             ]
         },
         resolve: {
