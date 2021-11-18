@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { AppLogo } from '@src/js/component/misc/app_logo/app_logo'
+import { AppLogo } from '@vender/component/app_logo/app_logo'
 import styles from "./index.module.css"
 
 type AppDescriptionProps = {
-    app_version: String
+    app_version: String,
 }
 
 export const AppDescription: React.FC<AppDescriptionProps> = ({ app_version }) => {

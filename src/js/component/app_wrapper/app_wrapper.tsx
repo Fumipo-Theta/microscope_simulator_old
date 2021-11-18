@@ -3,11 +3,15 @@ import { ViewerContainer } from "@src/js/component/ViewerContainer/viewer_contai
 import { ViewerContainerSuspend } from "@src/js/component/ViewerContainer/viewer_container_suspend"
 import styles from "./index.module.css"
 
-export const AppWrapper: React.FC = () => {
+type Props = {
+    AppLogo: React.FC
+}
+
+export const AppWrapper: React.FC<Props> = ({ AppLogo }) => {
     return (
         <div className={styles.appWrapper}>
             <React.Suspense fallback={<ViewerContainerSuspend />}>
-                <ViewerContainer />
+                <ViewerContainer AppLogo={AppLogo} />
             </React.Suspense>
         </div>
     )

@@ -51,7 +51,7 @@ const DescriptionContainer: React.FC<DescriptionProps> = ({ sample }) => {
     )
 }
 
-export const ViewerContainer: React.FC = () => {
+export const ViewerContainer: React.FC<{ AppLogo: React.FC }> = ({ AppLogo }) => {
     const currentSample = useRecoilValue(samplePackageState)
     const currentLayers = useRecoilValue(sampleLayersState)
     useRecoilValue(sampleOverLayMapState)
@@ -76,7 +76,7 @@ export const ViewerContainer: React.FC = () => {
                     <AnnotationContent />
                     <DescriptionContainer sample={currentSample} />
                 </> :
-                <Welcome />
+                <Welcome AppLogo={AppLogo} />
             }
         </>
     )

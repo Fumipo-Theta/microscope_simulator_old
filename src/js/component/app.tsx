@@ -8,7 +8,7 @@ import { AppWrapper } from "./app_wrapper/app_wrapper"
 import AppConfig from "@vender/app.config"
 import styles from "./index.module.css"
 
-const { Social, Footer } = AppConfig
+const { Social, Footer, AppLogo } = AppConfig
 
 type Props = {
 }
@@ -26,7 +26,7 @@ export const App: React.FC<Props> = (arg) => {
                                     <SampleListContainer ></SampleListContainer>
                                 </React.Suspense>
                                 <div className={styles.appWrapper}>
-                                    <AppWrapper />
+                                    <AppWrapper AppLogo={AppLogo} />
                                     <Social />
                                 </div>
                             </Route>
