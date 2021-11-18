@@ -68,6 +68,7 @@ module.exports = (process_env, argv) => {
                     { from: `${__dirname}/src/css`, to: outputPath + "/css" },
                     { from: `${__dirname}/src/images`, to: outputPath + "/images" },
                     { from: `${__dirname}/src/js/lib`, to: outputPath + "/js/lib" },
+                    { from: `${__dirname}/vender/images`, to: outputPath + "/images" },
                 ]
             })
         ],
