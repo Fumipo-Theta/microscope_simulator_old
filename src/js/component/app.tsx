@@ -6,8 +6,11 @@ import { Navigation } from "./navigation/navigation"
 import { SampleListContainer } from "./sample_list/sample_list_container"
 import { AppWrapper } from "./app_wrapper/app_wrapper"
 import { Sharing } from "./sharing/sharing"
-import { Footer } from "./footer/footer"
+//import { Footer } from "./footer/footer"
+import AppConfig from "@vender/app.config"
 import styles from "./index.module.css"
+
+const { Footer } = AppConfig
 
 type Props = {
 }
