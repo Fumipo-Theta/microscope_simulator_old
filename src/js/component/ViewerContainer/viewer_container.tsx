@@ -15,6 +15,7 @@ import { AnnotationContent } from "@src/js/component/ViewerContainer/viewer/laye
 import styles from "./index.module.css"
 import { LayersTogglerButton } from "@src/js/component/ViewerContainer/layers_toggler/layers_toggler_button"
 import { sampleLayersStatusState } from "@src/js/state/atom/sample_layers_status_state"
+import { IViewerContainerMessage, IWelcomeMessage } from "@src/js/type/message"
 
 type DescriptionProps = {
     sample: SamplePackage
@@ -51,7 +52,13 @@ const DescriptionContainer: React.FC<DescriptionProps> = ({ sample }) => {
     )
 }
 
-export const ViewerContainer: React.FC<{ AppLogo: React.FC }> = ({ AppLogo }) => {
+type Props = {
+    AppLogo: React.FC,
+    message: IViewerContainerMessage,
+    welcomeMessage: IWelcomeMessage,
+}
+
+export const ViewerContainer: React.FC<Props> = ({ AppLogo, message, welcomeMessage }) => {
     const currentSample = useRecoilValue(samplePackageState)
     const currentLayers = useRecoilValue(sampleLayersState)
     useRecoilValue(sampleOverLayMapState)
@@ -76,7 +83,7 @@ export const ViewerContainer: React.FC<{ AppLogo: React.FC }> = ({ AppLogo }) =>
                     <AnnotationContent />
                     <DescriptionContainer sample={currentSample} />
                 </> :
-                <Welcome AppLogo={AppLogo} />
+                <Welcome AppLogo={AppLogo} message={welcomeMessage} />
             }
         </>
     )

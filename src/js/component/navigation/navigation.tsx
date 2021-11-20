@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
-import { I18nMessages, Language } from '@src/js/type/entity'
+import { Language } from '@src/js/type/entity'
+import { INavigationMessage } from '@src/js/type/message'
 import { selectedSampleListItemState } from '@src/js/state/atom/selected_sample_list_item_state'
 import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
 import useLang from '@src/js/hooks/use_lang'
@@ -9,7 +10,7 @@ import { SampleListItemKeys } from '@src/js/type/sample'
 import { withFallbackLanguage } from '@src/js/util/language_util'
 
 type ExpanderProps = {
-    message: I18nMessages
+    message: INavigationMessage
 }
 
 const SampleListExpander: React.FC<ExpanderProps> = ({ message }) => {
@@ -64,7 +65,7 @@ const SystemLanguageSelector: React.FC = () => {
 }
 
 type Props = {
-    message: I18nMessages
+    message: INavigationMessage
 }
 
 export const Navigation: React.FC<Props> = ({ message }) => {

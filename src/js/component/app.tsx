@@ -8,8 +8,16 @@ import { AppWrapper } from "./app_wrapper/app_wrapper"
 import AppConfig from "@vender/app.config"
 import styles from "./index.module.css"
 
-const { Social, Footer, AppLogo, NavigationMessage } = AppConfig
+const {
+    Social,
+    Footer,
+    AppLogo,
+    navigationMessage,
+    welcomeMessage,
+    viewerContainerMessage
+} = AppConfig
 
+console.log(welcomeMessage)
 type Props = {
 }
 
@@ -18,7 +26,7 @@ export const App: React.FC<Props> = (arg) => {
         <>
             <RecoilRoot>
                 <Window>
-                    <Navigation message={NavigationMessage}></Navigation>
+                    <Navigation message={navigationMessage}></Navigation>
                     <Router>
                         <Switch>
                             <Route path="/">
@@ -26,7 +34,7 @@ export const App: React.FC<Props> = (arg) => {
                                     <SampleListContainer ></SampleListContainer>
                                 </React.Suspense>
                                 <div className={styles.appWrapper}>
-                                    <AppWrapper AppLogo={AppLogo} />
+                                    <AppWrapper AppLogo={AppLogo} welcomeMessage={welcomeMessage} viewerContainerMessage={viewerContainerMessage} />
                                     <Social />
                                 </div>
                             </Route>

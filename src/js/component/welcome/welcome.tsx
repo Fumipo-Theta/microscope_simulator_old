@@ -1,4 +1,7 @@
+import { IWelcomeMessage } from "@src/js/type/message"
 import React from "react"
+import { withFallbackLanguage } from "@src/js/util/language_util"
+import useLang from "@src/js/hooks/use_lang"
 
 const welcomeCardStyle: React.CSSProperties = {
     display: "flex",
@@ -13,20 +16,26 @@ const wrapperStyle: React.CSSProperties = {
     flexDirection: "column"
 }
 
-export const Welcome: React.FC<{ AppLogo: React.FC }> = ({ AppLogo }) => {
+type Props = {
+    AppLogo: React.FC,
+    message: IWelcomeMessage,
+}
+
+export const Welcome: React.FC<Props> = ({ AppLogo, message }) => {
+    const [lang, _] = useLang()
     return (<>
         <div id="welcome-card" style={welcomeCardStyle}>
             <div style={wrapperStyle}>
                 <AppLogo />
 
-                <p>Polarizing microscope simulator</p>
+                <p>{withFallbackLanguage(message.appDescription, lang)}</p>
 
                 {
                     es6Available()
                         ? <></>
                         : <div>
-                            <p>Sorry, please use web browser below ...</p>
-                            <p>I recommend the latest version of them.</p>
+                            <p>{withFallbackLanguage(message.recommendUseModernBrowser, lang)}</p>
+                            <p>{withFallbackLanguage(message.recommendLatestBrowserVersion, lang)}</p>
                             <ul>
                                 <li>Google Chrome (version 45~) </li>
                                 <li>Safari (version 10~)</li>
