@@ -14,9 +14,10 @@ import { sampleListSelector } from '@src/js/state/atom/sample_list_state'
 import { sampleCategoriesSelector, sampleCategoriesNameState } from '@src/js/state/atom/sample_category_state'
 import { SampleSelectorOption } from './sample_selector_option/sample_selector_option'
 import styles from "./index.module.css"
+import { ISampleListMessage } from '@src/js/type/message'
 
 type Props = {
-
+    message: ISampleListMessage,
 }
 
 interface SampleListSelectorProps extends SampleList {
@@ -49,7 +50,7 @@ const SampleListSelector: React.FC<SampleListSelectorProps> = ({ [SampleListKeys
         window.location.hash = sample[SampleListItemKeys.PackageName]
     }, [])
     const currentCategoryValue = useRecoilValue(currentCategoryState)
-    console.log("currentCategoryValue", currentCategoryValue)
+    console.log("[info] currentCategoryValue: ", currentCategoryValue)
 
     return <div className={styles.sampleListSelector}>
         <div className={styles.sampleSelectorWrapper}>
@@ -79,7 +80,7 @@ function belongsToCategory(category: string) {
     }
 }
 
-export const SampleListContainer: React.FC<Props> = ({ }) => {
+export const SampleListContainer: React.FC<Props> = ({ message }) => {
     const { sample_list, category } = parseQueryParams(location.search)
     const setSampleListNameValue = useSetRecoilState(sampleListNameState)
     const setSampleCategoriesNameValue = useSetRecoilState(sampleCategoriesNameState)
@@ -93,7 +94,7 @@ export const SampleListContainer: React.FC<Props> = ({ }) => {
     const sampleCategories = useRecoilValue(sampleCategoriesSelector)
 
     return <div className={`${styles.sampleListContainer} ${sampleListIsActive ? '' : styles.inActive}`}>
-        <SampleCategoryContainer {...sampleCategories} />
+        <SampleCategoryContainer {...sampleCategories} message={message} />
         <SampleListSelector {...sampleList} lang={currentLanguage} />
     </div>
 }

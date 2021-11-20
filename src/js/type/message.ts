@@ -14,3 +14,8 @@ export interface IWelcomeMessage {
 export interface IViewerContainerMessage {
 
 }
+
+export interface ISampleListMessage {
+    shownCategory: I18nMap<string>,
+    promptSelectingSubCategory: I18nMap<string>,
+}

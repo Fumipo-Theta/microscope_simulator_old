@@ -1,4 +1,4 @@
-import { INavigationMessage, IWelcomeMessage, IViewerContainerMessage } from "@src/js/type/message"
+import { INavigationMessage, IWelcomeMessage, IViewerContainerMessage, ISampleListMessage } from "@src/js/type/message"
 
 export const navigationMessage: INavigationMessage = {
     showSampleList: { ja: "観察するものを選ぶ", en: "Select a sample" },
@@ -13,4 +13,9 @@ export const welcomeMessage: IWelcomeMessage = {
 
 export const viewerContainerMessage: IViewerContainerMessage = {
 
+}
+
+export const sampleListMessage: ISampleListMessage = {
+    shownCategory: { ja: "表示中", en: "Shown" },
+    promptSelectingSubCategory: { ja: "絞り込む", en: "Filter by" }
 }

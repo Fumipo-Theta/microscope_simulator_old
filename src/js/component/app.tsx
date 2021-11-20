@@ -14,7 +14,8 @@ const {
     AppLogo,
     navigationMessage,
     welcomeMessage,
-    viewerContainerMessage
+    viewerContainerMessage,
+    sampleListMessage,
 } = AppConfig
 
 console.log(welcomeMessage)
@@ -31,7 +32,7 @@ export const App: React.FC<Props> = (arg) => {
                         <Switch>
                             <Route path="/">
                                 <React.Suspense fallback={<></>}>
-                                    <SampleListContainer ></SampleListContainer>
+                                    <SampleListContainer message={sampleListMessage} ></SampleListContainer>
                                 </React.Suspense>
                                 <div className={styles.appWrapper}>
                                     <AppWrapper AppLogo={AppLogo} welcomeMessage={welcomeMessage} viewerContainerMessage={viewerContainerMessage} />
