@@ -42,8 +42,8 @@ export const App: React.FC<Props> = (arg) => {
                         </Switch>
                     </Router>
                 </Window>
+                <Footer />
             </RecoilRoot>
-            <Footer />
         </>
     )
 }
