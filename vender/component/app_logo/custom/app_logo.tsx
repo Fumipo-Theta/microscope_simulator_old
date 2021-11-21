@@ -64,7 +64,7 @@ const style = `
 }
 `
 
-export const AppLogo: React.FC<AppLogoProps> = (_props) => {
+const AppLogo: React.FC<AppLogoProps> = (_props) => {
     return (
         <>
             <style>{style}</style>
@@ -133,3 +133,5 @@ export const AppLogo: React.FC<AppLogoProps> = (_props) => {
         </>
     )
 }
+
+export default AppLogo

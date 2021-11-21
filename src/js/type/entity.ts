@@ -15,8 +15,12 @@ export type NamedCoordinate = { fromLeft: fromLeft, fromTop: fromTop }
 
 export type PackageId = string
 
-export interface I18nMap<T> {
-    Language?: T
+export type I18nMap<T> = {
+    [key in Language]?: T
+}
+
+export type I18nMessages = {
+    [key: string]: I18nMap<string>
 }
 
 export interface SampleMeta {

@@ -84,6 +84,7 @@
 input[type=checkbox] {
     display: none;
 }
+
 input[type=checkbox]+label {
     cursor: pointer;
 }
@@ -125,7 +126,7 @@ input[type=checkbox]+label {
     left: 1px;
     width: 46px;
     height: 46px;
-    background-image: url("../images/SCOPin_image.svg");
+    background-image: url("../images/logo.svg");
     background-color: #888888;
     background-size: contain;
     border-radius: 50%;
@@ -255,7 +256,7 @@ select option.downloaded {
     box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.10), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
 }
 
-input[type=checkbox]:checked+#button-toggle_sample_category{
+input[type=checkbox]:checked+#button-toggle_sample_category {
     background-color: #2196f3;
 }
 
@@ -357,12 +358,12 @@ input[type=checkbox]:checked+#button-toggle_sample_category{
 }
 
 #wrapper-category_selector input[type=checkbox]+.category {
-    border-left: 3px solid  #88888800;
+    border-left: 3px solid #88888800;
 }
 
 #wrapper-category_selector input[type=checkbox]:checked+.category.active,
 #wrapper-category_selector input[type=checkbox]:checked+.category {
-    color:#efefef;
+    color: #efefef;
     border-left: 3px solid #4488bb;
 }
 
@@ -376,7 +377,7 @@ input[type=checkbox]:checked+#button-toggle_sample_category{
 
 #wrapper-category_selector input[type=checkbox]:checked+.super_category.active,
 #wrapper-category_selector input[type=checkbox]:checked+.super_category {
-    color:#efefef;
+    color: #efefef;
     border-bottom: 2px solid #4488bb;
 }
 

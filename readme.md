@@ -1,6 +1,6 @@
 # SCOPin rock: Polarizing microscope simulator
 
-![SCOPin rock logo](./src/images/SCOPin_rock_logo.png)
+![SCOPin rock logo](./src/images/official_logo.png)
 
 This Web application simulates polarizing microscope view of the thin section of rock samples.
 
