@@ -6,12 +6,19 @@ const CopyPlugin = require("copy-webpack-plugin");
 const version = process.env.npm_package_version;
 
 module.exports = (process_env, argv) => {
-    const compileMode = argv.env.COMPILE_ENV == "prod" ? "production" : "development"
+    const compileEnv = argv.env.COMPILE_ENV === "prod" ? "production" : "development"
+    const scopinEnv = argv.env.SCOPIN_ENV === "prod"
+        ? "production"
+        : argv.env.SCOPIN_ENV === "dev"
+            ? "development"
+            : "local"
+    const isDeploy = compileEnv === "production"
     const configJson = process.env.CONFIG_JSON ?? fs.readFileSync(`${__dirname}/config.example.json`, "utf-8")
     const config = JSON.parse(configJson)
+    config.compileEnv = compileEnv
+    config.scopinEnv = scopinEnv
 
-    console.log("compile mode: ", compileMode)
-    console.log("config", configJson)
+    console.log("config", config)
 
     const outputPath = `${__dirname}/release`
 
@@ -22,7 +29,7 @@ module.exports = (process_env, argv) => {
             filename: "app.js",
         },
 
-        mode: compileMode,
+        mode: scopinEnv === "production" ? "production" : "development",
 
         plugins: [
             new HtmlWebpackPlugin({
@@ -98,7 +105,16 @@ module.exports = (process_env, argv) => {
                     loader: 'string-replace-loader',
                     options: {
                         search: "'@CONFIG_JSON@'",
-                        replace: JSON.stringify(configJson),
+                        replace: `'${JSON.stringify(config)}'`,
+                    }
+                },
+                {
+                    test: /src.*\.(js|ts)$/,
+                    exclude: `${__dirname}/webpack.config.js`,
+                    loader: 'string-replace-loader',
+                    options: {
+                        search: "'@DEBUG_LOG_ROTATION@'",
+                        replace: isDeploy ? "" : "console.log('rotation: ', rotate)",
                     }
                 },
             ]
@@ -120,7 +136,7 @@ module.exports = (process_env, argv) => {
             path: `${outputPath}/`,
             filename: "service_worker.js",
         },
-        mode: compileMode,
+        mode: scopinEnv === "production" ? "production" : "development",
         module: {
             rules: [
                 {
@@ -142,7 +158,7 @@ module.exports = (process_env, argv) => {
             filename: "app_make_package.js",
         },
 
-        mode: compileMode,
+        mode: scopinEnv === "production" ? "production" : "development",
 
         plugins: [
             new HtmlWebpackPlugin({
@@ -189,7 +205,7 @@ module.exports = (process_env, argv) => {
         },
         target: "web"
     }
-    if (compileMode != "production") {
+    if (scopinEnv != "production") {
         //conf_main.devtool = 'eval-source-map'
         conf_make_package.devtool = 'eval-source-map'
     }
