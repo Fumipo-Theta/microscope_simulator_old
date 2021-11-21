@@ -17,5 +17,6 @@ export const viewerContainerMessage: IViewerContainerMessage = {
 
 export const sampleListMessage: ISampleListMessage = {
     shownCategory: { ja: "表示中", en: "Shown" },
-    promptSelectingSubCategory: { ja: "絞り込む", en: "Filter by" }
+    promptSelectingSubCategory: { ja: "絞り込む", en: "Filter by" },
+    noSubcategory: { ja: "サブカテゴリがありません", en: "No subcategory" },
 }

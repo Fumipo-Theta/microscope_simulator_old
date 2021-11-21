@@ -70,7 +70,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ categorySetter, lan
                             return <CategoryButton key={child} label={category.label[lang]} onClick={categorySetter(nodeMap[child])} />
                         })}
                     </>
-                    : <div className={styles.info}>No subcategory</div>
+                    : <div className={styles.info}>{withFallbackLanguage(message.noSubcategory, lang)}</div>
             }
         </div>
     )
