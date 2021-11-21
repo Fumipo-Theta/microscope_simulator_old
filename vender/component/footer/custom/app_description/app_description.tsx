@@ -5,7 +5,7 @@ import { I18nMap } from '@src/js/type/entity'
 import useLang from '@src/js/hooks/use_lang'
 import { withFallbackLanguage } from '@src/js/util/language_util'
 
-export interface AppDescriptionMessage {
+export interface IAppDescriptionMessage {
     head1: I18nMap<string>,
     guideToPackageMaker: I18nMap<string>,
     announceCopyRight: I18nMap<string>,
@@ -15,7 +15,7 @@ export interface AppDescriptionMessage {
 
 type AppDescriptionProps = {
     app_version: String,
-    message: AppDescriptionMessage,
+    message: IAppDescriptionMessage,
 }
 
 
