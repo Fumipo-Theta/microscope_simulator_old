@@ -3,8 +3,6 @@ const fs = require('fs')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
-const webpack = require('webpack');
-const { config } = require('process');
 const version = process.env.npm_package_version;
 
 module.exports = (process_env, argv) => {
@@ -64,11 +62,11 @@ module.exports = (process_env, argv) => {
 
             new CopyPlugin({
                 patterns: [
-                    { from: `${__dirname}/src/root`, to: outputPath + "/" },
                     { from: `${__dirname}/src/css`, to: outputPath + "/css" },
                     { from: `${__dirname}/src/images`, to: outputPath + "/images" },
                     { from: `${__dirname}/src/js/lib`, to: outputPath + "/js/lib" },
-                    { from: `${__dirname}/vender/images`, to: outputPath + "/images" },
+                    { from: `${__dirname}/vender/resource/root`, to: outputPath + "/" },
+                    { from: `${__dirname}/vender/resource/images`, to: outputPath + "/images" },
                 ]
             })
         ],
@@ -116,7 +114,7 @@ module.exports = (process_env, argv) => {
     }
 
     const conf_sw = {
-        entry: `${__dirname}/src/sw/service_worker.js`,
+        entry: `${__dirname}/vender/resource/sw/service_worker.js`,
 
         output: {
             path: `${outputPath}/`,

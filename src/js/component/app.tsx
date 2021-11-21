@@ -5,18 +5,17 @@ import { Window } from "./window/window"
 import { Navigation } from "./navigation/navigation"
 import { SampleListContainer } from "./sample_list/sample_list_container"
 import { AppWrapper } from "./app_wrapper/app_wrapper"
-import AppConfig from "@vender/app.config"
+import CustomComponents from "@vender/custom_components"
+import { navigationMessage, welcomeMessage, viewerContainerMessage, sampleListMessage } from "@vender/i18n/message"
+
 import styles from "./index.module.css"
+
 
 const {
     Social,
     Footer,
     AppLogo,
-    navigationMessage,
-    welcomeMessage,
-    viewerContainerMessage,
-    sampleListMessage,
-} = AppConfig
+} = CustomComponents
 
 console.log(welcomeMessage)
 type Props = {

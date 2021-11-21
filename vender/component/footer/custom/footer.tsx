@@ -9,7 +9,7 @@ import { appDescriptionMessage, contactFormMessage } from '@vender/i18n/custom_c
 
 type FooterProps = {}
 
-export const Footer: React.FC<FooterProps> = (_) => {
+const Footer: React.FC<FooterProps> = (_) => {
     const app_version = Package.version
     return (
         <div className={styles.footer}>
@@ -25,3 +25,5 @@ export const Footer: React.FC<FooterProps> = (_) => {
         </div>
     )
 }
+
+export default Footer

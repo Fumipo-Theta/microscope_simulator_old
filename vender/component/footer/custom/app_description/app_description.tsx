@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AppLogo } from '@vender/component/app_logo/app_logo'
+import AppLogo from '@vender/component/app_logo/custom/app_logo'
 import styles from "./index.module.css"
 import { I18nMap } from '@src/js/type/entity'
 import useLang from '@src/js/hooks/use_lang'
