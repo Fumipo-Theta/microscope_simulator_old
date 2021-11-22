@@ -19,17 +19,17 @@ function readFileIfExists(path, fallbackPath, fallbackStr) {
 
 module.exports = (process_env, argv) => {
     const compileEnv = argv.env.COMPILE_ENV === "prod" ? "prod" : "dev"
-    const scopinEnv = argv.env.SCOPIN_ENV === "prod"
+    const runtimeEnv = argv.env.RUNTIME_ENV === "prod"
         ? "prod"
-        : argv.env.SCOPIN_ENV === "dev"
+        : argv.env.RUNTIME_ENV === "dev"
             ? "dev"
             : "local"
     const isDeploy = compileEnv === "prod"
-    const compileMode = scopinEnv === "production" ? "production" : "development"
+    const compileMode = runtimeEnv === "prod" ? "production" : "development"
     const configJson = process.env.CONFIG_JSON ?? fs.readFileSync(`${__dirname}/config.example.json`, "utf-8")
     const config = JSON.parse(configJson)
     config.compileEnv = compileEnv
-    config.scopinEnv = scopinEnv
+    config.runtimeEnv = runtimeEnv
 
     console.log("config", config)
 
@@ -58,7 +58,7 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@CUSTOM_META@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${scopinEnv}/CUSTOM_META.fragment.html`,
+                    `${__dirname}/vender/html_fragment/${runtimeEnv}/CUSTOM_META.fragment.html`,
                     `${__dirname}/vender/html_fragment/CUSTOM_META.fragment.html`,
                     ""
                 )
@@ -67,7 +67,7 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@PRE_HOOKS_FRAGMENT@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${scopinEnv}/PRE_HOOKS.fragment.html`,
+                    `${__dirname}/vender/html_fragment/${runtimeEnv}/PRE_HOOKS.fragment.html`,
                     `${__dirname}/vender/html_fragment/PRE_HOOKS.fragment.html`,
                     ""
                 )
@@ -76,7 +76,7 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@POST_HOOKS_FRAGMENT@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${scopinEnv}/POST_HOOKS.fragment.html`,
+                    `${__dirname}/vender/html_fragment/${runtimeEnv}/POST_HOOKS.fragment.html`,
                     `${__dirname}/vender/html_fragment/POST_HOOKS.fragment.html`,
                     ""
                 )
@@ -85,7 +85,7 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@SERVICE_WORKER_FRAGMENT@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${scopinEnv}/SERVICE_WORKER.fragment.html`,
+                    `${__dirname}/vender/html_fragment/${runtimeEnv}/SERVICE_WORKER.fragment.html`,
                     `${__dirname}/vender/html_fragment/SERVICE_WORKER.fragment.html`,
                     ""
                 )
@@ -230,7 +230,7 @@ module.exports = (process_env, argv) => {
         },
         target: "web"
     }
-    if (scopinEnv != "prod") {
+    if (runtimeEnv != "prod") {
         //conf_main.devtool = 'eval-source-map'
         conf_make_package.devtool = 'eval-source-map'
     }

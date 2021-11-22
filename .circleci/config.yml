@@ -10,7 +10,7 @@ jobs:
           command: yarn install
       - run:
           name: build for production
-          command: CONFIG_JSON=$CONFIG_JSON_PROD yarn build
+          command: CONFIG_JSON=$CONFIG_JSON_DEV yarn build
 
       - persist_to_workspace:
           root: .

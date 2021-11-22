@@ -1,6 +1,6 @@
 {
   "name": "scopin",
-  "version": "2.3.0-rc3",
+  "version": "2.3.0-rc4",
   "description": "![SCOPin rock logo](./images/SCOPin_rock_logo.png)",
   "main": "/release/js/app.js",
   "directories": {
@@ -10,8 +10,8 @@
   "scripts": {
     "test:watch": "jest --watch",
     "test": "jest",
-    "build:prod": "webpack build --env COMPILE_ENV=prod --env SCOPIN_ENV=prod",
-    "build": "webpack build --env COMPILE_ENV=prod --env SCOPIN_ENV=dev",
+    "build:prod": "webpack build --env COMPILE_ENV=prod --env RUNTIME_ENV=prod",
+    "build": "webpack build --env COMPILE_ENV=prod --env RUNTIME_ENV=dev",
     "watch": "webpack --watch",
     "start": "webpack serve --mode development --hot --inline --port 8080",
     "storybook": "start-storybook -p 6006 -s ./",
