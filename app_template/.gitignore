@@ -1,0 +1,5 @@
+node_modules/
+deps/
+example_image_package_root/
+*.log
+release/

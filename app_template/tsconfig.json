@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "sourceMap": true,
+        // TSはECMAScript 5に変換
+        "target": "es6",
+        // TSのモジュールはES Modulesとして出力
+        "module": "es2015",
+        // JSXの書式を有効に設定
+        "jsx": "react",
+        "moduleResolution": "node",
+        "lib": [
+            "es2020",
+            "dom"
+        ],
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "baseUrl": ".",
+        "paths": {
+            "@src/*": [
+                "deps/microscope_simulator/src/*"
+            ],
+            "@vender/*": [
+                "vender/*"
+            ]
+        }
+    }
+}

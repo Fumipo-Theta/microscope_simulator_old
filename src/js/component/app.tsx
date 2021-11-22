@@ -5,23 +5,23 @@ import { Window } from "./window/window"
 import { Navigation } from "./navigation/navigation"
 import { SampleListContainer } from "./sample_list/sample_list_container"
 import { AppWrapper } from "./app_wrapper/app_wrapper"
-import CustomComponents from "@vender/custom_components"
 import { navigationMessage, welcomeMessage, viewerContainerMessage, sampleListMessage } from "@vender/i18n/message"
 
 import styles from "./index.module.css"
 
-
-const {
-    Social,
-    Footer,
-    AppLogo,
-} = CustomComponents
-
-console.log(welcomeMessage)
-type Props = {
+export interface ICustomComponents {
+    Social: React.FC
+    Footer: React.FC
+    AppLogo: React.FC
 }
 
-export const App: React.FC<Props> = (arg) => {
+
+interface Props extends ICustomComponents {
+
+}
+
+
+export const App: React.FC<Props> = ({ Social, Footer, AppLogo }) => {
     return (
         <>
             <RecoilRoot>
