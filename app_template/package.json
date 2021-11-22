@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "new": "node script/npm/new.js",
+    "update:core": "node script/npm/update_core.js",
     "test:watch": "jest --watch",
     "test": "jest",
     "build:prod": "webpack build --env COMPILE_ENV=prod --env RUNTIME_ENV=prod",
