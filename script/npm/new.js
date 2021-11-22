@@ -41,7 +41,8 @@ fs.writeFileSync(`${appDir}/package.json`, JSON.stringify(packageJson, null, 2))
 
 console.log(`[info] Clone latest release of microscope_simulator into deps/`)
 fs.mkdirSync(`${appDir}/deps`)
-execSync(`git clone ${repoUrl} ${appDir}/deps/microscope_simulator --branch release --depth 1`)
+execSync(`git clone ${repoUrl} ${appDir}/deps/microscope_simulator`)
+execSync('git checkout release', { cwd: `${appDir}/deps/microscope_simulator` })
 
 function makePackageJson(base, appName) {
     const { new: _, ...scripts } = base.scripts
