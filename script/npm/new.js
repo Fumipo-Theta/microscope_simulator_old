@@ -68,3 +68,5 @@ function makePackageJson(base, appName) {
 
     return package
 }
+
+fs.copySync(`${appDir}/deps/microscope_simulator/src`, `${appDir}/_src`)
