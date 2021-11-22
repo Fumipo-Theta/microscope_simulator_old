@@ -5,35 +5,44 @@ import { Window } from "./window/window"
 import { Navigation } from "./navigation/navigation"
 import { SampleListContainer } from "./sample_list/sample_list_container"
 import { AppWrapper } from "./app_wrapper/app_wrapper"
-import { Sharing } from "./sharing/sharing"
-import { Footer } from "./footer/footer"
+import { navigationMessage, welcomeMessage, viewerContainerMessage, sampleListMessage } from "@vender/i18n/message"
+
 import styles from "./index.module.css"
 
-type Props = {
+export interface ICustomComponents {
+    Social: React.FC
+    Footer: React.FC
+    AppLogo: React.FC
 }
 
-export const App: React.FC<Props> = (arg) => {
+
+interface Props extends ICustomComponents {
+
+}
+
+
+export const App: React.FC<Props> = ({ Social, Footer, AppLogo }) => {
     return (
         <>
             <RecoilRoot>
                 <Window>
-                    <Navigation></Navigation>
+                    <Navigation message={navigationMessage}></Navigation>
                     <Router>
                         <Switch>
                             <Route path="/">
                                 <React.Suspense fallback={<></>}>
-                                    <SampleListContainer ></SampleListContainer>
+                                    <SampleListContainer message={sampleListMessage} ></SampleListContainer>
                                 </React.Suspense>
                                 <div className={styles.appWrapper}>
-                                    <AppWrapper />
-                                    <Sharing />
+                                    <AppWrapper AppLogo={AppLogo} welcomeMessage={welcomeMessage} viewerContainerMessage={viewerContainerMessage} />
+                                    <Social />
                                 </div>
                             </Route>
                         </Switch>
                     </Router>
                 </Window>
+                <Footer />
             </RecoilRoot>
-            <Footer />
         </>
     )
 }

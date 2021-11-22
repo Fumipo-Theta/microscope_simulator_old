@@ -1,44 +1,49 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 import { Language } from '@src/js/type/entity'
-import { systemLanguageState } from '@src/js/state/atom/system_language_state'
+import { INavigationMessage } from '@src/js/type/message'
 import { selectedSampleListItemState } from '@src/js/state/atom/selected_sample_list_item_state'
 import { sampleListAppearanceState } from '@src/js/state/atom/sample_list_appearance_state'
+import useLang from '@src/js/hooks/use_lang'
 import styles from "./index.module.css"
 import { SampleListItemKeys } from '@src/js/type/sample'
+import { withFallbackLanguage } from '@src/js/util/language_util'
 
-const SampleListExpander: React.FC = () => {
+type ExpanderProps = {
+    message: INavigationMessage
+}
+
+const SampleListExpander: React.FC<ExpanderProps> = ({ message }) => {
     const listIsActive = useRecoilValue(sampleListAppearanceState)
     const setSampleListAppearanceValue = useSetRecoilState(sampleListAppearanceState)
     const onClick = useCallback(
-        (event: React.MouseEvent | React.TouchEvent) => {
+        (_event: React.MouseEvent | React.TouchEvent) => {
             setSampleListAppearanceValue((prev) => !prev)
         },
         []
     )
-    const currentLang = useRecoilValue(systemLanguageState)
+    const [lang, _] = useLang()
     const currentListItem = useRecoilValue(selectedSampleListItemState)
     const currentLitItemIndex = currentListItem?.[SampleListItemKeys.GlobalIndex] || ''
-    const buttonWord = currentListItem?.[SampleListItemKeys.ListName]?.[currentLang] || "Select sample"
+    const buttonWord = currentListItem?.[SampleListItemKeys.ListName]?.[lang] || withFallbackLanguage(message.showSampleList, lang, "en")
 
     return (
         <div className={`${styles.sampleListExpanderContainer}  ${listIsActive ? styles.activeButton : ""}`}>
             <button className={`${styles.expandSampleListButton}`} onClick={onClick}>
-                {listIsActive ? ">> Close <<" : `${currentLitItemIndex} ${buttonWord}`}
+                {listIsActive ? withFallbackLanguage(message.hideSampleList, lang, "en") : `${currentLitItemIndex} ${buttonWord}`}
             </button>
         </div>
     )
 }
 
 const SystemLanguageSelector: React.FC = () => {
-    const currentLang = useRecoilValue(systemLanguageState)
-    const setSystemLanguageValue = useSetRecoilState(systemLanguageState)
+    const [currentLang, setLang] = useLang()
     const onChange = useCallback(
         (event: React.ChangeEvent<HTMLSelectElement>) => {
             const selectedOptionIndex = event.target.options.selectedIndex
-            setSystemLanguageValue(event.target.options[selectedOptionIndex].value as Language)
+            setLang(event.target.options[selectedOptionIndex].value as Language)
         },
-        [setSystemLanguageValue]
+        [setLang]
     )
     return (
         <div className={styles.languageSelectorContainer}>
@@ -59,12 +64,16 @@ const SystemLanguageSelector: React.FC = () => {
     )
 }
 
-export const Navigation: React.FC = () => {
+type Props = {
+    message: INavigationMessage
+}
+
+export const Navigation: React.FC<Props> = ({ message }) => {
     return (
         <>
             <div className={styles.navigationContainer}>
                 <div className={styles.wrapper}>
-                    <SampleListExpander />
+                    <SampleListExpander message={message} />
                     <SystemLanguageSelector />
                 </div>
             </div>

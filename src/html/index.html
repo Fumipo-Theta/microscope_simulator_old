@@ -4,56 +4,14 @@
 <head>
     <meta http-equiv="Content-Type" charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1" user-zoom="no">
-    <link rel="manifest" href="./manifest.json">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#0c395e">
-    <link rel="apple-touch-icon" href="./images/SCOPin_image_home_logo.png" sizes="144x144">
-    <link rel="apple-touch-icon" href="./images/SCOPin_image_home_logo_192.png" sizes="192x192">
-    <link rel="apple-touch-icon" href="./images/SCOPin_image_home_logo_512.png" sizes="512x512">
-    <meta name="theme-color" content="#0c395e">
     <link rel="stylesheet" href="./css/main.css" charset="utf-8">
-
-    <link rel="icon" type="image/png" href="./images/SCOPin_favicon.png" sizes="64x64">
     <title>SCOPin rock: polarizing microscope simulator</title>
-    <!--
-    <PageMap>
-        <DataObject type="thumbnail">
-            <Attribute name="src"
-                value="https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png" />
-            <Attribute name="width" value="130">
-                <Attribute name="height" value="130">
-        </DataObject>
-    </PageMap>
-    -->
-    <meta name="thumbnail"
-        content="https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png" />
-    <meta name="description"
-        content="偏光顕微鏡による岩石薄片観察をシミュレートするアプリです. This application simulates polarizing microscopic view of rock slices." />
-    <meta property="og:title" content="SCOPin rock: polarizing microscope simulator" />
-    <meta property="og:description" content="This application simulates polarizing microscopic view of rock slices." />
-    <meta property="og:image"
-        content="https://s3-ap-northeast-1.amazonaws.com/fumipo-theta-microscope/images/SCOPin_image.png" />
-    <meta property="og:url" content="https://microscope.fumipo-theta.com" />
-    <meta property="og:type" content="article" />
-    <!--meta name="twitter:site" content="@xxxxxxxxx" /-->
-    <meta name="twitter:card" content="summary" />
-    <!--meta property="fb:admins" content="xxxxxxxx" /-->
-    <meta name="google-site-verification" content="-1sJ5n_gZ92tSdHs7KCPexogyau4A8MKl6WW3qe4gBk" />
+
+    @CUSTOM_META@
 </head>
 
 <body id="top" ontouchstart="">
-    <!-- TODO: should be removed from open source -->
-    <div id="fb-root"></div>
-    <script>
-        (function (d, s, id) {
-            if (location.hostname == 'localhost') return;
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = 'https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.2';
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
-
+    @PRE_HOOKS_FRAGMENT@
     <!-- Inline style for performance -->
     <style>
         :root {}
@@ -140,108 +98,8 @@
     </style>
 
     <div id="app"></div>
-
-    <div id="update_notification" class="align-center inactive">
-        <div class="align-center">
-            <a id="reload" class="align-center">
-                <div>
-                    <img src="./images/SCOPin_image_home_logo.png" width="50px" height="50px">
-                </div>
-                <div>
-                    New version is found. <br>
-                    <u>Click</u> to complete update !
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <script>
-        let newWorker
-        let refeshing
-        document.querySelector("#reload").addEventListener(
-            "click",
-            () => {
-                if (newWorker) {
-                    newWorker.postMessage({ "action": "skipWaiting" })
-                }
-            }
-        )
-        window.addEventListener('load', function () {
-
-            if (navigator.serviceWorker) {
-                navigator.serviceWorker.addEventListener(
-                    "controllerchange",
-                    () => {
-                        //if (refreshing) return;
-                        window.location.reload()
-                        refreshing = true
-                    }
-                )
-
-                navigator.serviceWorker.register(
-                    './service_worker.js',
-                    //{ scope: '.', updateViaCache: "none" }
-                )
-                    .then(function (registration) {
-                        if (registration.waiting && registration.waiting.state == "installed") {
-                            newWorker = registration.waiting
-                            let notification = document.querySelector("#update_notification")
-                            notification.classList.remove("inactive")
-                        }
-
-                        registration.onupdatefound = () => {
-                            console.log("update found")
-                            newWorker = registration.installing
-                            newWorker.addEventListener(
-                                "statechange", () => {
-                                    switch (newWorker.state) {
-                                        case "installed":
-                                            console.log("new worker installed ")
-                                            if (navigator.serviceWorker.controller) {
-                                                let notification = document.querySelector("#update_notification")
-                                                notification.classList.remove("inactive")
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                            )
-                        }
-
-                        registration.update();
-                    })
-                    .then(function (registration) {
-                        console.log("serviceWorker registed.");
-                    })
-                    .catch(function (error) {
-                        console.warn("serviceWorker error.", error);
-                    });
-            }
-        });
-    </script>
-
-    <script src="./js/lib/jsinflate.js"></script>
+    @POST_HOOKS_FRAGMENT@
+    @SERVICE_WORKER_FRAGMENT@
 </body>
-
-<!-- TODO: should be removed from open source -->
-<!-- API Gateway SDK -->
-<script type="text/javascript" defer src="js/lib/axios/dist/axios.standalone.js"></script>
-<script type="text/javascript" defer src="js/lib/CryptoJS/rollups/hmac-sha256.js"></script>
-<script type="text/javascript" defer src="js/lib/CryptoJS/rollups/sha256.js"></script>
-<script type="text/javascript" defer src="js/lib/CryptoJS/components/hmac.js"></script>
-<script type="text/javascript" defer src="js/lib/CryptoJS/components/enc-base64.js"></script>
-<script type="text/javascript" defer src="js/lib/url-template/url-template.js"></script>
-<script type="text/javascript" defer src="js/lib/apiGatewayCore/sigV4Client.js"></script>
-<script type="text/javascript" defer src="js/lib/apiGatewayCore/apiGatewayClient.js"></script>
-<script type="text/javascript" defer src="js/lib/apiGatewayCore/simpleHttpClient.js"></script>
-<script type="text/javascript" defer src="js/lib/apiGatewayCore/utils.js"></script>
-<script type="text/javascript" defer src="js/lib/apigClient.js"></script>
-
-
-<!-- TODO: should be removed from open source -->
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script defer src="https://www.googletagmanager.com/gtag/js?id=UA-134075472-1"></script>
-<!--script defer src="./js/lib/app_social_connection.js"></script -->
 
 </html>

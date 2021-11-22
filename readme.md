@@ -1,6 +1,6 @@
 # SCOPin rock: Polarizing microscope simulator
 
-![SCOPin rock logo](./src/images/SCOPin_rock_logo.png)
+![SCOPin rock logo](./src/images/official_logo.png)
 
 This Web application simulates polarizing microscope view of the thin section of rock samples.
 
@@ -77,12 +77,16 @@ Windows (PowerShell)
 
 ```sh
 $env:CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}'; yarn build
+
+$env:CONFIG_JSON=cat your_config.json; yarn build
 ```
 
 Mac/Linux
 
 ```sh
 CONFIG_JSON='{"package_endpoint": "path/to/example_image_package_root"}' yarn build
+
+CONFIG_JSON=$(cat your_config.json) yarn build
 ```
 
 ### Launch dev server

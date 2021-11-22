@@ -5,6 +5,9 @@ const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const version = process.env.npm_package_version;
 
+const coreDir = path.resolve(__dirname, 'deps/microscope_simulator/src/')
+const venderDir = path.resolve(__dirname, 'vender/')
+
 function readFileIfExists(path, fallbackPath, fallbackStr) {
     if (fs.existsSync(path)) {
         return fs.readFileSync(path, "utf-8")
@@ -36,7 +39,7 @@ module.exports = (process_env, argv) => {
     const outputPath = `${__dirname}/release`
 
     const conf_main = {
-        entry: `${__dirname}/src/js/index.tsx`,
+        entry: `${coreDir}/js/index.tsx`,
         output: {
             path: `${outputPath}/js/`,
             filename: "app.js",
@@ -46,7 +49,7 @@ module.exports = (process_env, argv) => {
 
         plugins: [
             new HtmlWebpackPlugin({
-                "template": `${__dirname}/src/html/index.html`,
+                "template": `${coreDir}/html/index.html`,
                 "filename": `${outputPath}/index.html`,
             }),
 
@@ -58,8 +61,8 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@CUSTOM_META@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${runtimeEnv}/CUSTOM_META.fragment.html`,
-                    `${__dirname}/vender/html_fragment/CUSTOM_META.fragment.html`,
+                    `${venderDir}/html_fragment/${runtimeEnv}/CUSTOM_META.fragment.html`,
+                    `${venderDir}/html_fragment/CUSTOM_META.fragment.html`,
                     ""
                 )
             }),
@@ -67,8 +70,8 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@PRE_HOOKS_FRAGMENT@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${runtimeEnv}/PRE_HOOKS.fragment.html`,
-                    `${__dirname}/vender/html_fragment/PRE_HOOKS.fragment.html`,
+                    `${venderDir}/html_fragment/${runtimeEnv}/PRE_HOOKS.fragment.html`,
+                    `${venderDir}/html_fragment/PRE_HOOKS.fragment.html`,
                     ""
                 )
             }),
@@ -76,8 +79,8 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@POST_HOOKS_FRAGMENT@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${runtimeEnv}/POST_HOOKS.fragment.html`,
-                    `${__dirname}/vender/html_fragment/POST_HOOKS.fragment.html`,
+                    `${venderDir}/html_fragment/${runtimeEnv}/POST_HOOKS.fragment.html`,
+                    `${venderDir}/html_fragment/POST_HOOKS.fragment.html`,
                     ""
                 )
             }),
@@ -85,8 +88,8 @@ module.exports = (process_env, argv) => {
             new HtmlReplaceWebpackPlugin({
                 pattern: '@SERVICE_WORKER_FRAGMENT@',
                 replacement: readFileIfExists(
-                    `${__dirname}/vender/html_fragment/${runtimeEnv}/SERVICE_WORKER.fragment.html`,
-                    `${__dirname}/vender/html_fragment/SERVICE_WORKER.fragment.html`,
+                    `${venderDir}/html_fragment/${runtimeEnv}/SERVICE_WORKER.fragment.html`,
+                    `${venderDir}/html_fragment/SERVICE_WORKER.fragment.html`,
                     ""
                 )
             }),
@@ -94,11 +97,11 @@ module.exports = (process_env, argv) => {
 
             new CopyPlugin({
                 patterns: [
-                    { from: `${__dirname}/src/css`, to: outputPath + "/css" },
-                    { from: `${__dirname}/src/images`, to: outputPath + "/images" },
-                    { from: `${__dirname}/src/js/lib`, to: outputPath + "/js/lib" },
-                    { from: `${__dirname}/vender/resource/root`, to: outputPath + "/" },
-                    { from: `${__dirname}/vender/resource/images`, to: outputPath + "/images" },
+                    { from: `${coreDir}/css`, to: outputPath + "/css" },
+                    { from: `${coreDir}/images`, to: outputPath + "/images" },
+                    { from: `${coreDir}/js/lib`, to: outputPath + "/js/lib" },
+                    { from: `${venderDir}/resource/root`, to: outputPath + "/" },
+                    { from: `${venderDir}/resource/images`, to: outputPath + "/images" },
                 ]
             })
         ],
@@ -146,8 +149,8 @@ module.exports = (process_env, argv) => {
         },
         resolve: {
             alias: {
-                '@src': path.resolve(__dirname, 'src/'),
-                '@vender': path.resolve(__dirname, 'vender/')
+                '@src': coreDir,
+                '@vender': venderDir
             },
             extensions: [".ts", ".tsx", ".js", ".json", ".svg", ".css"]
         },
@@ -155,7 +158,7 @@ module.exports = (process_env, argv) => {
     }
 
     const conf_sw = {
-        entry: `${__dirname}/vender/resource/sw/service_worker.js`,
+        entry: `${venderDir}/resource/sw/service_worker.js`,
 
         output: {
             path: `${outputPath}/`,
@@ -177,7 +180,7 @@ module.exports = (process_env, argv) => {
     }
 
     const conf_make_package = {
-        entry: `${__dirname}/src/js/index_make_package.ts`,
+        entry: `${coreDir}/js/index_make_package.ts`,
         output: {
             path: `${outputPath}/js/`,
             filename: "app_make_package.js",
@@ -187,7 +190,7 @@ module.exports = (process_env, argv) => {
 
         plugins: [
             new HtmlWebpackPlugin({
-                "template": `${__dirname}/src/html/make_package.html`,
+                "template": `${coreDir}/html/make_package.html`,
                 "filename": `${outputPath}/make_package.html`,
             }),
 
@@ -223,8 +226,8 @@ module.exports = (process_env, argv) => {
         },
         resolve: {
             alias: {
-                '@src': path.resolve(__dirname, 'src/'),
-                '@vender': path.resolve(__dirname, 'vender/')
+                '@src': coreDir,
+                '@vender': venderDir
             },
             extensions: [".ts", ".tsx", ".js", ".json", ".svg", ".css"]
         },

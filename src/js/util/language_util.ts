@@ -1,6 +1,6 @@
 import { I18nMap, Language } from "../type/entity"
 
-export const withFallbackLanguage = (obj: I18nMap<string>, lang: Language, fallbackLang: Language): string => {
+export const withFallbackLanguage = (obj: I18nMap<string>, lang: Language, fallbackLang: Language = "ja"): string => {
     return obj.hasOwnProperty(lang)
         ? obj[lang] !== ""
             ? obj[lang]

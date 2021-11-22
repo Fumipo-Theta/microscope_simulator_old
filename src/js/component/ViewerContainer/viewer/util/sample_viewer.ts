@@ -132,6 +132,13 @@ export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D): (props: Pr
             ? imageSource.crossImages
             : imageSource.openImages
 
+        /**
+         * For debug and creating contents
+         *
+         * This string will be replaced into logging expression in compile time only under dev env.
+         */
+        '@DEBUG_LOG_ROTATION@'
+
         with_restore_canvas_ctx(viewer_ctx, (ctx) => {
             clearView(ctx, { canvasHeight, canvasWidth })
             return ctx
@@ -154,8 +161,7 @@ export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D): (props: Pr
                     canvasHeight
                 );
             } catch (e) {
-                console.log(e)
-                console.log({ rotate, imageIndex })
+                // TypeError can be thrown because thumbnail image may not exist, but it is ok.
             }
             return ctx
         })
@@ -176,8 +182,7 @@ export function renderOnCanvas(viewer_ctx: CanvasRenderingContext2D): (props: Pr
                     canvasWidth,
                     canvasHeight)
             } catch (e) {
-                console.log(e)
-                console.log({ rotate, imageIndex })
+                // TypeError can be thrown because thumbnail image may not exist, but it is ok.
             }
             return ctx
         })
