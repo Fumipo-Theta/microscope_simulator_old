@@ -1,7 +1,7 @@
 {
-  "name": "scopin",
-  "version": "2.3.0-rc4",
-  "description": "![SCOPin rock logo](./images/SCOPin_rock_logo.png)",
+  "name": "app",
+  "version": "0.0.1",
+  "description": "",
   "main": "/release/js/app.js",
   "directories": {
     "doc": "docs",
@@ -18,17 +18,12 @@
     "storybook": "start-storybook -p 6006 -s ./",
     "build-storybook": "build-storybook"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Fumipo-Theta/microscope_simulator.git"
-  },
+  "repository": {},
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Fumipo-Theta/microscope_simulator/issues"
-  },
-  "homepage": "https://github.com/Fumipo-Theta/microscope_simulator#readme",
+  "license": "",
+  "bugs": {},
+  "homepage": "",
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@storybook/addon-actions": "^6.3.7",
