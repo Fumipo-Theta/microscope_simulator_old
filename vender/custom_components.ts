@@ -4,11 +4,12 @@
  * - Footer
  * - Social
  */
+import type { ICustomComponents } from "@src/js/component/app"
 import AppLogo from "@vender/component/app_logo/custom/app_logo"
 import Footer from "@vender/component/footer/custom/footer"
 import Social from "@vender/component/social/custom/social"
 
-const CustomComponents = {
+const CustomComponents: ICustomComponents = {
     Footer,
     Social,
     AppLogo,
