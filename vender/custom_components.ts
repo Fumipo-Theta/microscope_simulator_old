@@ -5,9 +5,9 @@
  * - Social
  */
 import type { ICustomComponents } from "@src/js/component/app"
-import AppLogo from "@vender/component/app_logo/custom/app_logo"
-import Footer from "@vender/component/footer/custom/footer"
-import Social from "@vender/component/social/custom/social"
+import AppLogo from "@vender/component/app_logo/default/app_logo"
+import Footer from "@vender/component/footer/default/footer"
+import Social from "@vender/component/social/default/social"
 
 const CustomComponents: ICustomComponents = {
     Footer,

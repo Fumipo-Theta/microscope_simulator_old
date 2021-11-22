@@ -12,10 +12,6 @@ You can override images below:
   - rounded shape and the same width and height are recommended
 - `logo.png`
   - possibly used for registering this app on the home screen of smart devices
-- `logo_192.png`
-  - possibly used for registering this app on the home screen of smart devices
-- `logo_512.png`
-  - possibly used for registering this app on the home screen of smart devices
 - `social_card_thumbnail`
   - used for thumbnail of the social card when shared by a SNS service
 
