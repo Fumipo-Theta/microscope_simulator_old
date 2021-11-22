@@ -20,9 +20,9 @@
             "@src/*": [
                 "src/*"
             ],
-            "@vender": [
+            "@vender/*": [
                 "vender/*"
             ]
-        },
+        }
     }
 }

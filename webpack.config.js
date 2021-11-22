@@ -6,7 +6,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const version = process.env.npm_package_version;
 
 const coreDir = path.resolve(__dirname, 'src/')
-const venderDir = path.resolve(__dirname, '_vender/')
+const venderDir = path.resolve(__dirname, 'vender/')
 
 function readFileIfExists(path, fallbackPath, fallbackStr) {
     if (fs.existsSync(path)) {
