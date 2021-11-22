@@ -5,14 +5,27 @@ const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const version = process.env.npm_package_version;
 
+function readFileIfExists(path, fallbackPath, fallbackStr) {
+    if (fs.existsSync(path)) {
+        return fs.readFileSync(path, "utf-8")
+    }
+
+    if (fs.existsSync(fallbackPath)) {
+        return fs.readFileSync(fallbackPath, "utf-8")
+    }
+
+    return fallbackStr
+}
+
 module.exports = (process_env, argv) => {
-    const compileEnv = argv.env.COMPILE_ENV === "prod" ? "production" : "development"
+    const compileEnv = argv.env.COMPILE_ENV === "prod" ? "prod" : "dev"
     const scopinEnv = argv.env.SCOPIN_ENV === "prod"
-        ? "production"
+        ? "prod"
         : argv.env.SCOPIN_ENV === "dev"
-            ? "development"
+            ? "dev"
             : "local"
-    const isDeploy = compileEnv === "production"
+    const isDeploy = compileEnv === "prod"
+    const compileMode = scopinEnv === "production" ? "production" : "development"
     const configJson = process.env.CONFIG_JSON ?? fs.readFileSync(`${__dirname}/config.example.json`, "utf-8")
     const config = JSON.parse(configJson)
     config.compileEnv = compileEnv
@@ -29,7 +42,7 @@ module.exports = (process_env, argv) => {
             filename: "app.js",
         },
 
-        mode: scopinEnv === "production" ? "production" : "development",
+        mode: compileMode,
 
         plugins: [
             new HtmlWebpackPlugin({
@@ -43,29 +56,41 @@ module.exports = (process_env, argv) => {
             }),
 
             new HtmlReplaceWebpackPlugin({
-                pattern: '@ADDITIONAL_META@',
-                replacement: config?.additional_meta || "",
+                pattern: '@CUSTOM_META@',
+                replacement: readFileIfExists(
+                    `${__dirname}/vender/html_fragment/${scopinEnv}/CUSTOM_META.fragment.html`,
+                    `${__dirname}/vender/html_fragment/CUSTOM_META.fragment.html`,
+                    ""
+                )
             }),
 
             new HtmlReplaceWebpackPlugin({
                 pattern: '@PRE_HOOKS_FRAGMENT@',
-                replacement: fs.readFileSync(`${__dirname}/vender/html_fragment/PRE_HOOKS.fragment.html`, "utf-8"),
+                replacement: readFileIfExists(
+                    `${__dirname}/vender/html_fragment/${scopinEnv}/PRE_HOOKS.fragment.html`,
+                    `${__dirname}/vender/html_fragment/PRE_HOOKS.fragment.html`,
+                    ""
+                )
             }),
 
             new HtmlReplaceWebpackPlugin({
                 pattern: '@POST_HOOKS_FRAGMENT@',
-                replacement: fs.readFileSync(`${__dirname}/vender/html_fragment/POST_HOOKS.fragment.html`, "utf-8"),
+                replacement: readFileIfExists(
+                    `${__dirname}/vender/html_fragment/${scopinEnv}/POST_HOOKS.fragment.html`,
+                    `${__dirname}/vender/html_fragment/POST_HOOKS.fragment.html`,
+                    ""
+                )
             }),
 
             new HtmlReplaceWebpackPlugin({
                 pattern: '@SERVICE_WORKER_FRAGMENT@',
-                replacement: fs.readFileSync(`${__dirname}/vender/html_fragment/SERVICE_WORKER.fragment.html`, "utf-8"),
+                replacement: readFileIfExists(
+                    `${__dirname}/vender/html_fragment/${scopinEnv}/SERVICE_WORKER.fragment.html`,
+                    `${__dirname}/vender/html_fragment/SERVICE_WORKER.fragment.html`,
+                    ""
+                )
             }),
 
-            new HtmlReplaceWebpackPlugin({
-                pattern: '@TRACKING_SCRIPT@',
-                replacement: config?.tracking_script || "",
-            }),
 
             new CopyPlugin({
                 patterns: [
@@ -136,7 +161,7 @@ module.exports = (process_env, argv) => {
             path: `${outputPath}/`,
             filename: "service_worker.js",
         },
-        mode: scopinEnv === "production" ? "production" : "development",
+        mode: compileMode,
         module: {
             rules: [
                 {
@@ -158,7 +183,7 @@ module.exports = (process_env, argv) => {
             filename: "app_make_package.js",
         },
 
-        mode: scopinEnv === "production" ? "production" : "development",
+        mode: compileMode,
 
         plugins: [
             new HtmlWebpackPlugin({
@@ -205,7 +230,7 @@ module.exports = (process_env, argv) => {
         },
         target: "web"
     }
-    if (scopinEnv != "production") {
+    if (scopinEnv != "prod") {
         //conf_main.devtool = 'eval-source-map'
         conf_make_package.devtool = 'eval-source-map'
     }
