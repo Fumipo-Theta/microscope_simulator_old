@@ -115,7 +115,13 @@ module.exports = (process_env, argv) => {
             rules: [
                 {
                     test: /\.(js|ts|jsx|tsx)$/,
-                    use: 'ts-loader'
+                    use: {
+                        loader: 'ts-loader',
+                        options: {
+                            transpileOnly: true,
+                            configFile: "tsconfig.local.json"
+                        }
+                    }
                 },
                 {
                     test: /module\.css$/,
@@ -203,7 +209,13 @@ module.exports = (process_env, argv) => {
             rules: [
                 {
                     test: /\.(js|ts|jsx|tsx)$/,
-                    use: 'ts-loader'
+                    use: {
+                        loader: 'ts-loader',
+                        options: {
+                            transpileOnly: true,
+                            configFile: "tsconfig.local.json"
+                        }
+                    }
                 },
                 {
                     test: /\.js$/,
