@@ -43,3 +43,5 @@ const currentJson = JSON.parse(fs.readFileSync(`${appDir}/package.json`))
 const coreJson = JSON.parse(fs.readFileSync(`${coreDir}/package.json`))
 const newJson = updatePackageJson(currentJson, coreJson)
 fs.writeFileSync(`${appDir}/package.json`, JSON.stringify(newJson, null, 2))
+
+fs.copySync(`${coreDir}/src`, `${appDir}/core`)

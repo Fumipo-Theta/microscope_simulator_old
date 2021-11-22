@@ -5,7 +5,7 @@ const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const version = process.env.npm_package_version;
 
-const coreDir = path.resolve(__dirname, 'deps/microscope_simulator/src/')
+const coreDir = path.resolve(__dirname, 'core/src/')
 const venderDir = path.resolve(__dirname, 'vender/')
 
 function readFileIfExists(path, fallbackPath, fallbackStr) {

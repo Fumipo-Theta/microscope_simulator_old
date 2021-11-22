@@ -21,11 +21,8 @@
                 "src/*"
             ],
             "@vender": [
-                "../../vender/*"
+                "vender/*"
             ]
         },
-    },
-    "exclude": [
-        "_vender/*"
-    ]
+    }
 }
