@@ -1,10 +1,6 @@
-*.ipynb
 node_modules/
-data/
-data-min/
-data-packages/
 image_package_root/
-zipped/
-zipped-min/
 *.log
 release/
+config*.json
+!config.example.json
